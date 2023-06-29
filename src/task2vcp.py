@@ -10,13 +10,10 @@ from functools import reduce
 import numpy as np
 from pandas import to_datetime
 import matplotlib.pyplot as plt
-from xmovie import Movie
 from datetime import datetime
 from datatree import DataTree, open_datatree
 from utils import get_pars_from_ini
-
-# radar_info = get_pars_from_ini('radar')
-# print(1)
+import zarr
 
 
 def create_query(date, radar_site):
@@ -51,9 +48,13 @@ def create_vcp(ls_dt):
     return DataTree.from_dict(dtree)
 
 
+def get_time(dt):
+    return pd.to_datetime(dt.time.values[0])
+
+
 def create_path(dt):
     el = np.array([i for i in list(dt.children)])
-    dt = pd.to_datetime(dt[f'{el[0]}'].time.values[0])
+    dt = pd.to_datetime(dt.time.values[0])
     return f"{dt:%Y%m%d%H%M}", dt
 
 
@@ -61,6 +62,17 @@ def rename_children(dt):
     for i in list(dt.children):
         dt[i].name = f"{dt[i].sweep_fixed_angle.values: .1f}".replace(' ', '')
     return dt
+
+
+def raw_to_dt(file):
+    radar_name = file.split('/')[-1].split('.')[0][:3]
+    elev = np.array(get_pars_from_ini('radar')[radar_name]['elevations'])
+    swps = {j: f"sweep_{idx}" for idx, j in enumerate(elev)}
+    data = {}
+    dt = xd.io.open_iris_datatree(data_accessor(file))
+    data.update({float(dt[j].sweep_fixed_angle.values): fix_angle(dt[j]).ds.xradar.georeference()
+                 for j in list(dt.children)})
+    return DataTree.from_dict({swps[k]: data[k] for k in list(data.keys())})
 
 
 def new_structure(files):
@@ -86,6 +98,28 @@ def concat_dt(dt, times):
     return new_dt
 
 
+def raw2dt(files, store, **kwargs):
+    st = zarr.DirectoryStore(store)
+    for file in files:
+        dt = raw_to_dt(file)
+
+        for k in list(dt.children):
+            args = kwargs.copy()
+            try:
+                time = get_time(dt[k])
+                ds = dt[k].to_dataset()
+                ds['times'] = time
+                ds = ds.expand_dims(dim='times', axis=0).set_coords('times')
+                del time
+                ds.to_zarr(store=st, **args)
+            except ValueError as e:
+                args['mode'] = "w"
+                del args['append_dim']
+                ds.to_zarr(store=st, **args)
+                del ds
+
+
+
 def radar_dt(radar_files):
     paths = []
     ls_time = []
@@ -99,20 +133,6 @@ def radar_dt(radar_files):
             ls_time.append(time)
             dt_dict[f"{path}"] = vcp
     ds = concat_dt(dt_dict, ls_time)
-    root_ds = xr.Dataset(
-        {
-            "vcp_time": xr.DataArray(
-                paths,
-                dims=["time"],
-                coords={"time": pd.Series(list(ls_time)).sort_values()},
-            ),
-        },
-        coords={
-            "time": pd.Series(list(ls_time)).sort_values(),
-        },
-    )
-    root_ds = root_ds.sortby("time")
-    ds["/"] = root_ds
     return DataTree.from_dict(ds)
 
 
@@ -136,20 +156,20 @@ def mult_vcp(radar_files):
             ls_time.append(time)
             dt_dict[f"{path}"] = vcp
 
-    root_ds = xr.Dataset(
-        {
-            "vcp_time": xr.DataArray(
-                paths,
-                dims=["time"],
-                coords={"time": pd.Series(list(ls_time)).sort_values()},
-            ),
-        },
-        coords={
-            "time": pd.Series(list(ls_time)).sort_values(),
-        },
-    )
-    root_ds = root_ds.sortby("time")
-    dt_dict["/"] = root_ds
+    # root_ds = xr.Dataset(
+    #     {
+    #         "vcp_time": xr.DataArray(
+    #             paths,
+    #             dims=["time"],
+    #             coords={"time": pd.Series(list(ls_time)).sort_values()},
+    #         ),
+    #     },
+    #     coords={
+    #         "time": pd.Series(list(ls_time)).sort_values(),
+    #     },
+    # )
+    # root_ds = root_ds.sortby("time")
+    # dt_dict["/"] = root_ds
     return DataTree.from_dict(dt_dict)
 
 
@@ -160,57 +180,16 @@ def fix_angle(ds):
     stop_ang = angle_dict["stop_angle"]
     angle_res = angle_dict["angle_res"]
     direction = angle_dict["direction"]
-
+    tol = angle_res / 1.75
     # first find exact duplicates and remove
     ds = xd.util.remove_duplicate_rays(ds)
 
     # second reindex according to retrieved parameters
     ds = xd.util.reindex_angle(
-        ds, start_ang, stop_ang, angle_res, direction, method="nearest"
+        ds, start_ang, stop_ang, angle_res, direction, method="nearest",
+        tolerance=tol
     )
     return ds
-
-
-def sel_by_date(dt, start, end=None):
-    if end is None:
-        paths = dt.vcp_time.sel(time=start).values
-        times = dt.time.sel(time=start).values
-    else:
-        paths = dt.vcp_time.sel(time=slice(start, end)).values
-        times = dt.time.sel(time=slice(start, end)).values
-
-    ls_ds = [dt[i] for i in paths]
-    dt_dict = {k: v for k, v in zip(paths, ls_ds)}
-    root_ds = xr.Dataset(
-        {
-            "vcp_time": xr.DataArray(
-                paths,
-                dims=["time"],
-                coords={"time": pd.Series(list(times)).sort_values()},
-            ),
-        },
-        coords={
-            "time": pd.Series(list(times)).sort_values(),
-        },
-    )
-    root_ds = root_ds.sortby("time")
-    dt_dict["/"] = root_ds
-    return DataTree.from_dict(dt_dict)
-
-
-def sel_by_elev(dt, elevation=1.3):
-    ls_ds = []
-    t = dt.time.values
-    for i in dt['vcp_time'].values:
-        try:
-            data = dt[i][f"{elevation}"].ds
-            ls_ds.append(data)
-        except KeyError:
-            print(f"please use the following elevation angles {list(dt[i].children)}")
-    ds = xr.concat(ls_ds, dim=f"times", coords='all')
-    ds.coords['times'] = ('times', t)
-    return ds
-
 
 def plt_ppi(ds):
     fig, ax = plt.subplots()
@@ -268,26 +247,20 @@ def plot_anim(ds):
 
 
 def main():
-    zarr_store = '../zarr/multiple_vcp_test.zarr'
+    zarr_store = '/media/alfonso/drive/Alfonso/zarr_radar/new_test_1.zarr'
     date_query = datetime(2023, 4, 7)
     radar_name = "Barrancabermeja"
     query = create_query(date=date_query, radar_site=radar_name)
     str_bucket = 's3://s3-radaresideam/'
     fs = fsspec.filesystem("s3", anon=True)
-
-    date_query = datetime(2022, 8, 9, 14)
-    radar_name = "Carimagua"
-    query = create_query(date=date_query, radar_site=radar_name)
-    str_bucket = 's3://s3-radaresideam/'
-    fs = fsspec.filesystem("s3", anon=True)
-
     radar_files = sorted(fs.glob(f"{str_bucket}{query}*"))
-    vcps_dt = radar_dt(radar_files[:24])
-    _ = vcps_dt.to_zarr(zarr_store, mode='w', consolidated=True)
-    del vcps_dt
+    raw2dt(radar_files[0:1] + radar_files[4:5], store=zarr_store, mode='a', consolidated=True, append_dim='times')
+    # vcps_dt = radar_dt(radar_files[:8])
+    # _ = vcps_dt.to_zarr(zarr_store, mode='w', consolidated=True)
+    # del vcps_dt
     print('Done!!!')
-    dt = open_datatree(zarr_store, engine="zarr")
-    print(1)
+    # dt = open_datatree(zarr_store, engine="zarr")
+    # print(1)
     # # ds_le = sel_by_date(dt, start='2023-04-07 00:15', end='2023-04-07 00:55')
     # ds_le = sel_by_elev(dt, elevation=1.3)
     # mov = Movie

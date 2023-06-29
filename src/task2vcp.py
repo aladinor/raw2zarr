@@ -98,26 +98,34 @@ def concat_dt(dt, times):
     return new_dt
 
 
-def raw2dt(files, store, **kwargs):
+def dt2zarr(dt, store, **kwargs):
     st = zarr.DirectoryStore(store)
+    nodes = st.listdir()
+    for k in list(dt.children):
+        args = kwargs.copy()
+        time = get_time(dt[k])
+        ds = dt[k].to_dataset()
+        ds['times'] = time
+        ds = ds.expand_dims(dim='times', axis=0).set_coords('times')
+        if k in nodes:
+            try:
+                ds.to_zarr(store=st, group=k, **args)
+            except ValueError as e:
+                del args['append_dim']
+                args['mode'] = 'w'
+                encoding = {'times': {'units': 'nanoseconds since 1970-01-01', 'dtype': 'int64'}}
+                ds.to_zarr(store=st, group=k, encoding=encoding, **args)
+        else:
+            del args['append_dim']
+            args['mode'] = 'w'
+            encoding = {'times': {'units': 'nanoseconds since 1970-01-01', 'dtype': 'int64'}}
+            ds.to_zarr(store=st, group=k, encoding=encoding, **args)
+
+
+def raw2dt(files, store, **kwargs):
     for file in files:
         dt = raw_to_dt(file)
-
-        for k in list(dt.children):
-            args = kwargs.copy()
-            try:
-                time = get_time(dt[k])
-                ds = dt[k].to_dataset()
-                ds['times'] = time
-                ds = ds.expand_dims(dim='times', axis=0).set_coords('times')
-                del time
-                ds.to_zarr(store=st, **args)
-            except ValueError as e:
-                args['mode'] = "w"
-                del args['append_dim']
-                ds.to_zarr(store=st, **args)
-                del ds
-
+        dt2zarr(dt, store, **kwargs)
 
 
 def radar_dt(radar_files):
@@ -146,7 +154,6 @@ def mult_vcp(radar_files):
     for idx, i in enumerate(radar_files):
         if idx % 4 == 0:
             ls_files = radar_files[idx: idx + 4]
-            # ls_sigmet = [xd.io.open_iris_datatree(data_accessor(j)).xradar.georeference() for j in ls_files]
             ls_sigmet = [xd.io.open_iris_datatree(data_accessor(j)) for j in ls_files]
 
             ls_sigmet = [rename_children(i) for i in ls_sigmet]
@@ -155,21 +162,6 @@ def mult_vcp(radar_files):
             paths.append(path)
             ls_time.append(time)
             dt_dict[f"{path}"] = vcp
-
-    # root_ds = xr.Dataset(
-    #     {
-    #         "vcp_time": xr.DataArray(
-    #             paths,
-    #             dims=["time"],
-    #             coords={"time": pd.Series(list(ls_time)).sort_values()},
-    #         ),
-    #     },
-    #     coords={
-    #         "time": pd.Series(list(ls_time)).sort_values(),
-    #     },
-    # )
-    # root_ds = root_ds.sortby("time")
-    # dt_dict["/"] = root_ds
     return DataTree.from_dict(dt_dict)
 
 
@@ -190,6 +182,7 @@ def fix_angle(ds):
         tolerance=tol
     )
     return ds
+
 
 def plt_ppi(ds):
     fig, ax = plt.subplots()
@@ -247,14 +240,14 @@ def plot_anim(ds):
 
 
 def main():
-    zarr_store = '/media/alfonso/drive/Alfonso/zarr_radar/new_test_1.zarr'
+    zarr_store = '../zarr/new_test_1.zarr'
     date_query = datetime(2023, 4, 7)
     radar_name = "Barrancabermeja"
     query = create_query(date=date_query, radar_site=radar_name)
     str_bucket = 's3://s3-radaresideam/'
     fs = fsspec.filesystem("s3", anon=True)
     radar_files = sorted(fs.glob(f"{str_bucket}{query}*"))
-    raw2dt(radar_files[0:1] + radar_files[4:5], store=zarr_store, mode='a', consolidated=True, append_dim='times')
+    raw2dt(radar_files[:288], store=zarr_store, mode='a', consolidated=True, append_dim='times')
     # vcps_dt = radar_dt(radar_files[:8])
     # _ = vcps_dt.to_zarr(zarr_store, mode='w', consolidated=True)
     # del vcps_dt

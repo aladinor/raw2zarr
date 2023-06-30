@@ -109,15 +109,15 @@ def dt2zarr(dt, store, **kwargs):
         ds = ds.expand_dims(dim='times', axis=0).set_coords('times')
         if k in nodes:
             try:
+                del args['files']
                 ds.to_zarr(store=st, group=k, **args)
             except ValueError as e:
-                del args['append_dim']
-                args['mode'] = 'w'
-                encoding = {'times': {'units': 'nanoseconds since 1970-01-01', 'dtype': 'int64'}}
-                ds.to_zarr(store=st, group=k, encoding=encoding, **args)
+                print(e)
+                print(f"Please check this file {args['files']}")
+                pass
         else:
-            del args['append_dim']
-            args['mode'] = 'w'
+            del args['append_dim'], args['files']
+            args['mode'] = 'w-'
             encoding = {'times': {'units': 'nanoseconds since 1970-01-01', 'dtype': 'int64'}}
             ds.to_zarr(store=st, group=k, encoding=encoding, **args)
 
@@ -125,6 +125,7 @@ def dt2zarr(dt, store, **kwargs):
 def raw2dt(files, store, **kwargs):
     for file in files:
         dt = raw_to_dt(file)
+        kwargs['files'] = file
         dt2zarr(dt, store, **kwargs)
 
 
@@ -171,6 +172,8 @@ def fix_angle(ds):
     start_ang = angle_dict["start_angle"]
     stop_ang = angle_dict["stop_angle"]
     angle_res = angle_dict["angle_res"]
+    if angle_res > 1:
+        angle_res = np.round(angle_res, 1)
     direction = angle_dict["direction"]
     tol = angle_res / 1.75
     # first find exact duplicates and remove
@@ -240,14 +243,14 @@ def plot_anim(ds):
 
 
 def main():
-    zarr_store = '../zarr/new_test_1.zarr'
+    zarr_store = '/media/alfonso/drive/Alfonso/zarr_radar/new_test_1.zarr'
     date_query = datetime(2023, 4, 7)
     radar_name = "Barrancabermeja"
     query = create_query(date=date_query, radar_site=radar_name)
     str_bucket = 's3://s3-radaresideam/'
     fs = fsspec.filesystem("s3", anon=True)
     radar_files = sorted(fs.glob(f"{str_bucket}{query}*"))
-    raw2dt(radar_files[:288], store=zarr_store, mode='a', consolidated=True, append_dim='times')
+    raw2dt(radar_files, store=zarr_store, mode='a', consolidated=True, append_dim='times')
     # vcps_dt = radar_dt(radar_files[:8])
     # _ = vcps_dt.to_zarr(zarr_store, mode='w', consolidated=True)
     # del vcps_dt

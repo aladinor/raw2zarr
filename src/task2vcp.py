@@ -1,22 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import fsspec
-import xarray as xr
 import xradar as xd
 import pandas as pd
-from matplotlib.animation import FuncAnimation
-import cartopy.crs as ccrs
-from functools import reduce
 import numpy as np
-from pandas import to_datetime
-import matplotlib.pyplot as plt
 from datetime import datetime
-from datatree import DataTree, open_datatree
+import xarray as xr
+import asyncio
+import zarr.errors
+from datatree import DataTree
 from utils import get_pars_from_ini
 import zarr
+from dask.distributed import Client, LocalCluster, get_client
+import os
 
 
-def create_query(date, radar_site):
+def create_query(date, radar_site) -> str:
     """
     Creates a string for quering the IDEAM radar files stored in AWS bucket
     :param date: date to be queried. e.g datetime(2021, 10, 3, 12). Datetime python object
@@ -31,40 +30,18 @@ def create_query(date, radar_site):
         return f'l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d}'
 
 
-def data_accessor(file):
+def data_accessor(file) -> str:
     """
     Open AWS S3 file(s), which can be resolved locally by file caching
     """
     return fsspec.open_local(f'simplecache::s3://{file}', s3={'anon': True}, filecache={'cache_storage': '/tmp/radar/'})
 
 
-def create_vcp(ls_dt):
-    """
-    Creates a tree-like object for each volume scan
-    """
-    dtree = [{f"{i[j].sweep_fixed_angle.values: .1f}".replace(' ', ''):
-                  fix_angle(i[j].copy()).ds.xradar.georeference() for j in i.children} for i in ls_dt]
-    dtree = reduce(lambda a, b: dict(a, **b), dtree)
-    return DataTree.from_dict(dtree)
-
-
-def get_time(dt):
+def get_time(dt) -> pd.to_datetime:
     return pd.to_datetime(dt.time.values[0])
 
 
-def create_path(dt):
-    el = np.array([i for i in list(dt.children)])
-    dt = pd.to_datetime(dt.time.values[0])
-    return f"{dt:%Y%m%d%H%M}", dt
-
-
-def rename_children(dt):
-    for i in list(dt.children):
-        dt[i].name = f"{dt[i].sweep_fixed_angle.values: .1f}".replace(' ', '')
-    return dt
-
-
-def raw_to_dt(file):
+def raw_to_dt(file) -> DataTree:
     radar_name = file.split('/')[-1].split('.')[0][:3]
     elev = np.array(get_pars_from_ini('radar')[radar_name]['elevations'])
     swps = {j: f"sweep_{idx}" for idx, j in enumerate(elev)}
@@ -75,30 +52,7 @@ def raw_to_dt(file):
     return DataTree.from_dict({swps[k]: data[k] for k in list(data.keys())})
 
 
-def new_structure(files):
-    radar_name = files[0].split('/')[-1].split('.')[0][:3]
-    elev = np.array(get_pars_from_ini('radar')[radar_name]['elevations'])
-    swps = {j: f"sweep_{idx}" for idx, j in enumerate(elev)}
-    data = {}
-    for i in files:
-        dt = xd.io.open_iris_datatree(data_accessor(i))
-        data.update({float(dt[j].sweep_fixed_angle.values): fix_angle(dt[j]).ds.xradar.georeference()
-                     for j in list(dt.children)})
-    return DataTree.from_dict({swps[k]: data[k] for k in list(data.keys())})
-
-
-def concat_dt(dt, times):
-    dates = list(dt.keys())
-    swps = list(dt[dates[0]].children)
-    new_dt = {}
-    for i in swps:
-        ds = xr.concat([dt[j][i].ds for j in dates], dim='times')
-        ds = ds.assign_coords(times=("times", times))
-        new_dt.update({i: ds})
-    return new_dt
-
-
-def dt2zarr(dt, store, **kwargs):
+def node2zarr(dt, store, **kwargs) -> None:
     st = zarr.DirectoryStore(store)
     nodes = st.listdir()
     for k in list(dt.children):
@@ -109,64 +63,50 @@ def dt2zarr(dt, store, **kwargs):
         ds = ds.expand_dims(dim='times', axis=0).set_coords('times')
         if k in nodes:
             try:
-                del args['files']
                 ds.to_zarr(store=st, group=k, **args)
             except ValueError as e:
                 print(e)
-                print(f"Please check this file {args['files']}")
                 pass
         else:
-            del args['append_dim'], args['files']
-            args['mode'] = 'w-'
-            encoding = {'times': {'units': 'nanoseconds since 1970-01-01', 'dtype': 'int64'}}
-            ds.to_zarr(store=st, group=k, encoding=encoding, **args)
+            try:
+                del args['append_dim']  # , args['files']
+                args['mode'] = 'w-'
+                encoding = {'times': {'units': 'nanoseconds since 1970-01-01', 'dtype': 'int64'}}
+                ds.to_zarr(store=st, group=k, encoding=encoding, **args)
+            except zarr.errors.ContainsGroupError:
+                args = kwargs.copy()
+                ds.to_zarr(store=st, group=k, **args)
 
 
-def raw2dt(files, store, **kwargs):
-    for file in files:
-        dt = raw_to_dt(file)
-        kwargs['files'] = file
-        dt2zarr(dt, store, **kwargs)
+async def dt2zarr(dt, store, **kwargs) -> None:
+    if type(dt) == list:
+        for i in dt:
+            node2zarr(dt=i, store=store, **kwargs)
+            await asyncio.sleep(0.2)
+    else:
+        node2zarr(dt, store=store, **kwargs)
+        await asyncio.sleep(0.2)
 
 
-def radar_dt(radar_files):
-    paths = []
-    ls_time = []
-    dt_dict = {}
-    for idx, i in enumerate(radar_files):
-        if idx % 4 == 0:
-            ls_files = radar_files[idx: idx + 4]
-            vcp = new_structure(ls_files)
-            path, time = create_path(vcp)
-            paths.append(path)
-            ls_time.append(time)
-            dt_dict[f"{path}"] = vcp
-    ds = concat_dt(dt_dict, ls_time)
-    return DataTree.from_dict(ds)
+def dt2zarr2(dt, store, **kwargs) -> None:
+    if type(dt) == list:
+        for i in dt:
+            node2zarr(dt=i, store=store, **kwargs)
+    else:
+        node2zarr(dt, store=store, **kwargs)
 
 
-def mult_vcp(radar_files):
-    """
-    Creates a tree-like object for multiple volumes scan every 4th file in the bucket
-    """
-    paths = []
-    ls_time = []
-    dt_dict = {}
-    for idx, i in enumerate(radar_files):
-        if idx % 4 == 0:
-            ls_files = radar_files[idx: idx + 4]
-            ls_sigmet = [xd.io.open_iris_datatree(data_accessor(j)) for j in ls_files]
-
-            ls_sigmet = [rename_children(i) for i in ls_sigmet]
-            vcp = create_vcp(ls_sigmet)
-            path, time = create_path(vcp)
-            paths.append(path)
-            ls_time.append(time)
-            dt_dict[f"{path}"] = vcp
-    return DataTree.from_dict(dt_dict)
+def raw2dt(files) -> DataTree:
+    if type(files) == list:
+        ls = []
+        for file in files:
+            ls.append(raw_to_dt(file))
+        return ls
+    else:
+        return raw_to_dt(files)
 
 
-def fix_angle(ds):
+def fix_angle(ds) -> xr.Dataset:
     angle_dict = xd.util.extract_angle_parameters(ds)
     # display(angle_dict)
     start_ang = angle_dict["start_angle"]
@@ -187,85 +127,46 @@ def fix_angle(ds):
     return ds
 
 
-def plt_ppi(ds):
-    fig, ax = plt.subplots()
-    ds.sel(times='2023-04-07 03:20', method='nearest').DBZH.plot(x="x", y='y', vmin=-10, vmax=50,
-                                                                 cmap="Spectral_r", )
-    m2km = lambda x, _: f"{x / 1000:g}"
-    # set new ticks
-    ax.xaxis.set_major_formatter(m2km)
-    ax.yaxis.set_major_formatter(m2km)
-    ax.set_ylabel("$North - South \ distance \ [km]$")
-    ax.set_xlabel("$East - West \ distance \ [km]$")
-    ax.set_title(
-        f"$Guaviare \ radar$"
-        + "\n"
-        + f"${to_datetime(ds.sel(times='2023-04-07 03:20', method='nearest').times.values): %Y-%m-%d - %H:%M}$"
-        + "$ UTC$"
-    )
-    ax.set_ylim(-300000, 300000)
-    ax.set_xlim(-300000, 300000)
-    plt.show()
+async def aiter(iterable):
+    for v in iterable:
+        yield v
 
 
-def plot_anim(ds):
-    fig, ax = plt.subplots(subplot_kw={"projection": ccrs.PlateCarree()})
-    proj_crs = xd.georeference.get_crs(ds)
-    cart_crs = ccrs.Projection(proj_crs)
-    sc = ds.isel(times=0).DBZH.plot.pcolormesh(x="x", y="y", vmin=-10,
-                                               vmax=50, cmap="Spectral_r",
-                                               transform=cart_crs,
-                                               ax=ax)
+async def f(dt, store, **kwargs):
+    client = get_client()
+    future = client.submit(raw2dt, dt, pure=False)
+    await asyncio.gather(future, return_exceptions=True)  #
+    futures = client.submit(dt2zarr, future, priority=10, store=store, **kwargs)
+    return await asyncio.gather(futures, return_exceptions=True)
 
-    title = f"Barranca radar - {ds.isel(times=0).sweep_fixed_angle.values: .1f} [deg] \n " \
-            f"{pd.to_datetime(ds.isel(times=0).time.values[0]):%Y-%m-%d %H:%M}UTC"
-    ax.set_title(title)
-    gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,
-                      linewidth=1, color="gray", alpha=0.3, linestyle="--")
-    plt.gca().xaxis.set_major_locator(plt.NullLocator())
-    gl.top_labels = False
-    gl.right_labels = False
-    ax.coastlines()
 
-    def update_plot(t):
-        sc.set_array(ds.sel(times=t).DBZH.values.ravel())
-        ax.set_title(f"Barranca radar - {ds.sel(times=t).sweep_fixed_angle.values: .1f} [deg] \n "
-                     f"{pd.to_datetime(ds.sel(times=t).time.values[0]):%Y-%m-%d %H:%M}UTC")
-
-        ani = FuncAnimation(fig, update_plot, frames=ds.times.values,
-                            interval=5)
-        plt.show()
-        # HTML(ani.to_html5_video())
-        # writervideo = ani.FFMpegWriter(fps=60)
-        # ani.save(f'/media/alfonso/drive/Alfonso/zarr_radar/ani.mp4')
-        print(1)
-        pass
+async def run_all(filenames, store, **kwargs):
+    await asyncio.gather(*[f(fn, store=store, **kwargs) for fn in filenames])
+    print(1)
 
 
 def main():
-    zarr_store = '/media/alfonso/drive/Alfonso/zarr_radar/new_test_1.zarr'
+    from time import monotonic
+    cluster = LocalCluster(dashboard_address=7022)
+    client = Client(cluster)
+    zarr_store = '/media/alfonso/drive/Alfonso/zarr_radar/bag1.zarr'
+    zarr_store2 = '/media/alfonso/drive/Alfonso/zarr_radar/bag.zarr'
+    os.system(f"rm -rf {zarr_store}")
     date_query = datetime(2023, 4, 7)
     radar_name = "Barrancabermeja"
     query = create_query(date=date_query, radar_site=radar_name)
     str_bucket = 's3://s3-radaresideam/'
     fs = fsspec.filesystem("s3", anon=True)
     radar_files = sorted(fs.glob(f"{str_bucket}{query}*"))
-    raw2dt(radar_files, store=zarr_store, mode='a', consolidated=True, append_dim='times')
-    # vcps_dt = radar_dt(radar_files[:8])
-    # _ = vcps_dt.to_zarr(zarr_store, mode='w', consolidated=True)
-    # del vcps_dt
+    start_time = monotonic()
+    res = raw2dt(radar_files[:100])  ### for running in a sequencial for loop
+    dt2zarr2(res, store=zarr_store, mode='a', consolidated=True, append_dim='times')  ### for running for loop
+    print(f"Run time for serial {monotonic() - start_time} seconds")
+    start_time = monotonic()
+    asyncio.run(run_all(radar_files[0:100], store=zarr_store2, mode='a',
+                        consolidated=True, append_dim='times'))
+    print(f"Run time for threads {monotonic() - start_time} seconds")
     print('Done!!!')
-    # dt = open_datatree(zarr_store, engine="zarr")
-    # print(1)
-    # # ds_le = sel_by_date(dt, start='2023-04-07 00:15', end='2023-04-07 00:55')
-    # ds_le = sel_by_elev(dt, elevation=1.3)
-    # mov = Movie
-    # # plt_ppi(ds_le)
-    # plot_anim(ds_le)
-    # # _ = vcps_dt.to_zarr(zarr_store, mode='w')
-    # ds = open_datatree(zarr_store, engine="zarr")
-    # ds_surp = get_data(ds)
-    print(1)
     pass
 
 

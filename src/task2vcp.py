@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import fsspec
-import xradar as xd
-import pandas as pd
-import numpy as np
-from datetime import datetime
-import xarray as xr
 import asyncio
-import zarr.errors
-from datatree import DataTree
-from utils import get_pars_from_ini
-import zarr
-from dask.distributed import Client, LocalCluster, get_client
 import os
+from datetime import datetime
+
+import fsspec
+import numpy as np
+import pandas as pd
+import xarray as xr
+import xradar as xd
+import zarr
+import zarr.errors
+from dask.distributed import Client, LocalCluster, get_client
+from datatree import DataTree
+
+from utils import get_pars_from_ini
 
 
 def create_query(date, radar_site) -> str:
@@ -82,10 +84,10 @@ async def dt2zarr(dt, store, **kwargs) -> None:
     if type(dt) == list:
         for i in dt:
             node2zarr(dt=i, store=store, **kwargs)
-            await asyncio.sleep(0.2)
+            await asyncio.sleep(0.5)
     else:
         node2zarr(dt, store=store, **kwargs)
-        await asyncio.sleep(0.2)
+        await asyncio.sleep(0.5)
 
 
 def dt2zarr2(dt, store, **kwargs) -> None:

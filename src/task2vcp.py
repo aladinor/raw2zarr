@@ -3,7 +3,6 @@
 import asyncio
 import os
 from datetime import datetime
-
 import fsspec
 import numpy as np
 import pandas as pd
@@ -13,7 +12,6 @@ import zarr
 import zarr.errors
 from dask.distributed import Client, LocalCluster, get_client
 from datatree import DataTree
-
 from utils import get_pars_from_ini
 
 
@@ -54,40 +52,40 @@ def raw_to_dt(file) -> DataTree:
     return DataTree.from_dict({swps[k]: data[k] for k in list(data.keys())})
 
 
-def node2zarr(dt, store, **kwargs) -> None:
+async def _to_zarr(dt, store, child, **kwargs) -> None:
     st = zarr.DirectoryStore(store)
     nodes = st.listdir()
-    for k in list(dt.children):
-        args = kwargs.copy()
-        time = get_time(dt[k])
-        ds = dt[k].to_dataset()
-        ds['times'] = time
-        ds = ds.expand_dims(dim='times', axis=0).set_coords('times')
-        if k in nodes:
-            try:
-                ds.to_zarr(store=st, group=k, **args)
-            except ValueError as e:
-                print(e)
-                pass
-        else:
-            try:
-                del args['append_dim']  # , args['files']
-                args['mode'] = 'w-'
-                encoding = {'times': {'units': 'nanoseconds since 1970-01-01', 'dtype': 'int64'}}
-                ds.to_zarr(store=st, group=k, encoding=encoding, **args)
-            except zarr.errors.ContainsGroupError:
-                args = kwargs.copy()
-                ds.to_zarr(store=st, group=k, **args)
+    args = kwargs.copy()
+    time = get_time(dt)
+    ds = dt.to_dataset()
+    ds['times'] = time
+    ds = ds.expand_dims(dim='times', axis=0).set_coords('times')
+    if child in nodes:
+        try:
+            ds.to_zarr(store=st, group=child, **args)
+        except ValueError as e:
+            print(e)
+            print('el error es aca')
+            pass
+    else:
+        try:
+            del args['append_dim']  # , args['files']
+            args['mode'] = 'w-'
+            encoding = {'times': {'units': 'nanoseconds since 1970-01-01', 'dtype': 'int64'}}
+            ds.to_zarr(store=st, group=child, encoding=encoding, **args)
+        except zarr.errors.ContainsGroupError:
+            args = kwargs.copy()
+            ds.to_zarr(store=st, group=child, **args)
+
+
+async def node2zarr(dt, store, **kwargs) -> None:
+    ls_children = sorted(list(dt.children))
+    task = [_to_zarr(dt[i], store, child=i, **kwargs) for i in ls_children]
+    return await asyncio.gather(*task)
 
 
 async def dt2zarr(dt, store, **kwargs) -> None:
-    if type(dt) == list:
-        for i in dt:
-            node2zarr(dt=i, store=store, **kwargs)
-            await asyncio.sleep(0.5)
-    else:
-        node2zarr(dt, store=store, **kwargs)
-        await asyncio.sleep(0.5)
+    await node2zarr(dt, store=store, **kwargs)
 
 
 def dt2zarr2(dt, store, **kwargs) -> None:
@@ -129,22 +127,16 @@ def fix_angle(ds) -> xr.Dataset:
     return ds
 
 
-async def aiter(iterable):
-    for v in iterable:
-        yield v
-
-
 async def f(dt, store, **kwargs):
     client = get_client()
     future = client.submit(raw2dt, dt, pure=False)
     await asyncio.gather(future, return_exceptions=True)  #
     futures = client.submit(dt2zarr, future, priority=10, store=store, **kwargs)
-    return await asyncio.gather(futures, return_exceptions=True)
+    client.gather(futures)
 
 
 async def run_all(filenames, store, **kwargs):
     await asyncio.gather(*[f(fn, store=store, **kwargs) for fn in filenames])
-    print(1)
 
 
 def main():
@@ -153,19 +145,19 @@ def main():
     client = Client(cluster)
     zarr_store = '/media/alfonso/drive/Alfonso/zarr_radar/bag1.zarr'
     zarr_store2 = '/media/alfonso/drive/Alfonso/zarr_radar/bag.zarr'
-    os.system(f"rm -rf {zarr_store}")
+    os.system(f"rm -rf {zarr_store2}")
     date_query = datetime(2023, 4, 7)
     radar_name = "Barrancabermeja"
     query = create_query(date=date_query, radar_site=radar_name)
     str_bucket = 's3://s3-radaresideam/'
     fs = fsspec.filesystem("s3", anon=True)
     radar_files = sorted(fs.glob(f"{str_bucket}{query}*"))
+    # start_time = monotonic()
+    # res = raw2dt(radar_files[:100])  ### for running in a sequencial for loop
+    # dt2zarr2(res, store=zarr_store, mode='a', consolidated=True, append_dim='times')  ### for running for loop
+    # print(f"Run time for serial {monotonic() - start_time} seconds")
     start_time = monotonic()
-    res = raw2dt(radar_files[:100])  ### for running in a sequencial for loop
-    dt2zarr2(res, store=zarr_store, mode='a', consolidated=True, append_dim='times')  ### for running for loop
-    print(f"Run time for serial {monotonic() - start_time} seconds")
-    start_time = monotonic()
-    asyncio.run(run_all(radar_files[0:100], store=zarr_store2, mode='a',
+    asyncio.run(run_all(radar_files, store=zarr_store2, mode='a',
                         consolidated=True, append_dim='times'))
     print(f"Run time for threads {monotonic() - start_time} seconds")
     print('Done!!!')

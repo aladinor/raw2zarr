@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import os
 from datetime import datetime
 import fsspec
 import time
@@ -10,7 +9,7 @@ import xarray as xr
 import xradar as xd
 import zarr
 from datatree import DataTree
-from utils import get_pars_from_ini
+from utils import get_pars_from_ini, make_dir
 
 
 def create_query(date, radar_site) -> str:
@@ -32,7 +31,8 @@ def data_accessor(file) -> str:
     """
     Open AWS S3 file(s), which can be resolved locally by file caching
     """
-    return fsspec.open_local(f'simplecache::s3://{file}', s3={'anon': True}, filecache={'cache_storage': '/tmp/radar/'})
+    return fsspec.open_local(f'simplecache::s3://{file}', s3={'anon': True},
+                             filecache={'cache_storage': '/tmp/radar/'})
 
 
 def get_time(dt) -> pd.to_datetime:
@@ -50,76 +50,117 @@ def raw_to_dt(file) -> DataTree:
     return DataTree.from_dict({swps[k]: data[k] for k in list(data.keys())})
 
 
-def dt2zarr2(dt, store, **kwargs) -> None:
-    st = zarr.DirectoryStore(store)
+def dt2zarr2(dt, **kwargs) -> None:
+    if kwargs['zarr_version'] == 3:
+        st = zarr.DirectoryStoreV3(kwargs['store'])
+    else:
+        st = zarr.DirectoryStore(kwargs['store'])
     nodes = st.listdir()
     args = kwargs.copy()
     for child in list(dt.children):
         ds = dt[child].to_dataset()
         _time = get_time(ds)
-        ds['times'] = _time
-        ds = ds.expand_dims(dim='times', axis=0).set_coords('times')
+        ds[kwargs['append_dim']] = _time
+        ds = ds.expand_dims(dim=kwargs['append_dim'], axis=0).set_coords(kwargs['append_dim'])
         if child in nodes:
-            try:
-                ds.to_zarr(store=st, group=child, **args)
-            except ValueError as e:
-                print(e)
-                print('el error es aca')
-                pass
+            ds.to_zarr(group=child, **args)
         else:
             try:
                 args = kwargs.copy()
                 del args['append_dim']
                 args['mode'] = 'w-'
-                encoding = {'times': {'units': 'nanoseconds since 1970-01-01', 'dtype': 'int64'}}
-                ds.to_zarr(store=st, group=child, encoding=encoding, **args)
+                encoding = {kwargs['append_dim']: {'units': 'milliseconds since 2000-01-01T00:00:04.010000',
+                                                   'dtype': 'float'},
+                            'time': {'units': 'milliseconds since 2000-01-01T00:00:04.010000',
+                                     'dtype': 'float'}
+                            }
+                ds.to_zarr(group=child, encoding=encoding, **args)
             except zarr.errors.ContainsGroupError:
                 args = kwargs.copy()
-                ds.to_zarr(store=st, group=child, **args)
+                ds.to_zarr(group=child, **args)
 
 
-def raw2dt(files, store, mode, consolidated, append_dim) -> None:
-    dt = raw_to_dt(files)
-    dt2zarr2(dt=dt, store=store, mode=mode, consolidated=consolidated, append_dim=append_dim)
+def raw2dt(file, **kwargs) -> None:
+    dt = raw_to_dt(file)
+    elevations = [np.round(np.median(dt.children[i].elevation.data), 1) for i in list(dt.children)]
+    try:
+        if kwargs['elevation'] in elevations:
+            del kwargs['elevation']
+            dt2zarr2(dt=dt, **kwargs)
+            del dt
+            write_file_radar(file)
+    except KeyError:
+        dt2zarr2(dt=dt, **kwargs)
 
 
 def fix_angle(ds) -> xr.Dataset:
     angle_dict = xd.util.extract_angle_parameters(ds)
-    # display(angle_dict)
     start_ang = angle_dict["start_angle"]
     stop_ang = angle_dict["stop_angle"]
-    angle_res = angle_dict["angle_res"]
-    if angle_res > 1:
-        angle_res = np.round(angle_res, 1)
     direction = angle_dict["direction"]
-    tol = angle_res / 1.75
-    # first find exact duplicates and remove
     ds = xd.util.remove_duplicate_rays(ds)
+    az = len(np.arange(start_ang, stop_ang))
+    ar = az / len(ds.azimuth.data)
+    tol = ar / 2
+    return xd.util.reindex_angle(ds, start_ang, stop_ang, ar, direction, method="nearest", tolerance=tol)
 
-    # second reindex according to retrieved parameters
-    ds = xd.util.reindex_angle(
-        ds, start_ang, stop_ang, angle_res, direction, method="nearest",
-        tolerance=tol
-    )
-    return ds
+
+def write_file_radar(file) -> None:
+    path = f'../results'
+    file_path = f"{path}"
+    make_dir(file_path)
+    file_name = f"{file_path}/{file.split('/')[-2]}_files.txt"
+    with open(file_name, 'a') as txt_file:
+        txt_file.write(f"{file}\n")
+        txt_file.close()
+
+
+def check_if_exist(file) -> bool:
+    path = f'../results'
+    file_path = f"{path}"
+    file_name = f"{file_path}/{file.split('/')[-2]}_files2.txt"
+    try:
+        with open(file_name, 'r', newline='\n') as txt_file:
+            lines = txt_file.readlines()
+            txt_file.close()
+        _file = [i for i in lines if i.replace("\n", "") == file]
+        if len(_file) > 0:
+            print("File already processed")
+            return True
+        else:
+            return False
+    except FileNotFoundError:
+        return False
 
 
 def main():
-
-    zarr_store = '/media/alfonso/drive/Alfonso/zarr_radar/bag.zarr'
-    os.system(f"rm -rf {zarr_store}")
-    for j in [6, 7, 8]:
-        date_query = datetime(2023, 4, j)
-        radar_name = "Barrancabermeja"
-        query = create_query(date=date_query, radar_site=radar_name)
-        str_bucket = 's3://s3-radaresideam/'
-        fs = fsspec.filesystem("s3", anon=True)
-        radar_files = sorted(fs.glob(f"{str_bucket}{query}*"))
-        start_time = time.monotonic()
-        for i in radar_files:
-            raw2dt(i, store=zarr_store, mode='a', consolidated=True, append_dim='times')
-        print(f"Run time for single{time.monotonic() - start_time} seconds")
-        print('Done!!!')
+    radar_name = "Carimagua"
+    v = 2
+    con = False if v == 3 else True
+    zarr_store = f'/media/alfonso/drive/Alfonso/python/zarr_radar/{radar_name}_{v}.zarr'
+    year, months, days = 2022, range(8, 9), range(9, 13)
+    # year, months, days = 2022, range(3, 4), range(3, 4)
+    for month in months:                                                                                                                                                                                                                                                                                                              
+        for day in days:
+            date_query = datetime(year=year, month=month, day=day)
+            query = create_query(date=date_query, radar_site=radar_name)
+            str_bucket = 's3://s3-radaresideam/'
+            fs = fsspec.filesystem("s3", anon=True)
+            radar_files = sorted(fs.glob(f"{str_bucket}{query}*"))
+            if radar_files:
+                start_time = time.monotonic()
+                for i in radar_files:
+                    exist = check_if_exist(i)
+                    if not exist:
+                        raw2dt(i, store=zarr_store, mode='a', consolidated=con, append_dim='vcp_time', zarr_version=v,
+                               # elevation=[0.5]
+                               )
+                print(f"Run time for single{time.monotonic() - start_time} seconds")
+                print('Done!!!')
+            else:
+                print(f'mes {month}, dia {day} no tienen datos')
+        print(f'mes {month}, dia {day}')
+    print('termine')
     pass
 
 

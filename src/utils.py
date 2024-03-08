@@ -20,7 +20,7 @@ def make_dir(path):
 
 def get_pars_from_ini(file_name='radar'):
     """
-    Returns dictionary with data for creating an xarray dataset from hdf5 file
+    Returns dictionary with data for creating a xarray dataset from hdf5 file
     :param file_name: campaign from data comes from
     :type file_name: str
     :return: data from config files

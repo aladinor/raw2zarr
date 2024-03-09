@@ -3,7 +3,7 @@ import zarr
 import xradar as xd
 import numpy as np
 from datatree import DataTree
-from utils import get_pars_from_ini, data_accessor, fix_angle, convert_time, write_file_radar
+from .utils import get_pars_from_ini, data_accessor, fix_angle, convert_time, write_file_radar
 
 
 def raw_to_dt(file: str) -> DataTree:
@@ -60,7 +60,7 @@ def dt2zarr2(dt: DataTree, **kwargs: dict) -> None:
                 ds.to_zarr(group=child, **args)
 
 
-def raw2dt(file, **kwargs) -> None:
+def raw2zarr(file, **kwargs) -> None:
     """
     Main function to convert sigmet radar files into xradar datatree
     @param file: radar file path

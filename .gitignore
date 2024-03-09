@@ -155,6 +155,7 @@ cython_debug/
 # folders
 zarr/
 .idea/
+sigmet2zarr.egg-info
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
@@ -163,4 +164,4 @@ zarr/
 #.idea/
 
 #Notebooks
-src/task2vcp.py
+sigmet2zarr/task2vcp.py

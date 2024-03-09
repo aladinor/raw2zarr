@@ -37,7 +37,6 @@ def get_pars_from_ini(file_name='radar'):
     dt_pars = {}
 
     groups = parser.sections()
-    print(groups)
     for group in groups:
         db = {}
         params = parser.items(group)

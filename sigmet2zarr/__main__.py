@@ -1,8 +1,8 @@
 from datetime import datetime
 import fsspec
 import time
-from utils import create_query, check_if_exist
-from task2zarr import raw2dt
+from sigmet2zarr.utils import create_query, check_if_exist
+from sigmet2zarr.task2zarr import raw2zarr
 
 
 def main():
@@ -24,9 +24,9 @@ def main():
                 for i in radar_files:
                     exist = check_if_exist(i)
                     if not exist:
-                        raw2dt(i, store=zarr_store, mode='a', consolidated=con, append_dim='vcp_time', zarr_version=v,
-                               # elevation=[0.5]
-                               )
+                        raw2zarr(i, store=zarr_store, mode='a', consolidated=con, append_dim='vcp_time', zarr_version=v,
+                                 # elevation=[0.5]
+                                 )
                 print(f"Run time for single{time.monotonic() - start_time} seconds")
                 print('Done!!!')
             else:

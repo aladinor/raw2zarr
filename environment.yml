@@ -20,4 +20,8 @@ dependencies:
   - boto3
   - s3fs
   - arm_pyart
+  - pip
+  - pip:
+      - git+https://github.com/aladinor/raw2zarr
+
 prefix: /home/alfonso/anaconda3/envs/xradar

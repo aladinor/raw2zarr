@@ -21,6 +21,8 @@ dependencies:
   - s3fs
   - arm_pyart
   - wradlib
+  - hvplot
+  - datashader
   - pip
   - pip:
       - git+https://github.com/aladinor/raw2zarr

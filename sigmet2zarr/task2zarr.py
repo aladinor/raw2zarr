@@ -92,10 +92,23 @@ def raw2zarr(file, **kwargs) -> None:
     ]
     try:
         if kwargs["elevation"] in elevations:
-            del kwargs["elevation"]
+            path2check = (
+                kwargs.get("path2check")
+                if kwargs.get("path2check") is not None
+                else "../results"
+            )
+            kwargs.setdefault("path2check", "../results")
+            del kwargs["elevation"], kwargs["path2check"]
             dt2zarr2(dt=dt, **kwargs)
             del dt
-            write_file_radar(file)
+            write_file_radar(file, path2check)
     except KeyError:
+        path2check = (
+            kwargs.get("path2check")
+            if kwargs.get("path2check") is not None
+            else "../results"
+        )
+        kwargs.setdefault("path2check", "../results")
+        del kwargs["path2check"]
         dt2zarr2(dt=dt, **kwargs)
-        write_file_radar(file)
+        write_file_radar(file, path2check)

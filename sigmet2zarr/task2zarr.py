@@ -1,4 +1,3 @@
-import time
 import zarr
 import xradar as xd
 import numpy as np
@@ -99,3 +98,4 @@ def raw2zarr(file, **kwargs) -> None:
             write_file_radar(file)
     except KeyError:
         dt2zarr2(dt=dt, **kwargs)
+        write_file_radar(file)

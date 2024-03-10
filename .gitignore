@@ -153,6 +153,7 @@ dmypy.json
 cython_debug/
 
 # folders
+results/
 zarr/
 .idea/
 sigmet2zarr.egg-info

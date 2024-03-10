@@ -5,15 +5,15 @@ import xarray as xr
 import xradar as xd
 import fsspec
 import numpy as np
-from configparser import ConfigParser
 from datetime import datetime
 import pandas as pd
+import tomllib
 
 
-def make_dir(path):
+def make_dir(path) -> None:
     """
     Makes directory based on path.
-    :param path:
+    :param path: directory path that will be created
     :return:
     """
     try:
@@ -22,44 +22,18 @@ def make_dir(path):
         pass
 
 
-def get_pars_from_ini(file_name='radar'):
+def load_toml(filepath: str) -> dict:
     """
-    Returns dictionary with data for creating a xarray dataset from hdf5 file
-    :param file_name: campaign from data comes from
-    :type file_name: str
-    :return: data from config files
+    Load a TOML data from file
+    @param filepath: path to TOML file
+    @return: dict
     """
-    file_name = f'../config/{file_name}.ini'
-    parser = ConfigParser()
-    parser.optionxform = str
-    parser.read(file_name)
-
-    dt_pars = {}
-
-    groups = parser.sections()
-    for group in groups:
-        db = {}
-        params = parser.items(group)
-
-        for param in params:
-            try:
-                db[param[0]] = eval(param[1])
-
-            except ValueError:
-                db[param[0]] = param[1].strip()
-
-            except NameError:
-                db[param[0]] = param[1].strip()
-
-            except SyntaxError:
-                db[param[0]] = param[1].strip()
-
-        dt_pars[group] = db
-
-    return dt_pars
+    with open(filepath, "rb") as f:
+        toml_data: dict = tomllib.load(f)
+        return toml_data
 
 
-def time_3d(time_array, numbers):
+def time_3d(time_array, numbers) -> np.ndarray:
     """
     Functions that creates a 3d time array from timestamps
     :param time_array: 2d timestamp array
@@ -72,7 +46,7 @@ def time_3d(time_array, numbers):
     return times
 
 
-def get_time(time_array):
+def get_time(time_array) -> np.ndarray:
     """
     Functions that creates a 3d time array from timestamps
     :param time_array: 2d timestamp array
@@ -91,26 +65,34 @@ def create_query(date, radar_site) -> str:
     :return: string with a IDEAM radar bucket format
     """
     if (date.hour != 0) and (date.hour != 0):
-        return f'l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d%H}'
+        return f"l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d%H}"
     elif (date.hour != 0) and (date.hour == 0):
-        return f'l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d}'
+        return f"l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d}"
     else:
-        return f'l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d}'
+        return f"l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d}"
 
 
 def data_accessor(file) -> str:
     """
     Open AWS S3 file(s), which can be resolved locally by file caching
     """
-    return fsspec.open_local(f'simplecache::s3://{file}', s3={'anon': True},
-                             filecache={'cache_storage': '/tmp/radar/'})
+    return fsspec.open_local(
+        f"simplecache::s3://{file}",
+        s3={"anon": True},
+        filecache={"cache_storage": "/tmp/radar/"},
+    )
 
 
 def convert_time(dt) -> pd.to_datetime:
     return pd.to_datetime(dt.time.values[0])
 
 
-def fix_angle(ds) -> xr.Dataset:
+def fix_angle(ds: xr.Dataset) -> xr.Dataset:
+    """
+    This function reindex the radar azimuth angle to make all sweeps starts and end at the same angle
+    @param ds: xarray dataset containing and xradar object
+    @return: azimuth reindex xarray dataset
+    """
     angle_dict = xd.util.extract_angle_parameters(ds)
     start_ang = angle_dict["start_angle"]
     stop_ang = angle_dict["stop_angle"]
@@ -119,15 +101,22 @@ def fix_angle(ds) -> xr.Dataset:
     az = len(np.arange(start_ang, stop_ang))
     ar = az / len(ds.azimuth.data)
     tol = ar / 2
-    return xd.util.reindex_angle(ds, start_ang, stop_ang, ar, direction, method="nearest", tolerance=tol)
+    return xd.util.reindex_angle(
+        ds, start_ang, stop_ang, ar, direction, method="nearest", tolerance=tol
+    )
 
 
-def check_if_exist(file) -> bool:
-    path = f'../results'
+def check_if_exist(file: str, path: str = "../results") -> bool:
+    """
+    Function that check if a sigmet file was already processed based on a txt file that written during the conversion
+    @param file: file name
+    @param path: path where txt file was written with the list of sigmet files processed
+    @return:
+    """
     file_path = f"{path}"
     file_name = f"{file_path}/{file.split('/')[-2]}_files2.txt"
     try:
-        with open(file_name, 'r', newline='\n') as txt_file:
+        with open(file_name, "r", newline="\n") as txt_file:
             lines = txt_file.readlines()
             txt_file.close()
         _file = [i for i in lines if i.replace("\n", "") == file]
@@ -140,11 +129,16 @@ def check_if_exist(file) -> bool:
         return False
 
 
-def write_file_radar(file) -> None:
-    path = f'../results'
-    file_path = f"{path}"
-    make_dir(file_path)
-    file_name = f"{file_path}/{file.split('/')[-2]}_files.txt"
-    with open(file_name, 'a') as txt_file:
+def write_file_radar(file: str, path: str = f"../results") -> None:
+    """
+    Write a new line with the radar filename converted. This is intended to create a checklist to avoid file
+    reprocessing
+    @param path: path where the txt file will be saved
+    @param file: radar filename
+    @return:
+    """
+    make_dir(path)
+    file_name = f"{path}/{file.split('/')[-2]}_files.txt"
+    with open(file_name, "a") as txt_file:
         txt_file.write(f"{file}\n")
         txt_file.close()

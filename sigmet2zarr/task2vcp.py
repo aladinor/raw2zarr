@@ -23,18 +23,22 @@ def create_query(date, radar_site) -> str:
     :return: string with a IDEAM radar bucket format
     """
     if (date.hour != 0) and (date.hour != 0):
-        return f'l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d%H}'
+        return f"l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d%H}"
     elif (date.hour != 0) and (date.hour == 0):
-        return f'l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d}'
+        return f"l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d}"
     else:
-        return f'l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d}'
+        return f"l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d}"
 
 
 def data_accessor(file) -> str:
     """
     Open AWS S3 file(s), which can be resolved locally by file caching
     """
-    return fsspec.open_local(f'simplecache::s3://{file}', s3={'anon': True}, filecache={'cache_storage': '/tmp/radar/'})
+    return fsspec.open_local(
+        f"simplecache::s3://{file}",
+        s3={"anon": True},
+        filecache={"cache_storage": "/tmp/radar/"},
+    )
 
 
 def get_time(dt) -> pd.to_datetime:
@@ -42,13 +46,19 @@ def get_time(dt) -> pd.to_datetime:
 
 
 def raw_to_dt(file) -> DataTree:
-    radar_name = file.split('/')[-1].split('.')[0][:3]
-    elev = np.array(get_pars_from_ini('radar')[radar_name]['elevations'])
+    radar_name = file.split("/")[-1].split(".")[0][:3]
+    elev = np.array(get_pars_from_ini("radar")[radar_name]["elevations"])
     swps = {j: f"sweep_{idx}" for idx, j in enumerate(elev)}
     data = {}
     dt = xd.io.open_iris_datatree(data_accessor(file))
-    data.update({float(dt[j].sweep_fixed_angle.values): fix_angle(dt[j]).ds.xradar.georeference()
-                 for j in list(dt.children)})
+    data.update(
+        {
+            float(dt[j].sweep_fixed_angle.values): fix_angle(
+                dt[j]
+            ).ds.xradar.georeference()
+            for j in list(dt.children)
+        }
+    )
     return DataTree.from_dict({swps[k]: data[k] for k in list(data.keys())})
 
 
@@ -58,20 +68,22 @@ async def _to_zarr(dt, store, child, **kwargs) -> None:
     args = kwargs.copy()
     time = get_time(dt)
     ds = dt.to_dataset()
-    ds['times'] = time
-    ds = ds.expand_dims(dim='times', axis=0).set_coords('times')
+    ds["times"] = time
+    ds = ds.expand_dims(dim="times", axis=0).set_coords("times")
     if child in nodes:
         try:
             ds.to_zarr(store=st, group=child, **args)
         except ValueError as e:
             print(e)
-            print('el error es aca')
+            print("el error es aca")
             pass
     else:
         try:
-            del args['append_dim']  # , args['files']
-            args['mode'] = 'w-'
-            encoding = {'times': {'units': 'nanoseconds since 1970-01-01', 'dtype': 'int64'}}
+            del args["append_dim"]  # , args['files']
+            args["mode"] = "w-"
+            encoding = {
+                "times": {"units": "nanoseconds since 1970-01-01", "dtype": "int64"}
+            }
             ds.to_zarr(store=st, group=child, encoding=encoding, **args)
         except zarr.errors.ContainsGroupError:
             args = kwargs.copy()
@@ -121,8 +133,7 @@ def fix_angle(ds) -> xr.Dataset:
 
     # second reindex according to retrieved parameters
     ds = xd.util.reindex_angle(
-        ds, start_ang, stop_ang, angle_res, direction, method="nearest",
-        tolerance=tol
+        ds, start_ang, stop_ang, angle_res, direction, method="nearest", tolerance=tol
     )
     return ds
 
@@ -141,15 +152,16 @@ async def run_all(filenames, store, **kwargs):
 
 def main():
     from time import monotonic
+
     cluster = LocalCluster(dashboard_address=7022)
     client = Client(cluster)
-    zarr_store = '/media/alfonso/drive/Alfonso/zarr_radar/bag1.zarr'
-    zarr_store2 = '/media/alfonso/drive/Alfonso/zarr_radar/bag.zarr'
+    zarr_store = "/media/alfonso/drive/Alfonso/zarr_radar/bag1.zarr"
+    zarr_store2 = "/media/alfonso/drive/Alfonso/zarr_radar/bag.zarr"
     os.system(f"rm -rf {zarr_store2}")
     date_query = datetime(2023, 4, 7)
     radar_name = "Barrancabermeja"
     query = create_query(date=date_query, radar_site=radar_name)
-    str_bucket = 's3://s3-radaresideam/'
+    str_bucket = "s3://s3-radaresideam/"
     fs = fsspec.filesystem("s3", anon=True)
     radar_files = sorted(fs.glob(f"{str_bucket}{query}*"))
     # start_time = monotonic()
@@ -157,10 +169,17 @@ def main():
     # dt2zarr2(res, store=zarr_store, mode='a', consolidated=True, append_dim='times')  ### for running for loop
     # print(f"Run time for serial {monotonic() - start_time} seconds")
     start_time = monotonic()
-    asyncio.run(run_all(radar_files, store=zarr_store2, mode='a',
-                        consolidated=True, append_dim='times'))
+    asyncio.run(
+        run_all(
+            radar_files,
+            store=zarr_store2,
+            mode="a",
+            consolidated=True,
+            append_dim="times",
+        )
+    )
     print(f"Run time for threads {monotonic() - start_time} seconds")
-    print('Done!!!')
+    print("Done!!!")
     pass
 
 

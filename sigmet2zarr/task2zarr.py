@@ -3,7 +3,14 @@ import zarr
 import xradar as xd
 import numpy as np
 from datatree import DataTree
-from .utils import get_pars_from_ini, data_accessor, fix_angle, convert_time, write_file_radar
+from .utils import (
+    get_pars_from_ini,
+    data_accessor,
+    fix_angle,
+    convert_time,
+    write_file_radar,
+    load_toml,
+)
 
 
 def raw_to_dt(file: str) -> DataTree:
@@ -12,13 +19,19 @@ def raw_to_dt(file: str) -> DataTree:
     @param file: radar file path
     @return: xradar datatree with all sweeps within each file
     """
-    radar_name = file.split('/')[-1].split('.')[0][:3]
-    elev = np.array(get_pars_from_ini('radar')[radar_name]['elevations'])
+    radar_name = file.split("/")[-1].split(".")[0][:3]
+    elev = np.array(load_toml("../config/radar.toml")[radar_name]["elevations"])
     swps = {j: f"sweep_{idx}" for idx, j in enumerate(elev)}
     data = {}
     dt = xd.io.open_iris_datatree(data_accessor(file))
-    data.update({float(dt[j].sweep_fixed_angle.values): fix_angle(dt[j]).ds.xradar.georeference()
-                 for j in list(dt.children)})
+    data.update(
+        {
+            float(dt[j].sweep_fixed_angle.values): fix_angle(
+                dt[j]
+            ).ds.xradar.georeference()
+            for j in list(dt.children)
+        }
+    )
     return DataTree.from_dict({swps[k]: data[k] for k in list(data.keys())})
 
 
@@ -31,29 +44,36 @@ def dt2zarr2(dt: DataTree, **kwargs: dict) -> None:
             - mode = Xarray.to_zarr mode. Options {"w", "w-", "a", "a-", r+", None}
     @return: None
     """
-    if kwargs['zarr_version'] == 3:
-        st = zarr.DirectoryStoreV3(kwargs['store'])
+    if kwargs["zarr_version"] == 3:
+        st = zarr.DirectoryStoreV3(kwargs["store"])
     else:
-        st = zarr.DirectoryStore(kwargs['store'])
+        st = zarr.DirectoryStore(kwargs["store"])
     nodes = st.listdir()
     args = kwargs.copy()
     for child in list(dt.children):
         ds = dt[child].to_dataset()
         _time = convert_time(ds)
-        ds[kwargs['append_dim']] = _time
-        ds = ds.expand_dims(dim=kwargs['append_dim'], axis=0).set_coords(kwargs['append_dim'])
+        ds[kwargs["append_dim"]] = _time
+        ds = ds.expand_dims(dim=kwargs["append_dim"], axis=0).set_coords(
+            kwargs["append_dim"]
+        )
         if child in nodes:
             ds.to_zarr(group=child, **args)
         else:
             try:
                 args = kwargs.copy()
-                del args['append_dim']
-                args['mode'] = 'w-'
-                encoding = {kwargs['append_dim']: {'units': 'milliseconds since 2000-01-01T00:00:04.010000',
-                                                   'dtype': 'float'},
-                            'time': {'units': 'milliseconds since 2000-01-01T00:00:04.010000',
-                                     'dtype': 'float'}
-                            }
+                del args["append_dim"]
+                args["mode"] = "w-"
+                encoding = {
+                    kwargs["append_dim"]: {
+                        "units": "milliseconds since 2000-01-01T00:00:04.010000",
+                        "dtype": "float",
+                    },
+                    "time": {
+                        "units": "milliseconds since 2000-01-01T00:00:04.010000",
+                        "dtype": "float",
+                    },
+                }
                 ds.to_zarr(group=child, encoding=encoding, **args)
             except zarr.errors.ContainsGroupError:
                 args = kwargs.copy()
@@ -69,10 +89,12 @@ def raw2zarr(file, **kwargs) -> None:
     @return: None
     """
     dt = raw_to_dt(file)
-    elevations = [np.round(np.median(dt.children[i].elevation.data), 1) for i in list(dt.children)]
+    elevations = [
+        np.round(np.median(dt.children[i].elevation.data), 1) for i in list(dt.children)
+    ]
     try:
-        if kwargs['elevation'] in elevations:
-            del kwargs['elevation']
+        if kwargs["elevation"] in elevations:
+            del kwargs["elevation"]
             dt2zarr2(dt=dt, **kwargs)
             del dt
             write_file_radar(file)

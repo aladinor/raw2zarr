@@ -3,8 +3,7 @@ import zarr
 import xradar as xd
 import numpy as np
 from datatree import DataTree
-from .utils import (
-    get_pars_from_ini,
+from sigmet2zarr.utils import (
     data_accessor,
     fix_angle,
     convert_time,

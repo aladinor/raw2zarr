@@ -3,7 +3,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python=3.10
+  - python>=3.12
   - mamba
   - xradar
   - cartopy
@@ -21,6 +21,7 @@ dependencies:
   - s3fs
   - arm_pyart
   - wradlib
+  - tomllib
   - pip
   - pip:
       - git+https://github.com/aladinor/raw2zarr

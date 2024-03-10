@@ -21,5 +21,30 @@ en diferentes nodos cada elevación del radar usando `Xarray`, `Xradar` y `Datat
   <img src="https://contrib.rocks/image?repo=aladinor/raw2zarr" />
 </a>
 
+### Running on Your Own Machine
+If you are interested in running this material locally on your computer, you will need to follow this workflow:
+
+1. Clone the ["raw2zarr"](https://github.com/aladinor/raw2zarr) repository
+    ```bash
+    git clone https://github.com/aladinor/raw2zarr.git
+    ```
+
+2. Move into the `raw2zarr` directory
+    ```bash
+    cd raw2zarr
+    ```
+
+3. Create and activate your conda environment from the `environment.yml` file
+    ```bash
+    conda env create -f environment.yml
+    conda activate raw2zarr
+    ```
+
+4.  Move into the `notebooks` directory and start up Jupyterlab
+    ```bash
+    cd notebooks/
+    jupyter lab
+    ```
+
 ## Referencias
 * R. P. Abernathey et al., "Cloud-Native Repositories for Big Scientific Data," in Computing in Science & Engineering, vol. 23, no. 2, pp. 26-35, 1 March-April 2021, doi: 10.1109/MCSE.2021.3059437.

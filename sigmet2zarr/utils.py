@@ -114,7 +114,7 @@ def check_if_exist(file: str, path: str = "../results") -> bool:
     @return:
     """
     file_path = f"{path}"
-    file_name = f"{file_path}/{file.split('/')[-2]}_files2.txt"
+    file_name = f"{file_path}/{file.split('/')[-2]}_files.txt"
     try:
         with open(file_name, "r", newline="\n") as txt_file:
             lines = txt_file.readlines()

@@ -69,6 +69,7 @@ def dt2zarr2(
                 store=zarr_store,
                 zarr_version=zarr_version,
                 consolidated=consolidated,
+                append_dim=append_dim,
             )
         else:
             mode = "w-"

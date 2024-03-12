@@ -72,14 +72,14 @@ def create_query(date, radar_site) -> str:
         return f"l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d}"
 
 
-def data_accessor(file) -> str:
+def data_accessor(file: str, cache_storage: str = "/tmp/radar/") -> xr.Dataset:
     """
     Open AWS S3 file(s), which can be resolved locally by file caching
     """
     return fsspec.open_local(
-        f"simplecache::s3://{file}",
+        f"filecache::s3://{file}",
         s3={"anon": True},
-        filecache={"cache_storage": "/tmp/radar/"},
+        filecache={"cache_storage": cache_storage},
     )
 
 

@@ -1,3 +1,5 @@
+import os
+import shutil
 import zarr
 import xradar as xd
 import numpy as np
@@ -11,9 +13,10 @@ from sigmet2zarr.utils import (
 )
 
 
-def raw_to_dt(file: str) -> DataTree:
+def raw_to_dt(file: str, cache_storage: str = "/tmp/radar/") -> DataTree:
     """
     Function that convert sigmet files into a datatree using xd.io.open_iris_datatree
+    @param cache_storage: locally caching remote files path
     @param file: radar file path
     @return: xradar datatree with all sweeps within each file
     """
@@ -30,6 +33,7 @@ def raw_to_dt(file: str) -> DataTree:
             for j in list(dt.children)
         }
     )
+    shutil.rmtree(cache_storage)
     return DataTree.from_dict({swps[k]: data[k] for k in list(data.keys())})
 
 

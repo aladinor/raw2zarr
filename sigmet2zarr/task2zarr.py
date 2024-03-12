@@ -24,7 +24,7 @@ def raw_to_dt(file: str, cache_storage: str = "/tmp/radar/") -> DataTree:
     elev = np.array(load_toml("../config/radar.toml")[radar_name]["elevations"])
     swps = {j: f"sweep_{idx}" for idx, j in enumerate(elev)}
     data = {}
-    dt = xd.io.open_iris_datatree(data_accessor(file))
+    dt = xd.io.open_iris_datatree(data_accessor(file, cache_storage))
     data.update(
         {
             float(dt[j].sweep_fixed_angle.values): fix_angle(

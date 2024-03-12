@@ -106,9 +106,11 @@ def raw2zarr(
     mode: str = "a",
     consolidated: bool = True,
     p2c: str = "../results",
+    cache_storage: str = "/tmp/radar/",
 ) -> None:
     """
     Main function to convert sigmet radar files into xradar datatree and save them using zarr format
+    @param cache_storage: locally caching remote files path
     @param consolidated: Xarray consolidated metadata. Default True
     @param p2c: path to write a file where each radar filename will be written once is processed.
     @param mode:  Xarray.to_zarr mode. Options are "w", "w-", "a", "a-", r+", None
@@ -120,7 +122,7 @@ def raw2zarr(
     @param file: radar file path
     @return: None
     """
-    dt = raw_to_dt(file)
+    dt = raw_to_dt(file, cache_storage=cache_storage)
     elevations = [
         np.round(np.median(dt.children[i].elevation.data), 1) for i in list(dt.children)
     ]

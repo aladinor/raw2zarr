@@ -1,4 +1,4 @@
-<img src="radar_FAIR.jpeg" alt="thumbnail" width="800"/>
+<img src="radar_FAIR.png" alt="thumbnail" width="800"/>
 
 # FAIR open radar data
 [![DOI](https://zenodo.org/badge/658848435.svg)](https://zenodo.org/doi/10.5281/zenodo.10069535)

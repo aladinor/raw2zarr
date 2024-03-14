@@ -33,7 +33,7 @@ def raw_to_dt(file: str, cache_storage: str = "/tmp/radar/") -> DataTree:
             for j in list(dt.children)
         }
     )
-    shutil.rmtree(cache_storage)
+    shutil.rmtree(cache_storage, ignore_errors=True)
     return DataTree.from_dict({swps[k]: data[k] for k in list(data.keys())})
 
 
@@ -67,14 +67,18 @@ def dt2zarr2(
         ds[append_dim] = _time
         ds = ds.expand_dims(dim=append_dim, axis=0).set_coords(append_dim)
         if child in nodes:
-            ds.to_zarr(
-                group=child,
-                mode=mode,
-                store=zarr_store,
-                zarr_version=zarr_version,
-                consolidated=consolidated,
-                append_dim=append_dim,
-            )
+            try:
+                ds.to_zarr(
+                    group=child,
+                    mode=mode,
+                    store=zarr_store,
+                    zarr_version=zarr_version,
+                    consolidated=consolidated,
+                    append_dim=append_dim,
+                )
+            except ValueError as e:
+                print("Corrupted file. %s %a" % (child, str(_time)))
+                continue
         else:
             mode = "w-"
             encoding = {

@@ -156,6 +156,7 @@ cython_debug/
 results/
 zarr/
 .idea/
+cache/
 sigmet2zarr.egg-info
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can

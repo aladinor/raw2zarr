@@ -85,12 +85,12 @@ def dt2zarr2(
                 append_dim: {
                     "units": "nanoseconds since 2000-01-01T00:00:00.00",
                     "dtype": "float64",
-                    "_FillValue": "nan",
+                    "_FillValue": np.datetime64("NaT"),
                 },
                 "time": {
                     "units": "nanoseconds since 2000-01-01T00:00:00.00",
                     "dtype": "float64",
-                    "_FillValue": "nan",
+                    "_FillValue": np.datetime64("NaT"),
                 },
             }
             ds.to_zarr(

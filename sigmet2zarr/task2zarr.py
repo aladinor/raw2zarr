@@ -83,12 +83,14 @@ def dt2zarr2(
             mode = "w-"
             encoding = {
                 append_dim: {
-                    "units": "milliseconds since 2000-01-01T00:00:04.010000",
-                    "dtype": "float",
+                    "units": "nanoseconds since 2000-01-01T00:00:00.00",
+                    "dtype": "float64",
+                    "_FillValue": "nan",
                 },
                 "time": {
-                    "units": "milliseconds since 2000-01-01T00:00:04.010000",
-                    "dtype": "float",
+                    "units": "nanoseconds since 2000-01-01T00:00:00.00",
+                    "dtype": "float64",
+                    "_FillValue": "nan",
                 },
             }
             ds.to_zarr(

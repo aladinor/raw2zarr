@@ -83,8 +83,16 @@ def data_accessor(file: str, cache_storage: str = "/tmp/radar/") -> xr.Dataset:
     )
 
 
-def convert_time(dt) -> pd.to_datetime:
-    return pd.to_datetime(dt.time.values[0])
+def convert_time(ds) -> pd.to_datetime:
+    """
+    Functions that create a timestamps for appending sweep data along a given dimension
+    @param ds: Xarray dataset
+    @return:
+    """
+    for i in ds.time.values:
+        time = pd.to_datetime(i)
+        if not pd.isnull(time):
+            return time
 
 
 def fix_angle(ds: xr.Dataset) -> xr.Dataset:

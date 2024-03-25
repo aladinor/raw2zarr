@@ -59,17 +59,23 @@ def raw_to_dt(file: str, cache_storage: str = "/tmp/radar/") -> DataTree:
     return dtree
 
 
-def exp_dim(dt, append_dim):
-    data_new = {}
+def exp_dim(dt, append_dim) -> DataTree:
+    """
+    Functions that expand dimension to each dataset within the datatree
+    @param dt: xarray.datatree
+    @param append_dim: dimension name which dataset will be expanded. e.g. 'vcp_time'
+    @return: xarray Datatree
+    """
+    data_new: dict = {}
     for child in list(dt.children):
-        ds = dt[child].to_dataset()
+        ds: Dataset = dt[child].to_dataset()
         _time = convert_time(ds)
         if not _time:
             continue
         ds[append_dim] = _time
-        ds = ds.expand_dims(dim=append_dim, axis=0).set_coords(append_dim)
+        ds: Dataset = ds.expand_dims(dim=append_dim, axis=0).set_coords(append_dim)
         data_new[child] = ds
-    dtree = DataTree(name="root", data=dt.root.ds)
+    dtree: DataTree = DataTree(name="root", data=dt.root.ds)
     for sw in data_new.keys():
         DataTree(data_new[sw], name=sw, parent=dtree)
     return dtree

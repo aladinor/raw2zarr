@@ -87,7 +87,7 @@ def convert_time(ds) -> pd.to_datetime:
     """
     Functions that create a timestamps for appending sweep data along a given dimension
     @param ds: Xarray dataset
-    @return:
+    @return: pandas datetime
     """
     for i in ds.time.values:
         time = pd.to_datetime(i)

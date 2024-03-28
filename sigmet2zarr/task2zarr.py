@@ -7,7 +7,6 @@ import numpy as np
 from datatree import DataTree
 from xarray.core.dataset import Dataset
 from xarray.core.dataarray import DataArray
-from xarray import concat
 from sigmet2zarr.utils import (
     data_accessor,
     fix_angle,
@@ -82,6 +81,12 @@ def exp_dim(dt, append_dim) -> DataTree:
 
 
 def time_encoding(dtree, append_dim) -> dict:
+    """
+    Function that creates encoding for time and append_dim variables
+    @param dtree: Input xarray Datatree
+    @param append_dim: dimension name. e.g. "vcp_time"
+    @return: dict with encoding parameters
+    """
     encoding = {}
     if type(dtree) is DataTree:
         for group in list(dtree.groups)[1:]:
@@ -120,21 +125,32 @@ def time_encoding(dtree, append_dim) -> dict:
         return encoding
 
 
-def update_sweep_num(st, dtree):
+def update_sweep_num(st, dtree, append_dim):
+    """
+    Function that updates the sweep_number variable under the root datatree
+    @param st: Zarr Storage
+    @param dtree: new datatree to be added to the Xarray Datatree
+    @param append_dim: dimension
+    @return: Bool. True if updated, false if not updated
+    """
+    encoding: dict = time_encoding(dtree, append_dim)
     dt = datatree.open_datatree(st, engine="zarr")
     root = dt.root.to_dataset()
-    mr = concat(
-        [root["sweep_number"], dtree.root.ds["sweep_number"]], join="inner", dim="sweep"
-    )
-    dt_root = dt.root.ds.drop_dims("sweep").assign(sweep_number=mr)
-    groups = [x for xs in [sw.children for sw in [dt, dtree]] for x in xs]
-    dtr = DataTree(dt_root, name="root")
-    for group in [dt.children, dtree.children]:
-        DataTree(data=dt[group].ds, name=group, parent=dtr)
-    dtr.to_zarr(
-        mode="w",
-        store=st,
-    )
+    sn_root = set(root["sweep_number"].values.tolist())
+    sn_dtre = set(dtree["sweep_number"].values.tolist())
+    if sn_dtre != sn_root.intersection(sn_dtre):
+        sn_root = np.array(list(sn_root.union(sn_dtre)))
+        sn = DataArray(data=sn_root, coords={"sweep": np.array(sn_root)})
+        ds_root = root.drop_dims("sweep").assign(sweep_number=sn)
+        ds_dict = {sw: dt[sw].ds for sw in list(dt.children)}
+        ds_dict.update({sw: dtree[sw].ds for sw in list(dtree.children)})
+        dtr = DataTree(ds_root, name="root")
+        for key in ds_dict.keys():
+            DataTree(data=ds_dict[key], name=key, parent=dtr)
+        dtr.to_zarr(mode="w", store=st, encoding=encoding)
+        return True
+    else:
+        return False
 
 
 def dt2zarr2(
@@ -161,7 +177,6 @@ def dt2zarr2(
         else zarr.DirectoryStore(zarr_store)
     )
     nodes = st.listdir()
-    # todo: check the root dataset and add the sweep_number and sweep_fixed angle before writing
     dtree = exp_dim(dt, append_dim=append_dim)
     if not nodes:
         encoding: dict = time_encoding(dtree, append_dim)
@@ -173,29 +188,30 @@ def dt2zarr2(
             encoding=encoding,
         )
     else:
-        # update_sweep_num(st, dtree)
-        for child in list(dtree.children):
-            ds = dtree[child].to_dataset()
-            encoding = time_encoding(ds, append_dim)
-            if child in nodes:
-                ds.to_zarr(
-                    group=child,
-                    mode=mode,
-                    store=zarr_store,
-                    zarr_version=zarr_version,
-                    consolidated=consolidated,
-                    append_dim=append_dim,
-                )
-            else:
-                mode = "w-"
-                ds.to_zarr(
-                    group=child,
-                    mode=mode,
-                    store=zarr_store,
-                    zarr_version=zarr_version,
-                    consolidated=consolidated,
-                    encoding=encoding,
-                )
+        update = update_sweep_num(st, dtree, append_dim)
+        if not update:
+            for child in list(dtree.children):
+                ds = dtree[child].to_dataset()
+                encoding = time_encoding(ds, append_dim)
+                if child in nodes:
+                    ds.to_zarr(
+                        group=child,
+                        mode=mode,
+                        store=zarr_store,
+                        zarr_version=zarr_version,
+                        consolidated=consolidated,
+                        append_dim=append_dim,
+                    )
+                else:
+                    mode = "w-"
+                    ds.to_zarr(
+                        group=child,
+                        mode=mode,
+                        store=zarr_store,
+                        zarr_version=zarr_version,
+                        consolidated=consolidated,
+                        encoding=encoding,
+                    )
 
 
 def raw2zarr(

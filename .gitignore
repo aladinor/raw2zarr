@@ -155,6 +155,7 @@ cython_debug/
 # folders
 results/
 zarr/
+zarrtest.zarr/
 .idea/
 cache/
 sigmet2zarr.egg-info

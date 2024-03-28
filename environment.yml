@@ -1,7 +1,7 @@
 name: raw2zarr
 channels:
   - conda-forge
-  - defaults
+  - nodefaults
 dependencies:
   - python>=3.12
   - mamba
@@ -24,7 +24,6 @@ dependencies:
   - hvplot
   - datashader
   - pip
+  - pydata-sphinx-theme
   - pip:
       - git+https://github.com/aladinor/raw2zarr
-
-prefix: /home/alfonso/anaconda3/envs/xradar

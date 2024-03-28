@@ -17,7 +17,7 @@ particularly when treating radar data as a time-series dataset, which parallels 
 
 Traditionally, radar data storage involves proprietary formats that demand extensive input-output (I/O) operations,
 leading to prolonged computation times and high hardware requirements. In response, our study introduces a novel d
-ata model designed to address these challenges. Leveraging the Climate and Forecast (CF) format-based
+ata model designed to address these challenges. Leveraging the Climate and Forecast Conventions (CF) format-based
 [FM301](https://community.wmo.int/en/activity-areas/wis/wmo-cf-extensions) hierarchical tree structure,
 endorsed by the World Meteorological Organization (WMO), and Analysis-Ready Cloud-Optimized
 (ARCO; Abernathey et al. 2023) formats, we developed an open data model to arrange, manage, and store radar data in
@@ -62,5 +62,5 @@ If you are interested in running this material locally on your computer, you wil
     jupyter lab
     ```
 
-## Referencias
+## References
 * R. P. Abernathey et al., "Cloud-Native Repositories for Big Scientific Data," in Computing in Science & Engineering, vol. 23, no. 2, pp. 26-35, 1 March-April 2021, doi: 10.1109/MCSE.2021.3059437.

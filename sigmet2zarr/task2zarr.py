@@ -13,10 +13,23 @@ from sigmet2zarr.utils import (
     convert_time,
     write_file_radar,
     load_toml,
+    time_encoding,
 )
 
 
-def raw_to_dt(file: str, cache_storage: str = "/tmp/radar/") -> DataTree:
+def _get_root(dt: DataTree):
+    groups = [
+        i for i in list(dt.groups) if not i.startswith("/sweep") if i not in ["/"]
+    ]
+    root = DataTree(data=dt.root.ds, name="root")
+    for group in groups:
+        DataTree(data=dt[group].ds, name=group[1:], parent=root)
+    return root
+
+
+def raw_to_dt(
+    file: str, append_dim: str, cache_storage: str = "/tmp/radar/"
+) -> DataTree:
     """
     Function that convert sigmet files into a datatree using xd.io.open_iris_datatree
     @param cache_storage: locally caching remote files path
@@ -42,16 +55,8 @@ def raw_to_dt(file: str, cache_storage: str = "/tmp/radar/") -> DataTree:
             if j not in ["radar_parameters"]
         }
     )
-    sn = {elev[i]: sw_num[i] for i in range(len(elev))}
-    act_sn = np.array(
-        [
-            sn[float(dt[j].sweep_fixed_angle.values)]
-            for j in list(dt.children)
-            if j not in ["radar_parameters"]
-        ]
-    )
-    dtree: DataTree = DataTree(data=dt.root.ds, name="root")
-    dtree["sweep_number"] = DataArray(act_sn, dims={"sweep": np.array(len(act_sn))})
+    data = exp_dim(data, append_dim=append_dim)
+    dtree = _get_root(dt)
     for i, sw in enumerate(data.keys()):
         DataTree(data[sw], name=swps[sw], parent=dtree)
     shutil.rmtree(cache_storage, ignore_errors=True)
@@ -65,92 +70,15 @@ def exp_dim(dt, append_dim) -> DataTree:
     @param append_dim: dimension name which dataset will be expanded. e.g. 'vcp_time'
     @return: xarray Datatree
     """
-    data_new: dict = {}
-    for child in list(dt.children):
-        ds: Dataset = dt[child].to_dataset()
+    dt_new = {}
+    for sw, ds in dt.items():
         _time = convert_time(ds)
         if not _time:
             continue
         ds[append_dim] = _time
         ds: Dataset = ds.expand_dims(dim=append_dim, axis=0).set_coords(append_dim)
-        data_new[child] = ds
-    dtree: DataTree = DataTree(name="root", data=dt.root.ds)
-    for sw in data_new.keys():
-        DataTree(data_new[sw], name=sw, parent=dtree)
-    return dtree
-
-
-def time_encoding(dtree, append_dim) -> dict:
-    """
-    Function that creates encoding for time and append_dim variables
-    @param dtree: Input xarray Datatree
-    @param append_dim: dimension name. e.g. "vcp_time"
-    @return: dict with encoding parameters
-    """
-    encoding = {}
-    if type(dtree) is DataTree:
-        for group in list(dtree.groups)[1:]:
-            encoding.update(
-                {
-                    f"{group}": {
-                        f"{append_dim}": dict(
-                            units="nanoseconds since 2000-01-01T00:00:00.00",
-                            dtype="float64",
-                            _FillValue=np.datetime64("NaT"),
-                        ),
-                        "time": dict(
-                            units="nanoseconds since 2000-01-01T00:00:00.00",
-                            dtype="float64",
-                            _FillValue=np.datetime64("NaT"),
-                        ),
-                    }
-                }
-            )
-        return encoding
-    else:
-        encoding.update(
-            {
-                f"{append_dim}": dict(
-                    units="nanoseconds since 2000-01-01T00:00:00.00",
-                    dtype="float64",
-                    _FillValue=np.datetime64("NaT"),
-                ),
-                "time": dict(
-                    units="nanoseconds since 2000-01-01T00:00:00.00",
-                    dtype="float64",
-                    _FillValue=np.datetime64("NaT"),
-                ),
-            }
-        )
-        return encoding
-
-
-def update_sweep_num(st, dtree, append_dim):
-    """
-    Function that updates the sweep_number variable under the root datatree
-    @param st: Zarr Storage
-    @param dtree: new datatree to be added to the Xarray Datatree
-    @param append_dim: dimension
-    @return: Bool. True if updated, false if not updated
-    """
-    encoding: dict = time_encoding(dtree, append_dim)
-    dt = datatree.open_datatree(st, engine="zarr")
-    root = dt.root.to_dataset()
-    sn_root = set(root["sweep_number"].values.tolist())
-    sn_dtre = set(dtree["sweep_number"].values.tolist())
-    if sn_dtre != sn_root.intersection(sn_dtre):
-        sn_root = np.array(list(sn_root.union(sn_dtre)))
-        sn = DataArray(data=sn_root, coords={"sweep": np.array(sn_root)})
-        ds_root = root.drop_dims("sweep").assign(sweep_number=sn)
-        ds_dict = {sw: dt[sw].ds for sw in list(dt.children)}
-        ds_dict.update({sw: dtree[sw].ds for sw in list(dtree.children)})
-        dtr = DataTree(ds_root, name="root")
-        for key in ds_dict.keys():
-            DataTree(data=ds_dict[key], name=key, parent=dtr)
-        dtr.to_zarr(mode="w", store=st, encoding=encoding)
-        return True
-    else:
-        return False
+        dt_new[sw] = ds
+    return dt_new
 
 
 def dt2zarr2(
@@ -177,10 +105,9 @@ def dt2zarr2(
         else zarr.DirectoryStore(zarr_store)
     )
     nodes = st.listdir()
-    dtree = exp_dim(dt, append_dim=append_dim)
     if not nodes:
-        encoding: dict = time_encoding(dtree, append_dim)
-        dtree.to_zarr(
+        encoding: dict = time_encoding(dt, append_dim)
+        dt.to_zarr(
             mode=mode,
             store=zarr_store,
             zarr_version=zarr_version,
@@ -188,30 +115,29 @@ def dt2zarr2(
             encoding=encoding,
         )
     else:
-        update = update_sweep_num(st, dtree, append_dim)
-        if not update:
-            for child in list(dtree.children):
-                ds = dtree[child].to_dataset()
-                encoding = time_encoding(ds, append_dim)
-                if child in nodes:
-                    ds.to_zarr(
-                        group=child,
-                        mode=mode,
-                        store=zarr_store,
-                        zarr_version=zarr_version,
-                        consolidated=consolidated,
-                        append_dim=append_dim,
-                    )
-                else:
-                    mode = "w-"
-                    ds.to_zarr(
-                        group=child,
-                        mode=mode,
-                        store=zarr_store,
-                        zarr_version=zarr_version,
-                        consolidated=consolidated,
-                        encoding=encoding,
-                    )
+        children = [i for i in list(dt.children) if i.startswith("sweep")]
+        for child in children:
+            ds = dt[child].to_dataset()
+            encoding = time_encoding(ds, append_dim)
+            if child in nodes:
+                ds.to_zarr(
+                    group=child,
+                    mode=mode,
+                    store=zarr_store,
+                    zarr_version=zarr_version,
+                    consolidated=consolidated,
+                    append_dim=append_dim,
+                )
+            else:
+                mode = "w-"
+                ds.to_zarr(
+                    group=child,
+                    mode=mode,
+                    store=zarr_store,
+                    zarr_version=zarr_version,
+                    consolidated=consolidated,
+                    encoding=encoding,
+                )
 
 
 def raw2zarr(
@@ -239,9 +165,11 @@ def raw2zarr(
     @param file: radar file path
     @return: None
     """
-    dt = raw_to_dt(file, cache_storage=cache_storage)
+    dt = raw_to_dt(file, append_dim=append_dim, cache_storage=cache_storage)
     elevations = [
-        np.round(np.median(dt.children[i].elevation.data), 1) for i in list(dt.children)
+        np.round(np.median(dt.children[i].elevation.data), 1)
+        for i in list(dt.children)
+        if i not in ["radar_parameters"]
     ]
     if not elevation:
         dt2zarr2(

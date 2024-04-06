@@ -18,8 +18,7 @@ dependencies:
   - ca-certificates
   - certifi
   - openssl
-  - boto3
-  - s3fs
+  - s3fs>=2023.3.0
   - arm_pyart
   - wradlib
   - hvplot

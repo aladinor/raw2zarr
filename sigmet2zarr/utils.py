@@ -6,6 +6,7 @@ import xradar as xd
 import fsspec
 import numpy as np
 from datetime import datetime
+from datatree import DataTree
 import pandas as pd
 import tomllib
 
@@ -150,3 +151,31 @@ def write_file_radar(file: str, path: str = f"../results") -> None:
     with open(file_name, "a") as txt_file:
         txt_file.write(f"{file}\n")
         txt_file.close()
+
+
+def time_encoding(dtree, append_dim) -> dict:
+    """
+    Function that creates encoding for time and append_dim variables
+    @param dtree: Input xarray Datatree
+    @param append_dim: dimension name. e.g. "vcp_time"
+    @return: dict with encoding parameters
+    """
+    encoding = {}
+    enc = dict(
+        units="nanoseconds since 2000-01-01T00:00:00.00",
+        dtype="float64",
+        _FillValue=np.datetime64("NaT"),
+    )
+    if type(dtree) is DataTree:
+        groups = [i for i in list(dtree.groups) if i.startswith("/sweep_")]
+        for group in groups:
+            encoding.update({f"{group}": {f"{append_dim}": enc, "time": enc}})
+        return encoding
+    else:
+        encoding.update(
+            {
+                f"{append_dim}": enc,
+                "time": enc,
+            }
+        )
+        return encoding

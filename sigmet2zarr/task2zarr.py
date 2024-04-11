@@ -43,6 +43,7 @@ def raw_to_dt(
 ) -> DataTree:
     """
     Function that convert sigmet files into a datatree using xd.io.open_iris_datatree
+    @param append_dim: dimension where data will be appended
     @param cache_storage: locally caching remote files path
     @param file: radar file path
     @return: xradar datatree with all sweeps within each file
@@ -58,7 +59,7 @@ def raw_to_dt(
     sw_fix: dict[float, int] = {j: sw_num[idx] for idx, j in enumerate(elev)}
     data: dict[float, Dataset] = {}
     dt: DataTree = xd.io.open_iris_datatree(data_accessor(file, cache_storage))
-    _fix_sn(dt, sw_fix)
+    dt: DataTree = _fix_sn(dt, sw_fix)
     data.update(
         {
             float(dt[j].sweep_fixed_angle.values): fix_angle(
@@ -178,15 +179,15 @@ def raw2zarr(
     @param file: radar file path
     @return: None
     """
-    dt = raw_to_dt(file, append_dim=append_dim, cache_storage=cache_storage)
+    dtree = raw_to_dt(file, append_dim=append_dim, cache_storage=cache_storage)
     elevations = [
-        np.round(np.median(dt.children[i].elevation.data), 1)
-        for i in list(dt.children)
+        np.round(np.median(dtree.children[i].elevation.data), 1)
+        for i in list(dtree.children)
         if i not in ["radar_parameters"]
     ]
     if not elevation:
         dt2zarr2(
-            dt=dt,
+            dt=dtree,
             zarr_store=zarr_store,
             zarr_version=zarr_version,
             mode=mode,
@@ -196,7 +197,7 @@ def raw2zarr(
         write_file_radar(file, p2c)
     elif elevation in elevations:
         dt2zarr2(
-            dt=dt,
+            dt=dtree,
             zarr_store=zarr_store,
             zarr_version=zarr_version,
             mode=mode,

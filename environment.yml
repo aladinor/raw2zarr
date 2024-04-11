@@ -19,7 +19,7 @@ dependencies:
   - certifi
   - openssl
   - s3fs>=2024.3.1
-  - arm_pyart
+  - arm_pyart>=1.18.1
   - wradlib
   - hvplot
   - datashader

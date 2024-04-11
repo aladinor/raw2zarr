@@ -7,6 +7,7 @@ import numpy as np
 from datatree import DataTree
 from xarray.core.dataset import Dataset
 from xarray.core.dataarray import DataArray
+from xarray import full_like
 from sigmet2zarr.utils import (
     data_accessor,
     fix_angle,
@@ -27,6 +28,16 @@ def _get_root(dt: DataTree):
     return root
 
 
+def _fix_sn(dt: DataTree, sw_num: list[int]):
+    groups = [i for i in list(dt.groups) if i.startswith("/sweep")]
+    for group in groups:
+        sn: float = float(dt[group].ds.sweep_fixed_angle.values)
+        nsn: int = sw_num[sn]
+        new_sn = full_like(dt[group].ds.sweep_number, nsn)
+        dt[group]["sweep_number"] = new_sn
+    return dt
+
+
 def raw_to_dt(
     file: str, append_dim: str, cache_storage: str = "/tmp/radar/"
 ) -> DataTree:
@@ -44,8 +55,10 @@ def raw_to_dt(
         load_toml("../config/radar.toml")[radar_name]["sweep_number"]
     )
     swps: dict[float, str] = {j: f"sweep_{idx}" for idx, j in enumerate(elev)}
+    sw_fix: dict[float, int] = {j: sw_num[idx] for idx, j in enumerate(elev)}
     data: dict[float, Dataset] = {}
     dt: DataTree = xd.io.open_iris_datatree(data_accessor(file, cache_storage))
+    _fix_sn(dt, sw_fix)
     data.update(
         {
             float(dt[j].sweep_fixed_angle.values): fix_angle(

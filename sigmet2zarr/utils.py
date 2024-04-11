@@ -96,7 +96,7 @@ def convert_time(ds) -> pd.to_datetime:
             return time
 
 
-def fix_angle(ds: xr.Dataset) -> xr.Dataset:
+def fix_angle(ds: xr.Dataset, **kwargs) -> xr.Dataset:
     """
     This function reindex the radar azimuth angle to make all sweeps starts and end at the same angle
     @param ds: xarray dataset containing and xradar object
@@ -109,10 +109,16 @@ def fix_angle(ds: xr.Dataset) -> xr.Dataset:
     ds = xd.util.remove_duplicate_rays(ds)
     az = len(np.arange(start_ang, stop_ang))
     ar = az / len(ds.azimuth.data)
-    tol = ar / 2
-    return xd.util.reindex_angle(
-        ds, start_ang, stop_ang, ar, direction, method="nearest", tolerance=tol
-    )
+    if kwargs.get("tolerance"):
+        return xd.util.reindex_angle(
+            ds, start_ang, stop_ang, ar, direction, method="nearest", **kwargs
+        )
+    else:
+        tol = ar / 1.6
+        kwargs["tolerance"] = tol
+        return xd.util.reindex_angle(
+            ds, start_ang, stop_ang, ar, direction, method="nearest", **kwargs
+        )
 
 
 def check_if_exist(file: str, path: str = "../results") -> bool:

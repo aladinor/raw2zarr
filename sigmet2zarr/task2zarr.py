@@ -58,7 +58,7 @@ def raw_to_dt(
     swps: dict[float, str] = {j: f"sweep_{idx}" for idx, j in enumerate(elev)}
     sw_fix: dict[float, int] = {j: sw_num[idx] for idx, j in enumerate(elev)}
     data: dict[float, Dataset] = {}
-    dt: DataTree = xd.io.open_iris_datatree(data_accessor(file, cache_storage))
+    dt: DataTree = xd.io.open_iris_datatree(data_accessor(file))
     dt: DataTree = _fix_sn(dt, sw_fix)
     data.update(
         {
@@ -73,7 +73,6 @@ def raw_to_dt(
     dtree = _get_root(dt)
     for i, sw in enumerate(data.keys()):
         DataTree(data[sw], name=swps[sw], parent=dtree)
-    shutil.rmtree(cache_storage, ignore_errors=True)
     return dtree
 
 
@@ -90,7 +89,7 @@ def exp_dim(dt, append_dim) -> DataTree:
         if not _time:
             continue
         ds[append_dim] = _time
-        ds: Dataset = ds.expand_dims(dim=append_dim, axis=0).set_coords(append_dim)
+        ds: Dataset = ds.set_coords(append_dim).expand_dims(dim=append_dim, axis=0)
         dt_new[sw] = ds
     return dt_new
 
@@ -163,11 +162,9 @@ def raw2zarr(
     mode: str = "a",
     consolidated: bool = True,
     p2c: str = "../results",
-    cache_storage: str = "/tmp/radar/",
 ) -> None:
     """
     Main function to convert sigmet radar files into xradar datatree and save them using zarr format
-    @param cache_storage: locally caching remote files path
     @param consolidated: Xarray consolidated metadata. Default True
     @param p2c: path to write a file where each radar filename will be written once is processed.
     @param mode:  Xarray.to_zarr mode. Options are "w", "w-", "a", "a-", r+", None
@@ -179,7 +176,7 @@ def raw2zarr(
     @param file: radar file path
     @return: None
     """
-    dtree = raw_to_dt(file, append_dim=append_dim, cache_storage=cache_storage)
+    dtree = raw_to_dt(file, append_dim=append_dim)
     elevations = [
         np.round(np.median(dtree.children[i].elevation.data), 1)
         for i in list(dtree.children)

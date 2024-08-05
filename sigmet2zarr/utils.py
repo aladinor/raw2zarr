@@ -5,7 +5,7 @@ import xarray as xr
 import xradar as xd
 import fsspec
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timezone
 from datatree import DataTree
 import pandas as pd
 import tomllib
@@ -41,7 +41,7 @@ def time_3d(time_array, numbers) -> np.ndarray:
     :param numbers: number of times in the new axis
     :return: 3d time array
     """
-    v_func = np.vectorize(lambda x: datetime.utcfromtimestamp(x))
+    v_func = np.vectorize(lambda x: datetime.fromtimestamp(x, tz=timezone.utc))
     _time = v_func(time_array)
     times = np.repeat(_time[np.newaxis, :], numbers, axis=0)
     return times
@@ -53,7 +53,7 @@ def get_time(time_array) -> np.ndarray:
     :param time_array: 2d timestamp array
     :return: 3d time array
     """
-    v_func = np.vectorize(lambda x: datetime.utcfromtimestamp(x))
+    v_func = np.vectorize(lambda x: datetime.fromtimestamp(x, tz=timezone.utc))
     _time = v_func(time_array)
     return _time
 
@@ -73,15 +73,12 @@ def create_query(date, radar_site) -> str:
         return f"l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d}"
 
 
-def data_accessor(file: str, cache_storage: str = "/tmp/radar/") -> xr.Dataset:
+def data_accessor(file: str):
     """
-    Open AWS S3 file(s), which can be resolved locally by file caching
+    Open remotely a AWS S3 file using fsspec
     """
-    return fsspec.open_local(
-        f"filecache::s3://{file}",
-        s3={"anon": True},
-        filecache={"cache_storage": cache_storage},
-    )
+    with fsspec.open(file, mode="rb", anon=True) as f:
+        return f.read()
 
 
 def convert_time(ds) -> pd.to_datetime:
@@ -108,17 +105,10 @@ def fix_angle(ds: xr.Dataset, **kwargs) -> xr.Dataset:
     direction = angle_dict["direction"]
     ds = xd.util.remove_duplicate_rays(ds)
     az = len(np.arange(start_ang, stop_ang))
-    ar = az / len(ds.azimuth.data)
-    if kwargs.get("tolerance"):
-        return xd.util.reindex_angle(
-            ds, start_ang, stop_ang, ar, direction, method="nearest", **kwargs
-        )
-    else:
-        tol = ar / 1.6
-        kwargs["tolerance"] = tol
-        return xd.util.reindex_angle(
-            ds, start_ang, stop_ang, ar, direction, method="nearest", **kwargs
-        )
+    ar = np.round(az / len(ds.azimuth.data), 2)
+    return xd.util.reindex_angle(
+        ds, start_ang, stop_ang, ar, direction, method="nearest", **kwargs
+    )
 
 
 def check_if_exist(file: str, path: str = "../results") -> bool:

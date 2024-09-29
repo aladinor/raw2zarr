@@ -4,6 +4,7 @@ import numpy as np
 from datatree import DataTree
 from xarray.core.dataset import Dataset
 from xarray import full_like
+from zarr.errors import ContainsGroupError
 from sigmet2zarr.utils import (
     data_accessor,
     fix_angle,
@@ -117,7 +118,6 @@ def dt2zarr2(
     zarr_store: str,
     zarr_version: int,
     append_dim: str,
-    mode: str,
     consolidated: bool,
 ) -> None:
     """
@@ -135,40 +135,33 @@ def dt2zarr2(
         if zarr_version == 3
         else zarr.DirectoryStore(zarr_store)
     )
-    nodes = st.listdir()
-    if not nodes:
-        encoding: dict = time_encoding(dt, append_dim)
-        dt.to_zarr(
-            mode=mode,
-            store=zarr_store,
-            zarr_version=zarr_version,
-            consolidated=consolidated,
-            encoding=encoding,
-        )
-    else:
-        children = [i for i in list(dt.children) if i.startswith("sweep")]
-        for child in children:
-            ds = dt[child].to_dataset()
+
+    for node in dt.subtree:
+        ds = node.to_dataset()
+        group_path = node.path
+        if group_path.startswith("/sweep"):
             encoding = time_encoding(ds, append_dim)
-            if child in nodes:
+        else:
+            encoding = {}
+        try:
+            ds.to_zarr(
+                store=st,
+                group=group_path,
+                mode="w-",
+                encoding=encoding,
+                consolidated=consolidated,
+            )
+        except ContainsGroupError:
+            try:
                 ds.to_zarr(
-                    group=child,
-                    mode=mode,
-                    store=zarr_store,
-                    zarr_version=zarr_version,
+                    store=st,
+                    group=group_path,
+                    mode="a-",
                     consolidated=consolidated,
-                    append_dim=append_dim,
+                    append_dim="vcp_time",
                 )
-            else:
-                mode = "w-"
-                ds.to_zarr(
-                    group=child,
-                    mode=mode,
-                    store=zarr_store,
-                    zarr_version=zarr_version,
-                    consolidated=consolidated,
-                    encoding=encoding,
-                )
+            except ValueError:
+                continue
 
 
 def raw2zarr(

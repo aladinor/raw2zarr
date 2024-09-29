@@ -9,6 +9,57 @@ from datetime import datetime, timezone
 from datatree import DataTree
 import pandas as pd
 import tomllib
+from time import time
+from collections.abc import Iterator
+from typing import Any, List
+
+
+def batch(iterable: List[Any], n: int = 1) -> Iterator[List[Any]]:
+    """
+    Splits a list into consecutive chunks of size `n`.
+
+    This function takes a list and yields successive batches of size `n` from it.
+    If the length of the list is not evenly divisible by `n`, the last batch will
+    contain the remaining elements.
+
+    Parameters
+    ----------
+    iterable : list[Any]
+        The list to be split into batches.
+    n : int, optional
+        The number of items in each batch (default is 1).
+
+    Yields
+    ------
+    Iterator[list[Any]]
+        An iterator that yields slices of the original list of size `n`, except
+        for the last batch which may contain fewer elements if the total number
+        of elements in the list is not evenly divisible by `n`.
+
+    Examples
+    --------
+    >>> list(batch([1, 2, 3, 4, 5], n=2))
+    [[1, 2], [3, 4], [5]]
+
+    >>> list(batch(['a', 'b', 'c', 'd'], n=3))
+    [['a', 'b', 'c'], ['d']]
+    """
+    l = len(iterable)
+    for ndx in range(0, l, n):
+        yield iterable[ndx : min(ndx + n, l)]
+
+
+def timer_func(func):
+    # This function shows the execution time of
+    # the function object passed
+    def wrap_func(*args, **kwargs):
+        t1 = time()
+        result = func(*args, **kwargs)
+        t2 = time()
+        print(f"Function {func.__name__!r} executed in {(t2-t1):.4f}s")
+        return result
+
+    return wrap_func
 
 
 def make_dir(path) -> None:
@@ -89,8 +140,9 @@ def convert_time(ds) -> pd.to_datetime:
     """
     for i in ds.time.values:
         time = pd.to_datetime(i)
-        if not pd.isnull(time):
-            return time
+        if pd.isnull(time):
+            continue
+        return time
 
 
 def fix_angle(ds: xr.Dataset, tolerance: float = None, **kwargs) -> xr.Dataset:

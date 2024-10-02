@@ -8,12 +8,10 @@ dependencies:
   - cartopy
   - fsspec
   - jupyterlab
-  - xarray
   - dask
   - netcdf4
   - bottleneck
   - zarr
-  - xarray-datatree
   - ca-certificates
   - certifi
   - openssl
@@ -27,3 +25,4 @@ dependencies:
   - pip:
       - git+https://github.com/aladinor/raw2zarr
       - git+https://github.com/openradar/xradar.git
+      - git+https://github.com/pydata/xarray.git

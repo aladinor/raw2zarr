@@ -3,6 +3,8 @@
 # FAIR open radar data
 [![DOI](https://zenodo.org/badge/658848435.svg)](https://zenodo.org/doi/10.5281/zenodo.10069535)
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/aladinor/raw2zarr/main)
+
 ## Motivation
 
 Radars are vital in meteorology, detecting severe weather early and enabling timely warnings, saving lives,

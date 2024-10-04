@@ -40,7 +40,7 @@ def radar_convert():
             fs = fsspec.filesystem("s3", anon=True)
             radar_files = [
                 f"s3://{i}" for i in sorted(fs.glob(f"{str_bucket}{query}*"))
-            ]
+            ][:30]
             for files in batch(radar_files, n=12):
                 bag = db.from_sequence(files, npartitions=len(files)).map(
                     accessor_wrapper

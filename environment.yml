@@ -20,9 +20,8 @@ dependencies:
   - wradlib
   - hvplot
   - datashader
+  - xarray>=2024.10
+  - xradar>=0.8.0
   - pip
-  - pydata-sphinx-theme
   - pip:
       - git+https://github.com/aladinor/raw2zarr
-      - git+https://github.com/openradar/xradar.git
-      - git+https://github.com/pydata/xarray.git

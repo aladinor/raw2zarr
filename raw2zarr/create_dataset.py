@@ -38,6 +38,7 @@ def radar_convert():
             query = create_query(date=date_query, radar_site=radar_name)
             str_bucket = "s3://s3-radaresideam/"
             fs = fsspec.filesystem("s3", anon=True)
+            x
             radar_files = [
                 f"s3://{i}" for i in sorted(fs.glob(f"{str_bucket}{query}*"))
             ][:30]

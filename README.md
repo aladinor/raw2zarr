@@ -39,6 +39,11 @@ with the new open data paradigm, emphasizing the FAIR principles (Findable, Acce
   <img src="https://contrib.rocks/image?repo=aladinor/raw2zarr" />
 </a>
 
+> [!WARNING]
+> **This project is currently in high development mode.**
+> Features may change frequently, and some parts of the library may be incomplete or subject to change. Please proceed with caution.
+
+
 ### Running on Your Own Machine
 If you are interested in running this material locally on your computer, you will need to follow this workflow:
 

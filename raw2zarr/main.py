@@ -1,15 +1,16 @@
 from datetime import datetime
+from errno import EXDEV
 
 from raw2zarr.utils import (
     create_query,
     timer_func,
     data_accessor,
+    time_encoding,
 )
 from raw2zarr.task2zarr import prepare2append
 from raw2zarr.dtree_builder import datatree_builder
 import fsspec
 import xradar as xd
-
 
 
 def accessor_wrapper(filename):
@@ -29,12 +30,29 @@ def radar_convert():
     query = create_query(date=date_query, radar_site=radar_name)
     str_bucket = "s3://s3-radaresideam/"
     fs = fsspec.filesystem("s3", anon=True)
-    radar_files = [
-        f"s3://{i}" for i in sorted(fs.glob(f"{str_bucket}{query}*"))
-    ][:100]
+    radar_files = [f"s3://{i}" for i in sorted(fs.glob(f"{str_bucket}{query}*"))][0:12]
 
-    builder = datatree_builder(radar_files, batch_size=4)
-    print(builder)
+    dtree = datatree_builder(radar_files, batch_size=4)
+    time_enc = time_encoding(dtree, append_dim="vcp_time")
+    zv = 2
+    try:
+        path = "../zarr/Guaviare_v2.zarr" if zv == 2 else "../zarr/Guaviare_v3.zarr"
+        _ = dtree.to_zarr(
+            path,
+            encoding=time_enc,
+            consolidated=True,
+            mode="a-",
+            zarr_format=zv,
+        )
+    except ValueError:
+        _ = dtree.to_zarr(
+            "../zarr/Guaviare_new.zarr",
+            consolidated=True,
+            mode="a-",
+            zarr_format=zv,
+        )
+    print(dtree)
+
 
 def main():
     radar_convert()

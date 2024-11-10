@@ -2,16 +2,18 @@ from typing import List, Iterable, Union
 import os
 import xarray as xr
 from xarray import DataTree, Dataset
-from xarray.backends.common  import _normalize_path
+from xarray.backends.common import _normalize_path
+import xradar
 from data_reader import load_radar_data  # Import the data loading function
-from raw2zarr.utils import ensure_dimension
+from raw2zarr.utils import ensure_dimension, fix_angle
+
 
 def datatree_builder(
-        filename_or_obj: Union[str, os.PathLike, Iterable[Union[str, os.PathLike]]],
-        backend: str = "iris",
-        dim: str = "vcp_time",
-        parallel: bool = False,
-        batch_size: int = 12
+    filename_or_obj: Union[str, os.PathLike, Iterable[Union[str, os.PathLike]]],
+    backend: str = "iris",
+    dim: str = "vcp_time",
+    parallel: bool = False,
+    batch_size: int = 12,
 ) -> DataTree:
     """
     Load radar data from files in batches and build a nested DataTree from it.
@@ -34,20 +36,29 @@ def datatree_builder(
     # Load radar data in batches
     filename_or_obj = _normalize_path(filename_or_obj)
 
-    for dtree_batch in load_radar_data(filename_or_obj, backend=backend, parallel=parallel, batch_size=batch_size):
+    for dtree_batch in load_radar_data(
+        filename_or_obj, backend=backend, parallel=parallel, batch_size=batch_size
+    ):
         if not dtree_batch:
-            raise ValueError("A batch of DataTrees is empty. Ensure data is loaded correctly.")
+            raise ValueError(
+                "A batch of DataTrees is empty. Ensure data is loaded correctly."
+            )
 
         # Process each DataTree in the current batch
         for dtree in dtree_batch:
             task_name = dtree.attrs.get("scan_name", "default_task").strip()
-
+            dtree = (
+                dtree.pipe(ensure_dimension, dim).pipe(fix_angle)
+            ).xradar.georeference()
             if task_name in nested_dict:
-               nested_dict[task_name] = append_dataset_to_node(nested_dict[task_name], dtree, dim=dim)
+                nested_dict[task_name] = append_dataset_to_node(
+                    nested_dict[task_name], dtree, dim=dim
+                )
             else:
                 nested_dict[task_name] = dtree
 
     # Final DataTree assembly
+
     return DataTree.from_dict(nested_dict)
 
 
@@ -59,9 +70,6 @@ def append_dataset_to_node(existing_node: DataTree, new_node: DataTree, dim: str
         existing_node (DataTree): The existing node in the nested DataTree to which data will be appended.
         new_node (DataTree): The new DataTree node containing datasets to be appended.
     """
-
-    existing_node = ensure_dimension(existing_node, dim)
-    new_node = ensure_dimension(new_node, dim)
     new_dtree = {}
     for child in new_node.subtree:
         node_name = child.path
@@ -75,4 +83,3 @@ def append_dataset_to_node(existing_node: DataTree, new_node: DataTree, dim: str
             new_dtree = new_node[node_name].to_dataset()
 
     return DataTree.from_dict(new_dtree)
-

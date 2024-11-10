@@ -3,17 +3,20 @@ import os
 import xradar
 import dask.bag as db
 from xarray import DataTree
-from xarray.backends.common  import _normalize_path
-from raw2zarr.utils import prepare_for_read, batch
+from xarray.backends.common import _normalize_path
+from raw2zarr.utils import prepare_for_read, batch, fix_angle
+from multiprocessing import Pool
 
 
 def accessor_wrapper(
-        filename_or_obj: str | os.PathLike | Iterable[str | os.PathLike],
-        backend: str = "iris"
+    filename_or_obj: str | os.PathLike | Iterable[str | os.PathLike],
+    backend: str = "iris",
 ) -> DataTree:
     """Wrapper function to load radar data for a single file or iterable of files with fsspec and compression check."""
     try:
-        if isinstance(filename_or_obj, Iterable) and not isinstance(filename_or_obj, (str, os.PathLike)):
+        if isinstance(filename_or_obj, Iterable) and not isinstance(
+            filename_or_obj, (str, os.PathLike)
+        ):
             results = []
             for file in filename_or_obj:
                 prepared_file = prepare_for_read(file)
@@ -33,15 +36,22 @@ def _load_file(file, backend) -> DataTree:
         return xradar.io.open_iris_datatree(file)
     elif backend == "odim":
         return xradar.io.open_odim_datatree(file)
+    elif backend == "nexradlevel2":
+        return xradar.io.open_nexradlevel2_datatree(file)
     else:
         raise ValueError(f"Unsupported backend: {backend}")
 
 
+def _process_file(args):
+    file, backend = args
+    return accessor_wrapper(file, backend=backend)
+
+
 def load_radar_data(
-        filename_or_obj: str | os.PathLike | Iterable[str | os.PathLike],
-        backend: str = "iris",
-        parallel: bool = False,
-        batch_size: int = 12
+    filename_or_obj: str | os.PathLike | Iterable[str | os.PathLike],
+    backend: str = "iris",
+    parallel: bool = False,
+    batch_size: int = 12,
 ) -> Iterable[List[DataTree]]:
     """
     Load radar data from files in batches to avoid memory overload.
@@ -61,8 +71,17 @@ def load_radar_data(
         ls_dtree = []
 
         if parallel:
-            bag = db.from_sequence(files_batch, npartitions=len(files_batch)).map(accessor_wrapper, backend=backend)
-            ls_dtree.extend(bag.compute())
+            # bag = db.from_sequence(files_batch, npartitions=len(files_batch)).map(accessor_wrapper, backend=backend)
+            # ls_dtree.extend(bag.compute())
+
+            # Number of processes to use
+            num_processes = min(len(files_batch), os.cpu_count())
+            files_with_backend = [(file, backend) for file in files_batch]
+            with Pool(num_processes) as pool:
+                results = pool.map(_process_file, files_with_backend)
+
+            # Extend ls_dtree with results
+            ls_dtree.extend(results)
         else:
             for file_path in files_batch:
                 result = accessor_wrapper(file_path, backend=backend)

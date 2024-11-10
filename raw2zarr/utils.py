@@ -16,7 +16,6 @@ import gzip
 import bz2
 
 
-
 def batch(iterable: List[Any], n: int = 1) -> Iterator[List[Any]]:
     """
     Splits a list into consecutive chunks of size `n`.
@@ -148,33 +147,6 @@ def convert_time(ds) -> pd.to_datetime:
         return time
 
 
-def fix_angle(ds: xr.Dataset, tolerance: float = None, **kwargs) -> xr.Dataset:
-    """
-    This function reindex the radar azimuth angle to make all sweeps starts and end at the same angle
-    @param tolerance: Tolerance at which angle reindex will be performed
-    @param ds: xarray dataset containing and xradar object
-    @return: azimuth reindex xarray dataset
-    """
-    angle_dict = xd.util.extract_angle_parameters(ds)
-    start_ang = angle_dict["start_angle"]
-    stop_ang = angle_dict["stop_angle"]
-    direction = angle_dict["direction"]
-    ds = xd.util.remove_duplicate_rays(ds)
-    az = len(np.arange(start_ang, stop_ang))
-    ar = np.round(az / len(ds.azimuth.data), 2)
-    tolerance = ar if not tolerance else tolerance
-    return xd.util.reindex_angle(
-        ds,
-        start_ang,
-        stop_ang,
-        ar,
-        direction,
-        method="nearest",
-        tolerance=tolerance,
-        **kwargs,
-    )
-
-
 def check_if_exist(file: str, path: str = "../results") -> bool:
     """
     Function that check if a sigmet file was already processed based on a txt file that written during the conversion
@@ -227,9 +199,19 @@ def time_encoding(dtree, append_dim) -> dict:
         _FillValue=np.datetime64("NaT"),
     )
     if type(dtree) is DataTree:
-        groups = [i for i in list(dtree.groups) if i.startswith("/sweep_")]
-        for group in groups:
-            encoding.update({f"{group}": {f"{append_dim}": enc, "time": enc}})
+        #  [dtree[node].data_vars for node in dtree.match("sweep_*")]
+        encoding = (
+            {
+                f"{group.parent.path}": {f"{append_dim}": enc}  # , "time": enc}
+                for group in dtree.match("sweep_*").leaves
+                if append_dim in list(group.variables)
+            }
+            if isinstance(dtree, DataTree)
+            else {}
+        )
+        encoding.update(
+            {f"{group.path}": {"time": enc} for group in dtree.match("sweep_*").leaves}
+        )
         return encoding
     else:
         encoding.update(
@@ -239,7 +221,6 @@ def time_encoding(dtree, append_dim) -> dict:
             }
         )
         return encoding
-
 
 
 def prepare_for_read(filename):
@@ -262,7 +243,7 @@ def prepare_for_read(filename):
         File-like object from which data can be read.
     """
     # If already a file-like object, return as-is
-    if hasattr(filename, 'read'):
+    if hasattr(filename, "read"):
         return filename
 
     # Check if S3 path, and open with fsspec
@@ -271,53 +252,35 @@ def prepare_for_read(filename):
             return f.read()
     else:
         # Open a local file and read the first few bytes to check for compression
-        file = open(filename, 'rb')
+        file = open(filename, "rb")
 
     # Read first few bytes to check for compression (only for local files)
     magic = file.read(3)
     file.seek(0)  # Reset pointer to beginning after reading header
 
     # Detect and handle gzip compression
-    if magic.startswith(b'\x1f\x8b'):
+    if magic.startswith(b"\x1f\x8b"):
         return gzip.GzipFile(fileobj=file)
 
     # Detect and handle bzip2 compression
-    if magic.startswith(b'BZh'):
+    if magic.startswith(b"BZh"):
         return bz2.BZ2File(fileobj=file)
 
     # Return the file object as-is if no compression detected
     return file
 
 
-# def exp_dim(dt: dict[str, Dataset], append_dim: str = "vcp_time") -> dict:
-#     """
-#     Functions that expand dimension to each dataset within the datatree
-#     @param dt: xarray.datatree
-#     @param append_dim: dimension name which dataset will be expanded. e.g. 'vcp_time'
-#     @return: xarray Datatree
-#     """
-#     for sw, ds in dt.items():
-#         if sw.startswith("sweep"):
-#             _time = convert_time(ds)
-#             ds[append_dim] = _time
-#             ds: Dataset = ds.set_coords(append_dim).expand_dims(dim=append_dim, axis=0)
-#         dt[sw] = ds
-#     return dt
-
 def exp_dim(dt: DataTree, append_dim: str):
     try:
         start_time = dt.time_coverage_start.item()
-        print(start_time)
     except ValueError as e:
         print(e)
-        print(dt.time_coverage_start.item())
     for node in dt.subtree:
         ds = node.to_dataset()
-        ds[append_dim] = start_time
+        ds[append_dim] = pd.to_datetime(start_time)
         ds = ds.set_coords(append_dim).expand_dims(dim=append_dim, axis=0)
         dt[node.path].ds = ds
     return dt
-
 
 
 def ensure_dimension(dt: xr.DataTree, dim: str) -> xr.Dataset:
@@ -336,4 +299,35 @@ def ensure_dimension(dt: xr.DataTree, dim: str) -> xr.Dataset:
     dims = [node.dims for node in dt.subtree if dim in node.dims]
     if not dims:
         return exp_dim(dt, dim)
+    return dt
+
+
+def fix_angle(dt: xr.DataTree, tolerance: float = None, **kwargs) -> xr.DataTree:
+    """
+    This function reindex the radar azimuth angle to make all sweeps starts and end at the same angle
+    @param tolerance: Torelance for angle reindex.
+    @param ds: xarray dataset containing and xradar object
+    @return: azimuth reindex xarray dataset
+    """
+    for node in dt.match("sweep_*"):
+        ds = dt[node].to_dataset()
+        ds["time"] = ds.time.load()
+        angle_dict = xd.util.extract_angle_parameters(ds)
+        start_ang = angle_dict["start_angle"]
+        stop_ang = angle_dict["stop_angle"]
+        direction = angle_dict["direction"]
+        ds = xd.util.remove_duplicate_rays(ds)
+        az = len(np.arange(start_ang, stop_ang))
+        ar = np.round(az / len(ds.azimuth.data), 2)
+        tolerance = ar if not tolerance else tolerance
+        ds = xd.util.reindex_angle(
+            ds,
+            start_ang,
+            stop_ang,
+            ar,
+            direction,
+            method="nearest",
+            tolerance=tolerance,
+        )
+        dt[node].ds = ds
     return dt

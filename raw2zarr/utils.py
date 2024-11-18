@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+from idlelib.iomenu import encoding
+
 import xarray as xr
 import xradar as xd
 import fsspec
@@ -185,45 +187,89 @@ def write_file_radar(file: str, path: str = f"../results") -> None:
         txt_file.close()
 
 
-def time_encoding(dtree, append_dim) -> dict:
+#
+# def time_encoding(dtree, append_dim) -> dict:
+#     """
+#     Function that creates encoding for time and append_dim variables
+#     @param dtree: Input xarray Datatree
+#     @param append_dim: dimension name. e.g. "vcp_time"
+#     @return: dict with encoding parameters
+#     """
+#     encoding = {}
+#     enc = dict(
+#         units="nanoseconds since 1950-01-01T00:00:00.00",
+#         dtype="float64",
+#         _FillValue=np.datetime64("NaT"),
+#     )
+#     if isinstance(dtree, DataTree):
+#
+#         # append_dim encoding
+#         encoding = {f"{dtree[group].path}": {f"{append_dim}": enc} for group in dtree.groups}
+#
+#         # time encoding (only sweeps)
+#         encoding.update(
+#             {f"{node}": {"time": enc, append_dim: enc} for node in dtree.match("*/sweep_*").groups[2:]}
+#         )
+#         try:
+#             encoding.pop("/")
+#         except KeyError:
+#             pass
+#     else:
+#         encoding.update(
+#             {
+#                 f"{append_dim}": enc,
+#                 "time": enc,
+#             }
+#         )
+#     return encoding
+
+
+def dtree_encoding(dtree, append_dim) -> dict:
     """
-    Function that creates encoding for time and append_dim variables
-    @param dtree: Input xarray Datatree
-    @param append_dim: dimension name. e.g. "vcp_time"
-    @return: dict with encoding parameters
+    Function that creates encoding for time, append_dim, and all variables in datasets within the DataTree.
+
+    Parameters:
+        dtree (DataTree): Input xarray DataTree.
+        append_dim (str): The name of the dimension to encode (e.g., "vcp_time").
+
+    Returns:
+        dict: A dictionary with encoding parameters for variables and coordinates.
     """
-    encoding = {}
-    enc = dict(
-        units="nanoseconds since 2000-01-01T00:00:00.00",
-        dtype="float64",
-        _FillValue=np.datetime64("NaT"),
+
+    _encoding = {}
+    # Base encoding for time-related variables
+    time_enc = dict(
+        units="nanoseconds since 1950-01-01T00:00:00.00",
+        dtype="int64",
+        _FillValue=-9999,
     )
-    if type(dtree) is DataTree:
-        #  [dtree[node].data_vars for node in dtree.match("sweep_*")]
-        encoding = (
-            {
-                f"{group.parent.path}": {f"{append_dim}": enc}  # , "time": enc}
-                for group in dtree.match("sweep_*").leaves
-                if append_dim in list(group.variables)
-            }
-            if isinstance(dtree, DataTree)
-            else {}
-        )
-        encoding.update(
-            {f"{group.path}": {"time": enc} for group in dtree.match("sweep_*").leaves}
-        )
-        return encoding
+    # Base encoding for general variables
+    var_enc = dict(
+        _FillValue=-9999,
+    )
+
+    if isinstance(dtree, DataTree):
+        # Append_dim encoding for each group
+        _encoding = {
+            f"{dtree[group].path}": {f"{append_dim}": time_enc}
+            for group in dtree.groups
+        }
+
+        # Add encoding for sweeps (time and append_dim)
+        for node in dtree.match("*/sweep_*").groups[2:]:
+            for var_name in dtree[node].to_dataset().data_vars:
+                _encoding[node].update({var_name: var_enc, "time": time_enc})
+
+        # Remove root encoding if present
+        _encoding.pop("/", None)
+
     else:
-        encoding.update(
-            {
-                f"{append_dim}": enc,
-                "time": enc,
-            }
-        )
-        return encoding
+        _encoding = {}
+
+    return _encoding
 
 
-def prepare_for_read(filename):
+def prepare_for_read(filename, storage_options={"anon": True}):
     """
     Return a file-like object ready for reading.
 
@@ -241,6 +287,7 @@ def prepare_for_read(filename):
     -------
     file_like : file-like object
         File-like object from which data can be read.
+        @param storage_options:
     """
     # If already a file-like object, return as-is
     if hasattr(filename, "read"):
@@ -248,8 +295,11 @@ def prepare_for_read(filename):
 
     # Check if S3 path, and open with fsspec
     if filename.startswith("s3://"):
-        with fsspec.open(filename, mode="rb", anon=True) as f:
-            return f.read()
+        # with fsspec.open(filename, mode="rb", anon=True) as f:
+        #     return f.read()
+        return fsspec.open(
+            filename, mode="rb", compression="infer", **storage_options
+        ).open()
     else:
         # Open a local file and read the first few bytes to check for compression
         file = open(filename, "rb")
@@ -270,31 +320,79 @@ def prepare_for_read(filename):
     return file
 
 
-def exp_dim(dt: DataTree, append_dim: str):
-    try:
-        start_time = dt.time_coverage_start.item()
-    except ValueError as e:
-        print(e)
+def exp_dim(dt: xr.DataTree, append_dim: str) -> xr.DataTree:
+    """
+    Add a new dimension to all datasets in a DataTree and initialize it with a specific value.
+
+    This function adds a new dimension to each dataset in the DataTree. The dimension is
+    initialized with the `time_coverage_start` value from the root of the DataTree and
+    is added as a coordinate. The new dimension is also expanded to allow additional values.
+
+    Parameters:
+        dt (xr.DataTree): The DataTree containing radar datasets.
+        append_dim (str): The name of the dimension to add.
+
+    Returns:
+        xr.DataTree: A DataTree with the specified dimension added to all datasets.
+
+    Notes:
+        - The new dimension is initialized with the `time_coverage_start` attribute.
+        - Attributes describing the new dimension are added for metadata.
+        - The datasets are updated in place within the DataTree.
+
+    Example:
+        Add a "vcp_time" dimension to all datasets in a DataTree:
+
+        >>> dt = exp_dim(dt, "vcp_time")
+    """
+    # Get the start time from the root node
+    start_time = pd.to_datetime(dt.time_coverage_start.item())
+
+    # Iterate over all nodes in the DataTree
     for node in dt.subtree:
-        ds = node.to_dataset()
-        ds[append_dim] = pd.to_datetime(start_time)
+        ds = node.to_dataset(inherit=False)  # Extract the dataset without inheritance
+
+        # Add the new dimension with the start_time value
+        ds[append_dim] = start_time
+
+        # Define attributes for the new dimension
+        attrs = {
+            "description": "Volume Coverage Pattern time since start of volume scan",
+        }
+        ds[append_dim].attrs = attrs
+
+        # Set the new variable as a coordinate and expand the dimension
         ds = ds.set_coords(append_dim).expand_dims(dim=append_dim, axis=0)
+
+        # Update the dataset in the DataTree node
         dt[node.path].ds = ds
+
     return dt
 
 
-def ensure_dimension(dt: xr.DataTree, dim: str) -> xr.Dataset:
+def ensure_dimension(dt: xr.DataTree, dim: str) -> xr.DataTree:
     """
-    Ensure that a dataset has a given dimension. If the dimension is missing,
-    add it using expand_dims with the specified coordinate value.
+    Ensure that all datasets in a DataTree have a specified dimension.
+
+    This function checks each dataset in the DataTree for the presence of the given dimension.
+    If the dimension is missing in a dataset, it is added using expand_dims.
 
     Parameters:
-        ds (xr.Dataset): The dataset to check.
-        dim (str): The name of the dimension to ensure.
-        coord_value: The coordinate value to use if adding the dimension.
+        dt (xr.DataTree): The DataTree to check and modify.
+        dim (str): The name of the dimension to ensure in each dataset.
 
     Returns:
-        xr.Dataset: Dataset with the specified dimension.
+        xr.DataTree: A DataTree where all datasets have the specified dimension.
+
+    Notes:
+        - If the dimension is already present in a dataset, it is left unchanged.
+        - The new dimension is added without any associated coordinates.
+        - This function modifies datasets in-place within the DataTree.
+
+    Example:
+        Ensure that all datasets in the DataTree have a "vcp_time" dimension:
+
+        >>> dt = ensure_dimension(dt, "vcp_time")
     """
     dims = [node.dims for node in dt.subtree if dim in node.dims]
     if not dims:
@@ -304,14 +402,31 @@ def ensure_dimension(dt: xr.DataTree, dim: str) -> xr.Dataset:
 
 def fix_angle(dt: xr.DataTree, tolerance: float = None, **kwargs) -> xr.DataTree:
     """
-    This function reindex the radar azimuth angle to make all sweeps starts and end at the same angle
-    @param tolerance: Torelance for angle reindex.
-    @param ds: xarray dataset containing and xradar object
-    @return: azimuth reindex xarray dataset
+    Reindex the radar azimuth angle to ensure all sweeps start and end at the same angle.
+
+    This function processes each sweep in a radar dataset stored in an xarray DataTree.
+    It ensures that the azimuth angles are reindexed to cover a consistent range, removing
+    duplicates and interpolating as needed to maintain uniform spacing.
+
+    Parameters:
+        dt (xr.DataTree): The input DataTree containing radar data, with each sweep represented as a node.
+        tolerance (float, optional): Tolerance for angle reindexing. If not specified, it will be
+            calculated based on the angular resolution.
+        **kwargs: Additional arguments passed to `xd.util.reindex_angle`.
+
+    Returns:
+        xr.DataTree: The DataTree with azimuth angles reindexed for all sweeps.
+
+    Notes:
+        - The function assumes the nodes of interest are named using the "sweep_*" pattern.
+        - It uses xradar utilities to extract angle parameters, remove duplicate rays,
+          and reindex angles for uniform azimuth coverage.
+        - The angular resolution (`ar`) is calculated dynamically based on the azimuth range and size.
     """
     for node in dt.match("sweep_*"):
         ds = dt[node].to_dataset()
         ds["time"] = ds.time.load()
+        ds = fix_azimuth(ds)
         angle_dict = xd.util.extract_angle_parameters(ds)
         start_ang = angle_dict["start_angle"]
         stop_ang = angle_dict["stop_angle"]
@@ -331,3 +446,60 @@ def fix_angle(dt: xr.DataTree, tolerance: float = None, **kwargs) -> xr.DataTree
         )
         dt[node].ds = ds
     return dt
+
+
+def fix_azimuth(
+    ds: xr.Dataset, target_size: int = 360, fill_value: str = "extrapolate"
+) -> xr.Dataset:
+    """
+    Ensure that the azimuth dimension in a radar dataset matches a target size.
+
+    This function adjusts the azimuth dimension of a radar dataset to match a specified target size
+    (e.g., 360 for a full sweep). It detects the starting and stopping angles of the azimuth and
+    interpolates data to create a uniform azimuth grid.
+
+    Parameters:
+        ds (xr.Dataset): The dataset containing radar data with an azimuth coordinate.
+        target_size (int, optional): The desired size of the azimuth dimension (default is 360).
+        fill_value (str, optional): Value used to fill points outside the data range during
+            interpolation. Options include:
+            - "extrapolate": Fill using extrapolation (default).
+            - None: Introduce `NaN` for points outside the data range.
+
+    Returns:
+        xr.Dataset: The dataset with a completed and uniformly spaced azimuth dimension.
+
+    Notes:
+        - If the current azimuth size matches the target size, no changes are made.
+        - The interpolation uses `xarray.interp` with the specified `fill_value` behavior.
+        - The azimuth grid is reconstructed to span from the detected start angle to the stop angle.
+    """
+    # Current azimuth size and coordinates
+    current_size = ds["azimuth"].shape[0]
+    azimuth = ds["azimuth"].values
+
+    # Detect start and stop angles from the azimuth
+    start_ang = np.min(azimuth)
+    stop_ang = np.max(azimuth)
+
+    # Check if the azimuth size needs fixing
+    if current_size % target_size != 0:
+        print(f"Fixing azimuth dimension from {current_size} to {target_size}")
+        time_numeric = ds["time"].astype("float64")
+        # Create a new uniform azimuth array within the detected range
+        new_azimuth = np.linspace(start_ang, stop_ang, target_size, endpoint=False)
+
+        # Interpolate data to the new azimuth array
+        ds = ds.interp(azimuth=new_azimuth, kwargs={"fill_value": fill_value})
+        # Interpolate the `time` coordinate explicitly if it exists
+        if "time" not in ds.coords:
+            # Convert datetime64 to numeric
+            time_interpolated = xr.DataArray(
+                pd.to_datetime(np.interp(new_azimuth, azimuth, time_numeric)),
+                dims="azimuth",
+                coords={"azimuth": new_azimuth},
+            )
+            ds["time"] = time_interpolated
+            ds = ds.set_coords("time")
+
+    return ds

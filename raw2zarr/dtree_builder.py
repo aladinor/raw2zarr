@@ -1,7 +1,7 @@
 from typing import Iterable, List, Union
 import os
 
-from xarray import DataTree, Dataset
+from xarray import DataTree
 from xarray.backends.common import _normalize_path
 
 # Relative imports
@@ -82,32 +82,68 @@ def process_file(file: str, engine: str = "nexradlevel2") -> DataTree:
 
 
 def append_sequential(
-    radar_files: Iterable[str | os.PathLike], append_dim: str, zarr_store: str, **kwargs
+    radar_files: Iterable[str | os.PathLike],
+    append_dim: str,
+    zarr_store: str,
+    engine: str = "iris",
+    **kwargs,
 ) -> None:
     """
-    Sequentially loads radar files and appends their data to a Zarr store.
+    Sequentially processes radar files and appends their data to a Zarr store.
 
-    This function processes radar files one at a time, loading each file into a
-    `xarray.DataTree` object and appending its data sequentially to a Zarr store.
-    Although the files are processed sequentially, the write process ensures
-    that data is written in an ordered manner to the Zarr store.
+    This function processes radar files one at a time, converting each file into an
+    `xarray.DataTree` object and sequentially appending its data to the specified Zarr store.
+    The process ensures data is written in an ordered manner along the specified dimension.
 
     Parameters:
-        radar_files (Iterable[str | os.PathLike]): List of radar file paths to process.
-        append_dim (str): The dimension along which to append data in the Zarr store.
-        zarr_store (str): Path to the output Zarr store.
-        **kwargs: Additional arguments, including:
-            - zarr_format (int, optional): The Zarr format version (default: 2).
+        radar_files (Iterable[str | os.PathLike]):
+            An iterable containing file paths to the radar data files to be processed.
+        append_dim (str):
+            The dimension along which data is appended in the Zarr store. Typically used
+            to represent temporal or scan-specific dimensions (e.g., "vcp_time").
+        zarr_store (str):
+            The file path or URL to the output Zarr store where data will be appended.
+        engine (str, optional):
+            The backend engine to use for loading radar data. Options include:
+            - "iris" (default): For IRIS format radar data.
+            - "nexradlevel2": For NEXRAD Level 2 data.
+            - "odim": For ODIM HDF5 format.
+        **kwargs:
+            Additional optional parameters, including:
+            - zarr_format (int, optional): The Zarr format version to use (default: 2).
 
     Returns:
-        None: Outputs data directly to the specified Zarr store.
+        None:
+            The function does not return any values. Processed radar data is written
+            directly to the specified Zarr store.
+
+    Raises:
+        ValueError:
+            If an error occurs during appending to the Zarr store or if the provided
+            dimension or file paths are invalid.
 
     Notes:
-        - Ensures ordered and sequential writing of data to the Zarr store.
-        - Handles encoding for compatibility with Zarr format.
+        - Data is written sequentially to the Zarr store, ensuring an ordered structure
+          along the specified `append_dim`.
+        - Handles encoding for compatibility with the Zarr format, including time and
+          custom dimension variables.
+        - Supports customization via the `engine` parameter for different radar data formats.
+
+    Example:
+        Process a list of radar files sequentially and append them to a Zarr store:
+
+        >>> radar_files = ["file1.RAW", "file2.RAW", "file3.RAW"]
+        >>> zarr_store = "output.zarr"
+        >>> append_sequential(
+        ...     radar_files=radar_files,
+        ...     append_dim="vcp_time",
+        ...     zarr_store=zarr_store,
+        ...     engine="iris",
+        ...     zarr_format=2
+        ... )
     """
     for file in radar_files:
-        dtree = process_file(file)
+        dtree = process_file(file, engine=engine)
         zarr_format = kwargs.get("zarr_format", 2)
         if dtree:
             enc = dtree.encoding
@@ -200,7 +236,6 @@ def append_parallel(
 
     for files in batch(radar_files, n=batch_size):
         bag = db.from_sequence(files, npartitions=len(files)).map(pf)
-
         ls_dtree: List[DataTree] = bag.compute()
         for dtree in ls_dtree:
             zarr_format = kwargs.get("zarr_format", 2)

@@ -1,4 +1,3 @@
-from typing import List, Iterable
 import os
 
 import xradar
@@ -7,7 +6,7 @@ from xarray import DataTree
 from s3fs import S3File
 
 # Relative imports
-from .utils import prepare_for_read, batch
+from .utils import prepare_for_read
 
 
 def accessor_wrapper(

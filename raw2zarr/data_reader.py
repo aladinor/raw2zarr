@@ -1,50 +1,62 @@
 from typing import List, Iterable
 import os
+
 import xradar
+import fsspec
 import dask.bag as db
 from xarray import DataTree
 from xarray.backends.common import _normalize_path
-from raw2zarr.utils import prepare_for_read, batch, fix_angle
-from multiprocessing import Pool
+from s3fs import S3File
+
+# Relative imports
+from .utils import prepare_for_read, batch, fix_angle
 
 
 def accessor_wrapper(
-    filename_or_obj: str | os.PathLike | Iterable[str | os.PathLike],
-    backend: str = "iris",
+    filename_or_obj: str | os.PathLike,
+    engine: str = "iris",
 ) -> DataTree:
     """Wrapper function to load radar data for a single file or iterable of files with fsspec and compression check."""
     try:
-        if isinstance(filename_or_obj, Iterable) and not isinstance(
-            filename_or_obj, (str, os.PathLike)
-        ):
-            results = []
-            for file in filename_or_obj:
-                prepared_file = prepare_for_read(file)
-                results.append(_load_file(prepared_file, backend))
-            return results
-        else:
-            file = prepare_for_read(filename_or_obj)
-            return _load_file(file, backend)
+        file = prepare_for_read(filename_or_obj)
+        return _load_file(file, engine)
     except Exception as e:
         print(f"Error loading {filename_or_obj}: {e}")
         return None
 
 
-def _load_file(file, backend) -> DataTree:
+def _load_file(file, engine) -> DataTree:
     """Helper function to load a single file with the specified backend."""
-    if backend == "iris":
-        return xradar.io.open_iris_datatree(file)
-    elif backend == "odim":
+    if engine == "iris":
+        if isinstance(file, S3File):
+            return xradar.io.open_iris_datatree(file.read())
+        elif isinstance(file, bytes):
+            return xradar.io.open_iris_datatree(file)
+        else:
+            return xradar.io.open_iris_datatree(file)
+    elif engine == "odim":
         return xradar.io.open_odim_datatree(file)
-    elif backend == "nexradlevel2":
-        return xradar.io.open_nexradlevel2_datatree(file)
+    elif engine == "nexradlevel2":
+        if isinstance(file, S3File):
+            local_file = fsspec.open_local(
+                f"simplecache::s3://{file.path}",
+                s3={"anon": True},
+                filecache={"cache_storage": "."},
+            )
+            data_tree = xradar.io.open_nexradlevel2_datatree(local_file)
+
+            # Remove the local file after loading the data
+            os.remove(local_file)
+            return data_tree
+        else:
+            return xradar.io.open_nexradlevel2_datatree(file)
     else:
-        raise ValueError(f"Unsupported backend: {backend}")
+        raise ValueError(f"Unsupported backend: {engine}")
 
 
 def _process_file(args):
-    file, backend = args
-    return accessor_wrapper(file, backend=backend)
+    file, engine = args
+    return accessor_wrapper(file, engine=engine)
 
 
 def load_radar_data(
@@ -52,7 +64,7 @@ def load_radar_data(
     backend: str = "iris",
     parallel: bool = False,
     batch_size: int = 12,
-) -> Iterable[List[DataTree]]:
+) -> DataTree:
     """
     Load radar data from files in batches to avoid memory overload.
 
@@ -71,20 +83,13 @@ def load_radar_data(
         ls_dtree = []
 
         if parallel:
-            # bag = db.from_sequence(files_batch, npartitions=len(files_batch)).map(accessor_wrapper, backend=backend)
-            # ls_dtree.extend(bag.compute())
-
-            # Number of processes to use
-            num_processes = min(len(files_batch), os.cpu_count())
-            files_with_backend = [(file, backend) for file in files_batch]
-            with Pool(num_processes) as pool:
-                results = pool.map(_process_file, files_with_backend)
-
-            # Extend ls_dtree with results
-            ls_dtree.extend(results)
+            bag = db.from_sequence(files_batch, npartitions=len(files_batch)).map(
+                accessor_wrapper, backend=backend
+            )
+            ls_dtree.extend(bag.compute())
         else:
             for file_path in files_batch:
-                result = accessor_wrapper(file_path, backend=backend)
+                result = accessor_wrapper(file_path, engine=backend)
                 if result is not None:
                     ls_dtree.append(result)
 

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-from idlelib.iomenu import encoding
 
 import xarray as xr
 import xradar as xd
@@ -13,7 +12,7 @@ import tomllib
 from time import time
 from collections.abc import Iterator
 from typing import Any, List
-from xarray import DataTree, Dataset
+from xarray import DataTree
 import gzip
 import bz2
 
@@ -185,43 +184,6 @@ def write_file_radar(file: str, path: str = f"../results") -> None:
     with open(file_name, "a") as txt_file:
         txt_file.write(f"{file}\n")
         txt_file.close()
-
-
-#
-# def time_encoding(dtree, append_dim) -> dict:
-#     """
-#     Function that creates encoding for time and append_dim variables
-#     @param dtree: Input xarray Datatree
-#     @param append_dim: dimension name. e.g. "vcp_time"
-#     @return: dict with encoding parameters
-#     """
-#     encoding = {}
-#     enc = dict(
-#         units="nanoseconds since 1950-01-01T00:00:00.00",
-#         dtype="float64",
-#         _FillValue=np.datetime64("NaT"),
-#     )
-#     if isinstance(dtree, DataTree):
-#
-#         # append_dim encoding
-#         encoding = {f"{dtree[group].path}": {f"{append_dim}": enc} for group in dtree.groups}
-#
-#         # time encoding (only sweeps)
-#         encoding.update(
-#             {f"{node}": {"time": enc, append_dim: enc} for node in dtree.match("*/sweep_*").groups[2:]}
-#         )
-#         try:
-#             encoding.pop("/")
-#         except KeyError:
-#             pass
-#     else:
-#         encoding.update(
-#             {
-#                 f"{append_dim}": enc,
-#                 "time": enc,
-#             }
-#         )
-#     return encoding
 
 
 def dtree_encoding(dtree, append_dim) -> dict:

@@ -1,7 +1,7 @@
 from typing import Iterable, List, Union
 import os
 
-from xarray import DataTree, Dataset
+from xarray import DataTree
 from xarray.backends.common import _normalize_path
 
 # Relative imports
@@ -236,7 +236,6 @@ def append_parallel(
 
     for files in batch(radar_files, n=batch_size):
         bag = db.from_sequence(files, npartitions=len(files)).map(pf)
-
         ls_dtree: List[DataTree] = bag.compute()
         for dtree in ls_dtree:
             zarr_format = kwargs.get("zarr_format", 2)

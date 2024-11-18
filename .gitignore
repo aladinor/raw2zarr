@@ -167,4 +167,4 @@ sigmet2zarr.egg-info
 #.idea/
 
 #Notebooks
-sigmet2zarr/task2vcp.py
+raw2zarr/task2vcp.py

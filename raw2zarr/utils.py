@@ -332,7 +332,7 @@ def exp_dim(dt: xr.DataTree, append_dim: str) -> xr.DataTree:
     return dt
 
 
-def ensure_dimension(dt: xr.DataTree, dim: str) -> xr.DataTree:
+def ensure_dimension(dt: xr.DataTree, append_dim: str) -> xr.DataTree:
     """
     Ensure that all datasets in a DataTree have a specified dimension.
 
@@ -341,7 +341,7 @@ def ensure_dimension(dt: xr.DataTree, dim: str) -> xr.DataTree:
 
     Parameters:
         dt (xr.DataTree): The DataTree to check and modify.
-        dim (str): The name of the dimension to ensure in each dataset.
+        append_dim (str): The name of the dimension to ensure in each dataset.
 
     Returns:
         xr.DataTree: A DataTree where all datasets have the specified dimension.
@@ -356,9 +356,9 @@ def ensure_dimension(dt: xr.DataTree, dim: str) -> xr.DataTree:
 
         >>> dt = ensure_dimension(dt, "vcp_time")
     """
-    dims = [node.dims for node in dt.subtree if dim in node.dims]
+    dims = [node.dims for node in dt.subtree if append_dim in node.dims]
     if not dims:
-        return exp_dim(dt, dim)
+        return exp_dim(dt, append_dim)
     return dt
 
 
@@ -410,9 +410,7 @@ def fix_angle(dt: xr.DataTree, tolerance: float = None, **kwargs) -> xr.DataTree
     return dt
 
 
-def fix_azimuth(
-    ds: xr.Dataset, target_size: int = 360, fill_value: str = "extrapolate"
-) -> xr.Dataset:
+def fix_azimuth(ds: xr.Dataset, fill_value: str = "extrapolate") -> xr.Dataset:
     """
     Ensure that the azimuth dimension in a radar dataset matches a target size.
 
@@ -444,6 +442,10 @@ def fix_azimuth(
     start_ang = np.min(azimuth)
     stop_ang = np.max(azimuth)
 
+    target_size = round(current_size / 360) * 360
+    if target_size < 360:
+        target_size = 360  # Ensure minimum target size is 360
+
     # Check if the azimuth size needs fixing
     if current_size % target_size != 0:
         print(f"Fixing azimuth dimension from {current_size} to {target_size}")
@@ -465,3 +467,51 @@ def fix_azimuth(
             ds = ds.set_coords("time")
 
     return ds
+
+
+def check_adaptative_scannig(dtree: xr.DataTree) -> bool:
+    """
+    Checks for the presence of adaptive scanning in radar data represented by a xarray DataTree.
+
+    Adaptive scanning in radar operations can involve repeated sweeps at the same elevation
+    angle, often due to techniques like SAILS or MRLE. This function determines whether
+    adaptive scanning is present by analyzing the frequency of repeated elevation angles
+    in the DataTree.
+
+    Parameters:
+        dtree (xr.DataTree):
+            An xarray DataTree containing radar data, where each sweep is represented
+            as a node with a `sweep_fixed_angle` attribute.
+
+    Returns:
+        bool:
+            `True` if adaptive scanning is detected (elevation angle is repeated more
+            than twice), otherwise `False`.
+
+    Algorithm:
+        - Extracts the `sweep_fixed_angle` for all sweeps in the DataTree.
+        - Counts the occurrences of each unique elevation angle.
+        - If any elevation angle occurs more than twice, adaptive scanning is inferred.
+
+    Example:
+        >>> from xarray import DataTree
+        >>> dtree = DataTree(...)  # Load your radar data into a DataTree
+        >>> is_adaptive = check_adaptative_scannig(dtree)
+        >>> print(is_adaptive)  # Outputs True or False based on the scan pattern.
+    """
+    # Extract sweep_fixed_angle values for each sweep in the DataTree
+    elevations: list[float] = [
+        dtree[sweep]["sweep_fixed_angle"].item()
+        for sweep in dtree.match("*sweep_*").groups[2:]
+    ]
+
+    # Count occurrences of each elevation angle and find the maximum frequency
+    adapt_scann = max(elevations.count(x) for x in set(elevations))
+
+    # Return True if any elevation angle occurs more than twice
+    # Usually Split Cut mode perform two measurement for the same elevation (High/Low PRF)
+    # Therefore, more than 2 occurrences implies adaptative scans
+    if adapt_scann > 2:
+        return True
+    else:
+        return False

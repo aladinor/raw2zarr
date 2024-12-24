@@ -5,7 +5,6 @@ import tempfile
 
 import xradar
 import fsspec
-from xarray import DataTree
 from s3fs import S3File
 
 from collections.abc import Mapping, MutableMapping

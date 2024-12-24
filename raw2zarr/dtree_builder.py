@@ -1,18 +1,29 @@
+from __future__ import annotations
+
 from typing import Iterable, List, Union
 import os
 
+import xarray as xr
+import pandas as pd
 from xarray import DataTree
 from xarray.backends.common import _normalize_path
 
 # Relative imports
-from .data_reader import accessor_wrapper
-from .utils import ensure_dimension, fix_angle, dtree_encoding, batch
+from .dtree_io import accessor_wrapper
+from .utils import (
+    ensure_dimension,
+    fix_angle,
+    dtree_encoding,
+    batch,
+    check_adaptative_scannig,
+)
+from .dtree_io import _datatree_to_zarr
 
 
 def datatree_builder(
     filename_or_obj: Union[str, os.PathLike, Iterable[Union[str, os.PathLike]]],
     engine: str = "iris",
-    dim: str = "vcp_time",
+    append_dim: str = "vcp_time",
 ) -> DataTree:
     """
     Construct a hierarchical xarray.DataTree from radar data files.
@@ -29,7 +40,7 @@ def datatree_builder(
             The backend engine to use for loading the radar data. Common options include
             'iris' (default) and 'odim'. The selected engine must be supported by the underlying
             data processing libraries.
-        dim (str, optional):
+        append_dim (str, optional):
             The name of the dimension to use for concatenating data across files. Default is 'vcp_time'.
             Note: The 'time' dimension cannot be used as the concatenation dimension because it is
             already a predefined dimension in the dataset and reserved for temporal data. Choose
@@ -53,19 +64,22 @@ def datatree_builder(
 
     Example:
         >>> from raw2zarr import datatree_builder
-        >>> tree = datatree_builder(["file1.RAW", "file2.RAW"], engine="iris", dim="vcp_time")
+        >>> tree = datatree_builder(["file1.RAW", "file2.RAW"], engine="iris", append_dim="vcp_time")
         >>> print(tree)
         >>> print(tree["root/child"].to_dataset())  # Access a node's dataset
     """
-    # Initialize an empty dictionary to hold the nested structure
 
-    # Load radar data in batches
     filename_or_obj = _normalize_path(filename_or_obj)
     dtree = accessor_wrapper(filename_or_obj, engine=engine)
     task_name = dtree.attrs.get("scan_name", "default_task").strip()
-    dtree = (dtree.pipe(fix_angle).pipe(ensure_dimension, dim)).xradar.georeference()
+    dtree = (dtree.pipe(fix_angle)).xradar.georeference()
+    if check_adaptative_scannig(dtree):
+        print("Adaptative scan")
+        dtree = align_adaptative_scanning(dtree, append_dim=append_dim)
+    else:
+        dtree = dtree.pipe(ensure_dimension, append_dim)
     dtree = DataTree.from_dict({task_name: dtree})
-    dtree.encoding = dtree_encoding(dtree, append_dim=dim)
+    dtree.encoding = dtree_encoding(dtree, append_dim=append_dim)
     return dtree
 
 
@@ -143,28 +157,21 @@ def append_sequential(
         ... )
     """
     for file in radar_files:
+        print(file)
         dtree = process_file(file, engine=engine)
         zarr_format = kwargs.get("zarr_format", 2)
         if dtree:
             enc = dtree.encoding
-            dtree = dtree[dtree.groups[1]]
-            try:
-                dtree.to_zarr(
-                    store=zarr_store,
-                    mode="a-",
-                    encoding=enc,
-                    consolidated=True,
-                    zarr_format=zarr_format,
-                )
-            except ValueError:
-                dtree.to_zarr(
-                    store=zarr_store,
-                    mode="a-",
-                    consolidated=True,
-                    append_dim=append_dim,
-                    zarr_format=zarr_format,
-                )
-    print("done")
+            _datatree_to_zarr(
+                dtree,
+                store=zarr_store,
+                mode="a-",
+                encoding=enc,
+                consolidated=True,
+                zarr_format=zarr_format,
+                append_dim=append_dim,
+                write_inherited_coords=True,
+            )
 
 
 def append_parallel(
@@ -226,35 +233,94 @@ def append_parallel(
     from functools import partial
     from dask import bag as db
     from dask.distributed import Client, LocalCluster
+    import gc
 
-    cluster = LocalCluster(dashboard_address="127.0.0.1:8785")
+    cluster = LocalCluster(dashboard_address="127.0.0.1:8785", memory_limit="10GB")
     client = Client(cluster)
     pf = partial(process_file, engine=engine)
 
     if not batch_size:
         batch_size = sum(client.ncores().values())
 
-    for files in batch(radar_files, n=batch_size):
-        bag = db.from_sequence(files, npartitions=len(files)).map(pf)
+    for radar_files_batch in batch(radar_files, n=batch_size):
+        bag = db.from_sequence(radar_files_batch, npartitions=batch_size).map(pf)
         ls_dtree: List[DataTree] = bag.compute()
         for dtree in ls_dtree:
-            zarr_format = kwargs.get("zarr_format", 2)
             if dtree:
-                enc = dtree.encoding
-                dtree = dtree[dtree.groups[1]]
-                try:
-                    dtree.to_zarr(
-                        store=zarr_store,
-                        mode="a-",
-                        encoding=enc,
-                        consolidated=True,
-                        zarr_format=zarr_format,
-                    )
-                except ValueError:
-                    dtree.to_zarr(
-                        store=zarr_store,
-                        mode="a-",
-                        consolidated=True,
-                        append_dim=append_dim,
-                        zarr_format=zarr_format,
-                    )
+                _datatree_to_zarr(
+                    dtree,
+                    store=zarr_store,
+                    mode="a-",
+                    encoding=dtree.encoding,
+                    consolidated=True,
+                    zarr_format=kwargs.get("zarr_format", 2),
+                    append_dim=append_dim,
+                    compute=True,
+                    write_inherited_coords=True,
+                )
+        del bag, ls_dtree
+        gc.collect()
+
+
+def align_adaptative_scanning(tree: DataTree, append_dim: str = "vcp_time") -> DataTree:
+    sweep_groups = {"root": [("/", tree.root.to_dataset())]}
+    for node_name, node in tree.match("sweep_*").items():
+        ds = node.ds  # Access the xarray.Dataset for this node
+        if "sweep_fixed_angle" not in ds:
+            raise ValueError(f"'sweep_fixed_angle' not found in node {node_name}")
+
+        # Extract identifying properties
+        fixed_angle = ds["sweep_fixed_angle"].values.item()  # Assume single value
+        dims = tuple(ds.sizes.items())  # Tuple of dimension names and sizes
+
+        # Use (fixed_angle, dims) as a key to group similar sweeps
+        key = (fixed_angle, dims)
+        if key not in sweep_groups:
+            sweep_groups[key] = []
+        sweep_groups[key].append((node_name, ds))
+
+    new_dtree = {}
+    for key, node_ds_list in sweep_groups.items():
+        # sweep_fixed_angle, _ = key  # Unpack key components
+        node_names, datasets = zip(*node_ds_list)
+        start_time = pd.to_datetime(
+            tree.time_coverage_start.item()
+        )  # # Separate node names and datasets
+        # Unpack key components
+        if len(datasets) > 1:
+            # Concatenate datasets along the time dimension
+            time_coords = [pd.to_datetime(ds.time.mean().values) for ds in datasets]
+            time_coords[0] = start_time
+            time_coords = [
+                ts.tz_convert(None) if ts.tzinfo else ts for ts in time_coords
+            ]
+            # Create a DataArray
+            time_coords_da = xr.DataArray(
+                data=time_coords,
+                dims=(append_dim,),
+                name=append_dim,
+                attrs={
+                    "description": "Volume Coverage Pattern time since start of volume scan"
+                },
+            )
+            concat_ds = xr.concat(datasets, dim=append_dim)
+            concat_ds[append_dim] = time_coords_da
+
+            # Set the new variable as a coordinate and expand the dimension
+            concat_ds = concat_ds.set_coords(append_dim)
+            new_dtree[node_names[0]] = concat_ds
+        else:
+            # Single dataset, keep as is
+            ds = datasets[0].copy()
+            ds[append_dim] = start_time
+            # Define attributes for the new dimension
+            attrs = {
+                "description": "Volume Coverage Pattern time since start of volume scan",
+            }
+            ds[append_dim].attrs = attrs
+            # Set the new variable as a coordinate and expand the dimension
+            ds = ds.set_coords(append_dim).expand_dims(dim=append_dim, axis=0)
+            new_dtree[node_names[0]] = ds
+
+    # Step 3: Build a new datatree with reordered nodes
+    return DataTree.from_dict(new_dtree)

@@ -24,4 +24,4 @@ dependencies:
   - xradar>=0.8.0
   - pip
   - pip:
-      - -e .
+      - .

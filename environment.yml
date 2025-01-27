@@ -1,4 +1,4 @@
-name: raw2zarr
+name: raw2zarr-dev
 channels:
   - conda-forge
   - nodefaults
@@ -11,7 +11,7 @@ dependencies:
   - dask
   - netcdf4
   - bottleneck
-  - zarr
+  - zarr<3.0
   - ca-certificates
   - certifi
   - openssl
@@ -20,7 +20,7 @@ dependencies:
   - wradlib
   - hvplot
   - datashader
-  - xarray>=2024.10
+  - xarray<2025.0
   - xradar>=0.8.0
   - pip
   - pip:

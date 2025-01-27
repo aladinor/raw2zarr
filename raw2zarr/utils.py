@@ -231,7 +231,7 @@ def dtree_encoding(dtree, append_dim) -> dict:
     return _encoding
 
 
-def prepare_for_read(filename, storage_options={"anon": True}):
+def prepare2read(filename, storage_options={"anon": True}):
     """
     Return a file-like object ready for reading.
 

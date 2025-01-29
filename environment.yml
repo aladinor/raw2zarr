@@ -3,7 +3,7 @@ channels:
   - conda-forge
   - nodefaults
 dependencies:
-  - python>=3.12
+  - python=3.12
   - mamba
   - cartopy
   - fsspec
@@ -21,6 +21,11 @@ dependencies:
   - hvplot
   - datashader
   - xarray<2025.0
+  - pytest
+  - pytest-cov
+  - pytest-doctestplus
+  - pytest-sugar
+  - pytest-xdist
   - pip
   - pip:
       - .

@@ -1,23 +1,22 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+import bz2
+import gzip
 import os
+from collections.abc import Iterator
+from datetime import datetime, timezone
+from time import time
+from typing import Any
 
-import xarray as xr
-import xradar as xd
 import fsspec
 import numpy as np
-from datetime import datetime, timezone
 import pandas as pd
 import tomllib
-from time import time
-from collections.abc import Iterator
-from typing import Any, List
+import xarray as xr
+import xradar as xd
 from xarray import DataTree
-import gzip
-import bz2
 
 
-def batch(iterable: List[Any], n: int = 1) -> Iterator[List[Any]]:
+def batch(iterable: list[Any], n: int = 1) -> Iterator[list[Any]]:
     """
     Splits a list into consecutive chunks of size `n`.
 
@@ -47,9 +46,9 @@ def batch(iterable: List[Any], n: int = 1) -> Iterator[List[Any]]:
     >>> list(batch(['a', 'b', 'c', 'd'], n=3))
     [['a', 'b', 'c'], ['d']]
     """
-    l = len(iterable)
-    for ndx in range(0, l, n):
-        yield iterable[ndx : min(ndx + n, l)]
+    length = len(iterable)
+    for ndx in range(0, length, n):
+        yield iterable[ndx : min(ndx + n, length)]
 
 
 def timer_func(func):
@@ -158,7 +157,7 @@ def check_if_exist(file: str, path: str = "../results") -> bool:
     file_path = f"{path}"
     file_name = f"{file_path}/{file.split('/')[-2]}_files.txt"
     try:
-        with open(file_name, "r", newline="\n") as txt_file:
+        with open(file_name, newline="\n") as txt_file:
             lines = txt_file.readlines()
             txt_file.close()
         _file = [i for i in lines if i.replace("\n", "") == file]
@@ -171,7 +170,7 @@ def check_if_exist(file: str, path: str = "../results") -> bool:
         return False
 
 
-def write_file_radar(file: str, path: str = f"../results") -> None:
+def write_file_radar(file: str, path: str = "../results") -> None:
     """
     Write a new line with the radar filename converted. This is intended to create a checklist to avoid file
     reprocessing

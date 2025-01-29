@@ -22,8 +22,10 @@ dependencies:
   - datashader
   - xarray<2025.0
   - pytest
-  - pytest-xdist
   - pytest-cov
+  - pytest-doctestplus
+  - pytest-sugar
+  - pytest-xdist
   - pip
   - pip:
       - .

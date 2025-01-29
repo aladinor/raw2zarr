@@ -14,9 +14,10 @@ def nexrad_local_str_file(tmp_path_factory):
     with fsspec.open(aws_url, anon=True) as s3_file:
         with open(local_path, "wb") as local_file:
             local_file.write(s3_file.read())
-    with gzip.open(str(local_path), "rb") as gz, tempfile.NamedTemporaryFile(
-        delete=False
-    ) as temp_file:
+    with (
+        gzip.open(str(local_path), "rb") as gz,
+        tempfile.NamedTemporaryFile(delete=False) as temp_file,
+    ):
         temp_file.write(gz.read())
         temp_file_path = temp_file.name
     return temp_file_path

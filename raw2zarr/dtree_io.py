@@ -101,9 +101,10 @@ def _decompress(gz_file: str) -> DataTree:
     DataTree
         The loaded radar data.
     """
-    with gzip.open(gz_file, "rb") as gz, tempfile.NamedTemporaryFile(
-        delete=False
-    ) as temp_file:
+    with (
+        gzip.open(gz_file, "rb") as gz,
+        tempfile.NamedTemporaryFile(delete=False) as temp_file,
+    ):
         temp_file.write(gz.read())
         temp_file_path = temp_file.name
     return temp_file_path

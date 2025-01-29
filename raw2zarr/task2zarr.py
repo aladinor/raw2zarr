@@ -8,8 +8,8 @@ from raw2zarr.utils import (
     fix_angle,
     write_file_radar,
     load_toml,
-    time_encoding,
-    exp_dim
+    dtree_encoding,
+    exp_dim,
 )
 
 
@@ -95,7 +95,6 @@ def prepare2append(dt: DataTree, append_dim: str, radar_name: str = "GUA") -> Da
     return DataTree.from_dict(tree)
 
 
-
 def dt2zarr2(
     dt: DataTree,
     zarr_store: str,
@@ -123,7 +122,7 @@ def dt2zarr2(
         ds = node.to_dataset()
         group_path = node.path
         if group_path.startswith("/sweep"):
-            encoding = time_encoding(ds, append_dim)
+            encoding = dtree_encoding(ds, append_dim)
         else:
             encoding = {}
         try:

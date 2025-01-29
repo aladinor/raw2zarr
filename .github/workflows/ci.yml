@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install black black[jupyter] ruff pytest pytest-xdist pytest-cov
+          pip install black black[jupyter] ruff
       - name: Black style check
         run: |
           black --check .
@@ -59,12 +59,16 @@ jobs:
         - name: Install raw2zarr
           run: |
             python -m pip install . --no-deps
+        - name: Install Test Dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install pytest pytest-xdist pytest-cov
         - name: Version Info
           run: |
             python -c "import raw2zarr; print(raw2zarr.__version__)"
         - name: Test with pytest
           run: |
-            pytest -n auto --dist loadfile --verbose --durations=15 --cov-report xml:coverage_unit.xml --cov=raw2zarr --pyargs tests
+            pytest -n auto --dist loadfile --verbose --durations=15 --cov-report xml:coverage_unit.xml --cov=raw2zarr --cov-append
         - name: Upload coverage to Codecov
           uses: codecov/codecov-action@v4
           with:

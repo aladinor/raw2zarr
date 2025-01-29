@@ -21,6 +21,7 @@ dependencies:
   - hvplot
   - datashader
   - xarray<2025.0
+  - pytest
   - pip
   - pip:
       - .

@@ -5,7 +5,6 @@ import os
 
 import xarray as xr
 import pandas as pd
-from requests.utils import parse_dict_header
 from xarray import DataTree
 from xarray.backends.common import _normalize_path
 

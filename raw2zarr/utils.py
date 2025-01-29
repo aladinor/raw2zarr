@@ -47,9 +47,9 @@ def batch(iterable: List[Any], n: int = 1) -> Iterator[List[Any]]:
     >>> list(batch(['a', 'b', 'c', 'd'], n=3))
     [['a', 'b', 'c'], ['d']]
     """
-    l = len(iterable)
-    for ndx in range(0, l, n):
-        yield iterable[ndx : min(ndx + n, l)]
+    length = len(iterable)
+    for ndx in range(0, length, n):
+        yield iterable[ndx : min(ndx + n, length)]
 
 
 def timer_func(func):
@@ -171,7 +171,7 @@ def check_if_exist(file: str, path: str = "../results") -> bool:
         return False
 
 
-def write_file_radar(file: str, path: str = f"../results") -> None:
+def write_file_radar(file: str, path: str = "../results") -> None:
     """
     Write a new line with the radar filename converted. This is intended to create a checklist to avoid file
     reprocessing

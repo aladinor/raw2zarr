@@ -28,4 +28,8 @@ __all__ = [
     "fix_angle",
     "batch",
     "dtree_encoding",
+    "process_file",
+    "prepare2read",
+    "_load_file",
+    "dtree2zarr",
 ]

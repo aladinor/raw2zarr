@@ -1,8 +1,8 @@
 import fsspec
 from datetime import datetime
 
-from raw2zarr.dtree_builder import append_sequential, append_parallel
-from raw2zarr.utils import timer_func, create_query, prepare2read
+from raw2zarr.dtree_builder import append_sequential
+from raw2zarr.utils import timer_func, create_query
 
 
 def get_radar_files(engine):

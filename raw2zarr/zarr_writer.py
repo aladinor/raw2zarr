@@ -59,7 +59,7 @@ def dtree2zarr(
                 append_dim=append_dim,
                 **kwargs,
             )
-        except ValueError as e:
+        except ValueError:
             ds.to_zarr(
                 store,
                 group=group_path,

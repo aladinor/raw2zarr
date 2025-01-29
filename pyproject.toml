@@ -8,6 +8,9 @@ description = "Package for convertir Sigmet radar files into zarr format"
 version = "2025.0.0.1"
 requires-python = ">=3.9"
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
 [tool.setuptools.packages.find]
 include = ['raw2zarr']
 exclude = ["data", "notebooks"]

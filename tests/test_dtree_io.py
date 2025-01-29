@@ -1,6 +1,7 @@
 import pytest
-from raw2zarr.dtree_io import nexradlevel2_loader
 from xarray import DataTree
+
+from raw2zarr.dtree_io import nexradlevel2_loader
 
 
 @pytest.mark.parametrize(

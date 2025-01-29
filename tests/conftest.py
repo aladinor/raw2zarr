@@ -1,7 +1,8 @@
-import pytest
-import fsspec
 import gzip
 import tempfile
+
+import fsspec
+import pytest
 
 
 @pytest.fixture(scope="session")

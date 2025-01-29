@@ -61,7 +61,7 @@ jobs:
             python -m pip install . --no-deps
         - name: Version Info
           run: |
-            python -c "import raw2zarr; print(xradar.version.version)"
+            python -c "import raw2zarr; print(raw2zarr.__version__)"
         - name: Test with pytest
           run: |
             pytest -n auto --dist loadfile --verbose --durations=15 --cov-report xml:coverage_unit.xml --cov=xradar --pyargs tests

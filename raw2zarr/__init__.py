@@ -8,6 +8,7 @@ Top-level package for raw2zarr.
 
 __author__ = """Alfonso Ladino"""
 __email__ = "alfonso8@illinois.edu"
+__version__ = "2025.1.0."
 
 from .dtree_builder import (
     datatree_builder,

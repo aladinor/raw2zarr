@@ -1,13 +1,14 @@
 from __future__ import annotations
-import os
-import gzip
-import tempfile
-import logging
 
-import xradar as xd
+import gzip
+import logging
+import os
+import tempfile
+from typing import Callable
+
 import fsspec
+import xradar as xd
 from s3fs.core import S3File
-from typing import Callable, Dict
 from xarray import DataTree
 
 # Relative imports
@@ -17,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 SUPPORTED_ENGINES = {"iris", "nexradlevel2"}
 
-ENGINE_REGISTRY: Dict[str, Callable] = {}
+ENGINE_REGISTRY: dict[str, Callable] = {}
 
 
 def iris_loader(file: str | bytes | S3File) -> DataTree:

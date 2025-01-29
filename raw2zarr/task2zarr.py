@@ -1,16 +1,17 @@
-import zarr
-import xradar as xd
 import numpy as np
-from xarray import full_like, Dataset, DataTree
-from zarr.errors import ContainsGroupError
+import xradar as xd
+from xarray import Dataset, DataTree, full_like
+
+import zarr
 from raw2zarr.utils import (
     data_accessor,
-    fix_angle,
-    write_file_radar,
-    load_toml,
     dtree_encoding,
     exp_dim,
+    fix_angle,
+    load_toml,
+    write_file_radar,
 )
+from zarr.errors import ContainsGroupError
 
 
 def _get_root(dt: DataTree):

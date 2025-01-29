@@ -1,27 +1,27 @@
 from __future__ import annotations
 
-from typing import Iterable, List, Union
 import os
+from collections.abc import Iterable
 
-import xarray as xr
 import pandas as pd
+import xarray as xr
 from xarray import DataTree
 from xarray.backends.common import _normalize_path
 
 # Relative imports
 from .dtree_io import load_radar_data
 from .utils import (
-    ensure_dimension,
-    fix_angle,
-    dtree_encoding,
     batch,
     check_adaptative_scannig,
+    dtree_encoding,
+    ensure_dimension,
+    fix_angle,
 )
 from .zarr_writer import dtree2zarr
 
 
 def datatree_builder(
-    filename_or_obj: Union[str, os.PathLike, Iterable[Union[str, os.PathLike]]],
+    filename_or_obj: str | os.PathLike | Iterable[str | os.PathLike],
     engine: str = "iris",
     append_dim: str = "vcp_time",
 ) -> DataTree:
@@ -228,10 +228,11 @@ def append_parallel(
             )
     """
 
+    import gc
     from functools import partial
+
     from dask import bag as db
     from dask.distributed import Client, LocalCluster
-    import gc
 
     cluster = LocalCluster(dashboard_address="127.0.0.1:8785", memory_limit="10GB")
     client = Client(cluster)
@@ -242,7 +243,7 @@ def append_parallel(
 
     for radar_files_batch in batch(radar_files, n=batch_size):
         bag = db.from_sequence(radar_files_batch, npartitions=batch_size).map(pf)
-        ls_dtree: List[DataTree] = bag.compute()
+        ls_dtree: list[DataTree] = bag.compute()
         for dtree in ls_dtree:
             if dtree:
                 dtree2zarr(

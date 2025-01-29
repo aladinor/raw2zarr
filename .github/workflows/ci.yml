@@ -31,7 +31,6 @@ jobs:
   build_0:
       name: raw2zarr unit tests - linux
       runs-on: ubuntu-latest
-      needs:
       defaults:
         run:
           shell: bash -l {0}

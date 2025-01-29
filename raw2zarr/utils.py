@@ -499,6 +499,9 @@ def check_adaptative_scannig(dtree: xr.DataTree) -> bool:
         >>> is_adaptive = check_adaptative_scannig(dtree)
         >>> print(is_adaptive)  # Outputs True or False based on the scan pattern.
     """
+    if len(dtree.match("*sweep_*")) <= 1:
+        return False
+
     # Extract sweep_fixed_angle values for each sweep in the DataTree
     elevations: list[float] = [
         dtree[sweep]["sweep_fixed_angle"].item()

@@ -5,11 +5,12 @@ import os
 
 import xarray as xr
 import pandas as pd
+from requests.utils import parse_dict_header
 from xarray import DataTree
 from xarray.backends.common import _normalize_path
 
 # Relative imports
-from .dtree_io import accessor_wrapper
+from .dtree_io import load_radar_data
 from .utils import (
     ensure_dimension,
     fix_angle,
@@ -17,7 +18,7 @@ from .utils import (
     batch,
     check_adaptative_scannig,
 )
-from .dtree_io import _datatree_to_zarr
+from .zarr_writer import dtree2zarr
 
 
 def datatree_builder(
@@ -70,7 +71,7 @@ def datatree_builder(
     """
 
     filename_or_obj = _normalize_path(filename_or_obj)
-    dtree = accessor_wrapper(filename_or_obj, engine=engine)
+    dtree = load_radar_data(filename_or_obj, engine=engine)
     task_name = dtree.attrs.get("scan_name", "default_task").strip()
     dtree = (dtree.pipe(fix_angle)).xradar.georeference()
     if check_adaptative_scannig(dtree):
@@ -88,8 +89,7 @@ def process_file(file: str, engine: str = "nexradlevel2") -> DataTree:
     Load and transform a single radar file into a DataTree object.
     """
     try:
-        dtree = datatree_builder(file, engine=engine)
-        return dtree
+        return datatree_builder(file, engine=engine)
     except Exception as e:
         print(f"Error processing file {file}: {e}")
         return None
@@ -157,12 +157,11 @@ def append_sequential(
         ... )
     """
     for file in radar_files:
-        print(file)
         dtree = process_file(file, engine=engine)
         zarr_format = kwargs.get("zarr_format", 2)
         if dtree:
             enc = dtree.encoding
-            _datatree_to_zarr(
+            dtree2zarr(
                 dtree,
                 store=zarr_store,
                 mode="a-",
@@ -247,7 +246,7 @@ def append_parallel(
         ls_dtree: List[DataTree] = bag.compute()
         for dtree in ls_dtree:
             if dtree:
-                _datatree_to_zarr(
+                dtree2zarr(
                     dtree,
                     store=zarr_store,
                     mode="a-",
@@ -322,5 +321,31 @@ def align_adaptative_scanning(tree: DataTree, append_dim: str = "vcp_time") -> D
             ds = ds.set_coords(append_dim).expand_dims(dim=append_dim, axis=0)
             new_dtree[node_names[0]] = ds
 
+    new_dtree = _dtree_aligment(new_dtree, append_dim=append_dim)
+
     # Step 3: Build a new datatree with reordered nodes
     return DataTree.from_dict(new_dtree)
+
+
+def _dtree_aligment(tree_dict: dict, append_dim: str) -> dict:
+    all_vcp_time_coords = set()
+    for ds in tree_dict.values():
+        if append_dim in ds.coords:
+            all_vcp_time_coords.update(ds.coords[append_dim].values)
+
+    # Convert the superset to a sorted array (ensure it's datetime64[ns])
+    unified_coords = pd.to_datetime(list(all_vcp_time_coords))
+
+    # Align all datasets to the unified vcp_time coordinates
+    aligned_tree_dict = {}
+    for path, ds in tree_dict.items():
+        if append_dim in ds.coords:
+            # Reindex the dataset to include the unified coordinates, using NaT for missing values
+            aligned_ds = ds.reindex({append_dim: unified_coords})
+            aligned_tree_dict[path] = aligned_ds
+        else:
+            # If vcp_time_dim is missing, create a dataset with only the unified coordinates
+            aligned_ds = xr.Dataset(coords={append_dim: unified_coords})
+            aligned_tree_dict[path] = aligned_ds
+
+    return aligned_tree_dict

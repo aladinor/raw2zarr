@@ -4,7 +4,7 @@ import gzip
 import tempfile
 import logging
 
-import xradar
+import xradar as xd
 import fsspec
 from s3fs.core import S3File
 from typing import Callable, Dict
@@ -25,52 +25,69 @@ def iris_loader(file: str | bytes | S3File) -> DataTree:
     Loads iris files
     """
     if isinstance(file, (S3File, bytes)):
-        return xradar.io.open_iris_datatree(
+        return xd.io.open_iris_datatree(
             file.read() if isinstance(file, S3File) else file
         )
-    return xradar.io.open_iris_datatree(file)
+    return xd.io.open_iris_datatree(file)
 
 
 def odim_loader(file: str) -> DataTree:
     """
     Loads odim files
     """
-    return xradar.io.open_odim_datatree(file)
+    return xd.io.open_odim_datatree(file)
 
 
-def nexradlevel2_loader(file: str | bytes | S3File) -> DataTree:
+def nexradlevel2_loader(filename_or_obj: str | bytes | S3File) -> DataTree:
     """
     Loads Nexrad level2 files
     """
-    if isinstance(file, S3File):
+    if isinstance(filename_or_obj, S3File):
+        # As xradar.io.open_nexradlevel2_datatree does not support data streaming we need to download the file
         local_file = fsspec.open_local(
-            f"simplecache::s3://{file.path}",
+            f"simplecache::s3://{filename_or_obj.path}",
             s3={"anon": True},
             filecache={"cache_storage": "."},
         )
         try:
-            if file.path.endswith(".gz"):
-                return _decompress_and_load(local_file)
-            return xradar.io.open_nexradlevel2_datatree(local_file)
+            if filename_or_obj.path.endswith(".gz"):
+                return _decompress(local_file)
+            return xd.io.open_nexradlevel2_datatree(local_file)
         finally:
             os.remove(local_file)
-    elif isinstance(file, gzip.GzipFile):
+    elif isinstance(filename_or_obj, gzip.GzipFile):
         try:
             local_file = fsspec.open_local(
-                f"simplecache::s3://{file.fileobj.full_name}",
+                f"simplecache::s3://{filename_or_obj.fileobj.full_name}",
                 s3={"anon": True},
                 filecache={"cache_storage": "."},
             )
-            return _decompress_and_load(local_file)
+            return xd.io.open_nexradlevel2_datatree(_decompress(local_file))
         finally:
             os.remove(local_file)
-    elif isinstance(file, str) and file.endswith(".gz"):
-        return _decompress_and_load(file)
+    elif isinstance(filename_or_obj, str):
+        if not filename_or_obj.startswith("s3://") and filename_or_obj.endswith(".gz"):
+            return xd.io.open_nexradlevel2_datatree(_decompress(filename_or_obj))
+        elif filename_or_obj.startswith("s3://") and not filename_or_obj.endswith(
+            ".gz"
+        ):
+            local_file = fsspec.open_local(
+                f"simplecache::s3://{filename_or_obj}",
+                s3={"anon": True},
+                filecache={"cache_storage": "."},
+            )
+            return xd.io.open_nexradlevel2_datatree(local_file)
+        elif filename_or_obj.startswith("s3://") and filename_or_obj.endswith(".gz"):
+            local_file = fsspec.open_local(
+                f"simplecache::s3://{filename_or_obj}",
+                s3={"anon": True},
+                filecache={"cache_storage": "."},
+            )
+            return xd.io.open_nexradlevel2_datatree(_decompress(local_file))
+    return xd.io.open_nexradlevel2_datatree(filename_or_obj)
 
-    return xradar.io.open_nexradlevel2_datatree(file)
 
-
-def _decompress_and_load(gz_file: str) -> DataTree:
+def _decompress(gz_file: str) -> DataTree:
     """
     Decompress a GZIP file and load it into a DataTree.
 
@@ -89,10 +106,7 @@ def _decompress_and_load(gz_file: str) -> DataTree:
     ) as temp_file:
         temp_file.write(gz.read())
         temp_file_path = temp_file.name
-    try:
-        return xradar.io.open_nexradlevel2_datatree(temp_file_path)
-    finally:
-        os.remove(temp_file_path)
+    return temp_file_path
 
 
 ENGINE_REGISTRY["iris"] = iris_loader

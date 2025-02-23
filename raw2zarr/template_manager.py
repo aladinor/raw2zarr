@@ -1,17 +1,17 @@
-from pathlib import Path
-from functools import lru_cache
 import json
+from functools import lru_cache
+from pathlib import Path
+
 import numpy as np
 import xarray as xr
-from pydantic import BaseModel, Field, ConfigDict
-from typing import Dict, List
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ScanCoordConfig(BaseModel):
     model_config = ConfigDict(frozen=True)
-    dims: List[str]
+    dims: list[str]
     dtype: str
-    attributes: Dict = Field(default_factory=dict)
+    attributes: dict = Field(default_factory=dict)
 
 
 class ScanVariableConfig(ScanCoordConfig):
@@ -21,10 +21,10 @@ class ScanVariableConfig(ScanCoordConfig):
 class ScanConfig(BaseModel):
     model_config = ConfigDict(frozen=True)
     # 🛠️ Added missing required fields from JSON structure
-    dims: Dict[str, int]
-    coords: Dict[str, ScanCoordConfig]
-    variables: Dict[str, ScanVariableConfig]
-    metadata: Dict[str, str | float]
+    dims: dict[str, int]
+    coords: dict[str, ScanCoordConfig]
+    variables: dict[str, ScanVariableConfig]
+    metadata: dict[str, str | float]
 
 
 class ScanTemplateManager:

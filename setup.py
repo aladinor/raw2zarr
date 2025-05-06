@@ -1,4 +1,4 @@
-from setuptools import find_packages, setup
+from setuptools import setup
 
 setup(
     name="raw2zarr",
@@ -7,7 +7,9 @@ setup(
     author="Alfonso Ladino, Max Grover",
     author_email="alfonso8@illinois.edu",
     url="https://github.com/aladinor/raw2zarr",
-    packages=find_packages(),  # Automatically finds all packages in the directory
+    packages=["raw2zarr"],
+    include_package_data=True,
+    package_data={"raw2zarr.config": ["*.toml"]},
     python_requires=">=3.12",
     install_requires=[
         "cartopy",
@@ -25,8 +27,8 @@ setup(
         "xradar>=0.8.0",
     ],
     extras_require={
-        "dev": ["pytest", "pytest-cov", "flake8"],  # Add development dependencies here
-        "notebooks": ["jupyterlab"],  # Dependencies for working with notebooks
+        "dev": ["pytest", "pytest-cov", "flake8"],
+        "notebooks": ["jupyterlab"],
     },
     classifiers=[
         "Programming Language :: Python :: 3.12",

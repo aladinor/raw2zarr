@@ -11,10 +11,11 @@ def dtree2zarr(
     store: MutableMapping | str | PathLike[str],
     mode: ZarrWriteModes = "w-",
     encoding: Mapping[str, Any] | None = None,
-    consolidated: bool = True,
+    consolidated: bool = False,
     group: str | None = None,
     write_inherited_coords: bool = False,
     compute: Literal[True] = True,
+    zarr_format: int = 3,
     **kwargs,
 ):
     """This function creates an appropriate datastore for writing a datatree
@@ -55,17 +56,20 @@ def dtree2zarr(
                 store,
                 group=group_path,
                 mode=mode,
-                consolidated=False,
+                consolidated=consolidated,
                 append_dim=append_dim,
+                zarr_format=zarr_format,
                 **kwargs,
             )
+        # ValueError is raised as no append_dimension was found in the store
         except ValueError:
             ds.to_zarr(
                 store,
                 group=group_path,
                 mode="a-",
                 encoding=encoding.get(node.path),
-                consolidated=False,
+                consolidated=consolidated,
+                zarr_format=zarr_format,
                 **kwargs,
             )
 

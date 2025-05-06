@@ -10,12 +10,16 @@ from xarray.backends.common import _normalize_path
 
 # Relative imports
 from .dtree_io import load_radar_data
+from .template_manager import ScanTemplateManager
 from .utils import (
+    _get_missing_elevations,
     batch,
-    check_adaptative_scannig,
+    check_dynamic_scan,
     dtree_encoding,
     ensure_dimension,
     fix_angle,
+    get_vcp_values,
+    load_json_config,
 )
 from .zarr_writer import dtree2zarr
 
@@ -73,9 +77,8 @@ def datatree_builder(
     dtree = load_radar_data(filename_or_obj, engine=engine)
     task_name = dtree.attrs.get("scan_name", "default_task").strip()
     dtree = (dtree.pipe(fix_angle)).xradar.georeference()
-    if check_adaptative_scannig(dtree):
-        print("Adaptative scan")
-        dtree = align_adaptative_scanning(dtree, append_dim=append_dim)
+    if (engine == "nexradlevel2") & check_dynamic_scan(dtree):
+        dtree = align_dynamic_scan(dtree, append_dim=append_dim)
     else:
         dtree = dtree.pipe(ensure_dimension, append_dim)
     dtree = DataTree.from_dict({task_name: dtree})
@@ -98,6 +101,8 @@ def append_sequential(
     radar_files: Iterable[str | os.PathLike],
     append_dim: str,
     zarr_store: str,
+    zarr_format: int = 3,
+    consolidated: bool = False,
     engine: str = "iris",
     **kwargs,
 ) -> None:
@@ -141,23 +146,9 @@ def append_sequential(
         - Handles encoding for compatibility with the Zarr format, including time and
           custom dimension variables.
         - Supports customization via the `engine` parameter for different radar data formats.
-
-    Example:
-        Process a list of radar files sequentially and append them to a Zarr store:
-
-        >>> radar_files = ["file1.RAW", "file2.RAW", "file3.RAW"]
-        >>> zarr_store = "output.zarr"
-        >>> append_sequential(
-        ...     radar_files=radar_files,
-        ...     append_dim="vcp_time",
-        ...     zarr_store=zarr_store,
-        ...     engine="iris",
-        ...     zarr_format=2
-        ... )
     """
     for file in radar_files:
         dtree = process_file(file, engine=engine)
-        zarr_format = kwargs.get("zarr_format", 2)
         if dtree:
             enc = dtree.encoding
             dtree2zarr(
@@ -165,7 +156,7 @@ def append_sequential(
                 store=zarr_store,
                 mode="a-",
                 encoding=enc,
-                consolidated=True,
+                consolidated=consolidated,
                 zarr_format=zarr_format,
                 append_dim=append_dim,
                 write_inherited_coords=True,
@@ -176,6 +167,8 @@ def append_parallel(
     radar_files: Iterable[str | os.PathLike],
     append_dim: str,
     zarr_store: str,
+    zarr_format: int = 3,
+    consolidated: bool = False,
     engine: str = "nexradlevel2",
     batch_size: int = None,
     **kwargs,
@@ -215,17 +208,6 @@ def append_parallel(
           `http://127.0.0.1:8785` by default.
         - If `batch_size` is not specified, it is automatically set based on the available cores
           in the Dask cluster.
-
-    Example:
-        >>> radar_files = ["file1.nc", "file2.nc", "file3.nc"]
-        >>> zarr_store = "output.zarr"
-        >>> append_parallel(
-                radar_files=radar_files,
-                append_dim="time",
-                zarr_store=zarr_store,
-                engine="nexradlevel2",
-                batch_size=5
-            )
     """
 
     import gc
@@ -251,8 +233,8 @@ def append_parallel(
                     store=zarr_store,
                     mode="a-",
                     encoding=dtree.encoding,
-                    consolidated=True,
-                    zarr_format=kwargs.get("zarr_format", 2),
+                    consolidated=consolidated,
+                    zarr_format=zarr_format,
                     append_dim=append_dim,
                     compute=True,
                     write_inherited_coords=True,
@@ -261,8 +243,29 @@ def append_parallel(
         gc.collect()
 
 
-def align_adaptative_scanning(tree: DataTree, append_dim: str = "vcp_time") -> DataTree:
-    sweep_groups = {"root": [("/", tree.root.to_dataset())]}
+def align_dynamic_scan(tree: DataTree, append_dim: str = "vcp_time") -> DataTree:
+    vcp = tree.attrs["scan_name"]
+    VCP_REFERENCE = get_vcp_values(vcp_name=vcp)
+    actual_sweeps = [
+        tree[path].ds["sweep_fixed_angle"].values.item()
+        for path in tree.match("sweep_*").children
+    ]
+    missing_idx = _get_missing_elevations(VCP_REFERENCE, actual_sweeps)
+    sweep_groups = {
+        "root": [("/", tree.root.to_dataset())],
+        "radar_parameters": [
+            ("radar_parameters", tree["radar_parameters"].to_dataset())
+        ],
+        "georeferencing_correction": [
+            (
+                "georeferencing_correction",
+                tree["georeferencing_correction"].to_dataset(),
+            )
+        ],
+        "radar_calibration": [
+            ("radar_calibration", tree["radar_calibration"].to_dataset())
+        ],
+    }
     for node_name, node in tree.match("sweep_*").items():
         ds = node.ds  # Access the xarray.Dataset for this node
         if "sweep_fixed_angle" not in ds:
@@ -279,12 +282,16 @@ def align_adaptative_scanning(tree: DataTree, append_dim: str = "vcp_time") -> D
         sweep_groups[key].append((node_name, ds))
 
     new_dtree = {}
+    start_time = pd.to_datetime(tree.time_coverage_start.item())
+
+    i = 0
     for key, node_ds_list in sweep_groups.items():
-        # sweep_fixed_angle, _ = key  # Unpack key components
-        node_names, datasets = zip(*node_ds_list)
-        start_time = pd.to_datetime(
-            tree.time_coverage_start.item()
-        )  # # Separate node names and datasets
+        group_path, datasets = zip(*node_ds_list)
+        group_path = group_path[0]
+        if group_path.startswith("sweep"):
+            group_path = f"sweep_{i}"
+            i += 1
+        # # Separate node names and datasets
         # Unpack key components
         if len(datasets) > 1:
             # Concatenate datasets along the time dimension
@@ -307,7 +314,7 @@ def align_adaptative_scanning(tree: DataTree, append_dim: str = "vcp_time") -> D
 
             # Set the new variable as a coordinate and expand the dimension
             concat_ds = concat_ds.set_coords(append_dim)
-            new_dtree[node_names[0]] = concat_ds
+            new_dtree[group_path] = concat_ds
         else:
             # Single dataset, keep as is
             ds = datasets[0].copy()
@@ -319,33 +326,132 @@ def align_adaptative_scanning(tree: DataTree, append_dim: str = "vcp_time") -> D
             ds[append_dim].attrs = attrs
             # Set the new variable as a coordinate and expand the dimension
             ds = ds.set_coords(append_dim).expand_dims(dim=append_dim, axis=0)
-            new_dtree[node_names[0]] = ds
+            coords_to_expand = ["time", "elevation", "x", "y", "z"]
+            # Expand each coordinate using a for loop
+            for coord in coords_to_expand:
+                if coord in ds.coords:  # Ensure the coordinate exists in the dataset
+                    ds[coord] = ds[coord].expand_dims(dim="vcp_time", axis=0)
+            new_dtree[group_path] = ds
 
-    new_dtree = _dtree_aligment(new_dtree, append_dim=append_dim)
+    if missing_idx:
+        template_mgr = ScanTemplateManager()
+        # Get radar metadata once
+        radar_info = {
+            "lon": tree.root.longitude.item(),  # Changed from radar_lon
+            "lat": tree.root.latitude.item(),  # Changed from radar_lat
+            "alt": tree.root.altitude.item(),  # Changed from radar_alt
+            "reference_time": pd.to_datetime(
+                tree.time_coverage_start.item()
+            ).to_numpy(),
+            "vcp": tree.attrs["scan_name"],
+        }
+        vcp_config = load_json_config("vcp.json")[vcp]
+        for idx in missing_idx:
+            scan_type = vcp_config["scan_types"][idx]
 
+            empty_ds = template_mgr.create_scan_dataset(
+                scan_type=scan_type, sweep_idx=idx, radar_info=radar_info
+            )
+
+            # Use consistent naming convention
+            group_path = f"sweep_{idx}"
+            empty_ds[append_dim] = start_time
+            # Define attributes for the new dimension
+            attrs = {
+                "description": "Volume Coverage Pattern time since start of volume scan",
+            }
+            empty_ds[append_dim].attrs = attrs
+            # Set the new variable as a coordinate and expand the dimension
+            new_dtree[group_path] = empty_ds.set_coords(append_dim).expand_dims(
+                dim=append_dim, axis=0
+            )
+    radar_info = {
+        "lon": tree.root.longitude.item(),
+        "lat": tree.root.latitude.item(),
+        "alt": tree.root.altitude.item(),
+        "reference_time": pd.to_datetime(tree.time_coverage_start.item()).to_numpy(),
+        "vcp_id": vcp,
+    }
+    new_dtree = _dtree_aligment(new_dtree, append_dim=append_dim, radar_info=radar_info)
     # Step 3: Build a new datatree with reordered nodes
     return DataTree.from_dict(new_dtree)
 
 
-def _dtree_aligment(tree_dict: dict, append_dim: str) -> dict:
+def _dtree_aligment(tree_dict: dict, append_dim: str, radar_info: dict) -> dict:
+    vcp_id = radar_info.pop("vcp_id")
+    max_vcp_time = 0
+    for path, ds in tree_dict.items():
+        if append_dim in ds.coords:
+            len_vcp_time = len(ds.coords[append_dim].values)
+            if len_vcp_time > max_vcp_time:
+                max_vcp_time = len_vcp_time
+
     all_vcp_time_coords = set()
     for ds in tree_dict.values():
         if append_dim in ds.coords:
             all_vcp_time_coords.update(ds.coords[append_dim].values)
 
     # Convert the superset to a sorted array (ensure it's datetime64[ns])
-    unified_coords = pd.to_datetime(list(all_vcp_time_coords))
-
+    unified_time = pd.to_datetime(list(all_vcp_time_coords)[:max_vcp_time])
+    for time in unified_time:
+        radar_info["vcp_time"] = time
+        create_empty_vcp_datatree(vcp_id=vcp_id, radar_info=radar_info)
     # Align all datasets to the unified vcp_time coordinates
     aligned_tree_dict = {}
     for path, ds in tree_dict.items():
         if append_dim in ds.coords:
+            if path == "/":
+                method = "pad"
+            else:
+                method = None
             # Reindex the dataset to include the unified coordinates, using NaT for missing values
-            aligned_ds = ds.reindex({append_dim: unified_coords})
+            aligned_ds = ds.reindex({append_dim: unified_time}, method=method)
             aligned_tree_dict[path] = aligned_ds
         else:
             # If vcp_time_dim is missing, create a dataset with only the unified coordinates
-            aligned_ds = xr.Dataset(coords={append_dim: unified_coords})
+            aligned_ds = xr.Dataset(coords={append_dim: unified_time})
             aligned_tree_dict[path] = aligned_ds
 
     return aligned_tree_dict
+
+
+def create_empty_vcp_datatree(vcp_id: str, radar_info: dict) -> DataTree:
+    """
+    Create a DataTree with empty datasets for all scans in a VCP
+
+    Parameters:
+        vcp_id: Volume Coverage Pattern ID (e.g., "VCP-21")
+        radar_info: Dictionary with radar metadata:
+            - lon: Radar longitude
+            - lat: Radar latitude
+            - alt: Radar altitude
+            - reference_time: Volume start time
+            - vcp_time: VCP timestamp
+
+    Returns:
+        DataTree: Hierarchical structure with empty scans for all expected elevations
+    """
+    # Load VCP configuration
+    vcp_config = load_json_config("vcp.json")[vcp_id]
+    template_mgr = ScanTemplateManager()
+
+    # Create empty datasets for all scans in VCP
+    empty_datasets = {}
+    for idx, (elevation, scan_type) in enumerate(
+        zip(vcp_config["elevations"], vcp_config["scan_types"])
+    ):
+        empty_ds = template_mgr.create_scan_dataset(
+            scan_type=scan_type,
+            elevation=elevation,
+            radar_info={
+                **radar_info,
+                "vcp_time": radar_info["vcp_time"],  # Add VCP timestamp
+            },
+        )
+
+        # Use consistent naming convention
+        node_name = f"sweep_{idx}"
+        empty_datasets[node_name] = empty_ds
+
+    # Create DataTree from dictionary
+    return DataTree.from_dict(empty_datasets)

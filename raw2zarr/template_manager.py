@@ -149,5 +149,5 @@ class ScanTemplateManager:
         )
         ds = ds.set_coords(["time", "longitude", "latitude", "altitude", "elevation"])
         # TO DO: add follow_mode, prt_mode, sweep_mode, sweep_fixed_angle
-        meta = cfg.metadata
+        # meta = cfg.metadata
         return ds.xradar.georeference()

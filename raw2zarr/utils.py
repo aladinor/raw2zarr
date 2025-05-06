@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 import bz2
 import gzip
+import json
 import os
 from collections.abc import Iterator
 from datetime import datetime, timezone
+from pathlib import Path
 from time import time
 from typing import Any
 
@@ -52,13 +54,21 @@ def batch(iterable: list[Any], n: int = 1) -> Iterator[list[Any]]:
 
 
 def timer_func(func):
-    # This function shows the execution time of
-    # the function object passed
+    """Decorator that prints the execution time in h:m:s."""
+
     def wrap_func(*args, **kwargs):
         t1 = time()
         result = func(*args, **kwargs)
         t2 = time()
-        print(f"Function {func.__name__!r} executed in {(t2-t1):.4f}s")
+        elapsed = t2 - t1
+
+        hours = int(elapsed // 3600)
+        minutes = int((elapsed % 3600) // 60)
+        seconds = elapsed % 60
+
+        print(
+            f"Function {func.__name__!r} executed in {hours}h {minutes}m {seconds:.2f}s"
+        )
         return result
 
     return wrap_func
@@ -196,68 +206,107 @@ def dtree_encoding(dtree, append_dim) -> dict:
     Returns:
         dict: A dictionary with encoding parameters for variables and coordinates.
     """
+    from collections import defaultdict
 
-    _encoding = {}
-    # Base encoding for time-related variables
     time_enc = dict(
         units="nanoseconds since 1950-01-01T00:00:00.00",
         dtype="int64",
         _FillValue=-9999,
     )
-    # Base encoding for general variables
     var_enc = dict(
         _FillValue=-9999,
     )
+    encoding = defaultdict(dict)
+    if not isinstance(dtree, DataTree):
+        return {}
 
-    if isinstance(dtree, DataTree):
-        # Append_dim encoding for each group
-        _encoding = {
-            f"{dtree[group].path}": {f"{append_dim}": time_enc}
-            for group in dtree.groups
-        }
+    for node in dtree.subtree:
+        path = node.path
+        ds = node.ds
+        if node.is_empty:
+            continue
+        if "time" in ds:
+            encoding[path]["time"] = time_enc
+        if append_dim in ds:
+            encoding[path][append_dim] = time_enc
+        # will trigger warning. Still waiting for https://github.com/pydata/xarray/issues/10077
+        for var_name, var in ds.data_vars.items():
+            if var.dtype.kind in {"O", "U"}:
+                maxlen = max(
+                    len(str(val)) for val in var.values.ravel() if val is not None
+                )
+                encoding[path][var_name] = {
+                    "dtype": f"<U{maxlen}",
+                    "_FillValue": "",
+                }
+            else:
+                encoding[path][var_name] = var_enc
 
-        # Add encoding for sweeps (time and append_dim)
-        for node in dtree.match("*/sweep_*").groups[2:]:
-            for var_name in dtree[node].to_dataset().data_vars:
-                _encoding[node].update({var_name: var_enc, "time": time_enc})
-
-        # Remove root encoding if present
-        _encoding.pop("/", None)
-
-    else:
-        _encoding = {}
-
-    return _encoding
+    return dict(encoding)
 
 
-def prepare2read(filename, storage_options={"anon": True}):
+def prepare2read(filename: str, storage_options: dict = None):
     """
     Return a file-like object ready for reading.
 
-    Open a file for reading in binary mode with transparent decompression of
-    Gzip and BZip2 files. Supports local and S3 files. The resulting file-like
-    object should be closed.
+    Opens a file for reading in binary mode with automatic detection and handling of
+    Gzip and BZip2 compressed files. Supports local and S3 files through `fsspec`.
+    If a file is hosted on S3, it uses the given storage options for authentication.
+    The caller is responsible for closing the returned file-like object.
 
     Parameters
     ----------
     filename : str or file-like object
-        Filename or file-like object which will be opened. File-like objects
-        will not be examined for compressed data.
+        The path to the file to be opened, either as a string (for local or S3 files)
+        or an already open file-like object. If the input is a file-like object, it will be returned as-is.
+    storage_options : dict, optional
+        A dictionary containing authentication options for S3. By default,
+        it uses anonymous authentication (`{"anon": True}`). This parameter is ignored for local files.
 
     Returns
     -------
-    file_like : file-like object
-        File-like object from which data can be read.
-        @param storage_options:
+    file-like object
+        A file-like object that can be used to read the contents of the specified file.
+        For compressed files, the appropriate decompression object (gzip or bzip2) is returned.
+        For S3 files, the object returned by `fsspec.open` is used. Otherwise, the standard
+        file object from `open()` is returned.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the specified local file does not exist.
+    ValueError
+        If the filename string is not a valid S3 path when using S3 storage options.
+    fsspec.exceptions.FSSpecError
+        For errors related to S3 file handling.
+
+    Examples
+    --------
+    Open a local file for reading:
+    >>> with prepare2read("example.txt") as f:
+    ...     data = f.read()
+
+    Open a gzip-compressed file:
+    >>> with prepare2read("example.txt.gz") as f:
+    ...     data = f.read()
+
+    Open an S3 file with anonymous access:
+    >>> with prepare2read("s3://mybucket/example.txt") as f:
+    ...     data = f.read()
+
+    Open an S3 file with specific storage options:
+    >>> storage_options = {"anon": False, "key": "my-access-key", "secret": "my-secret-key"}
+    >>> with prepare2read("s3://mybucket/example.txt", storage_options=storage_options) as f:
+    ...     data = f.read()
     """
+    if not storage_options:
+        storage_options = {"anon": True}
     # If already a file-like object, return as-is
     if hasattr(filename, "read"):
         return filename
 
     # Check if S3 path, and open with fsspec
     if filename.startswith("s3://"):
-        # with fsspec.open(filename, mode="rb", anon=True) as f:
-        #     return f.read()
         return fsspec.open(
             filename, mode="rb", compression="infer", **storage_options
         ).open()
@@ -306,26 +355,18 @@ def exp_dim(dt: xr.DataTree, append_dim: str) -> xr.DataTree:
 
         >>> dt = exp_dim(dt, "vcp_time")
     """
-    # Get the start time from the root node
     start_time = pd.to_datetime(dt.time_coverage_start.item())
+    if start_time.tzinfo is not None:
+        start_time = start_time.tz_convert(None)
 
-    # Iterate over all nodes in the DataTree
     for node in dt.subtree:
         ds = node.to_dataset(inherit=False)  # Extract the dataset without inheritance
-
-        # Add the new dimension with the start_time value
-        ds[append_dim] = start_time
-
-        # Define attributes for the new dimension
+        ds[append_dim] = (append_dim, np.array([start_time], dtype="datetime64[ns]"))
         attrs = {
             "description": "Volume Coverage Pattern time since start of volume scan",
         }
         ds[append_dim].attrs = attrs
-
-        # Set the new variable as a coordinate and expand the dimension
-        ds = ds.set_coords(append_dim).expand_dims(dim=append_dim, axis=0)
-
-        # Update the dataset in the DataTree node
+        ds = ds.set_coords(append_dim)
         dt[node.path].ds = ds
 
     return dt
@@ -468,7 +509,87 @@ def fix_azimuth(ds: xr.Dataset, fill_value: str = "extrapolate") -> xr.Dataset:
     return ds
 
 
-def check_adaptative_scannig(dtree: xr.DataTree) -> bool:
+def load_json_config(filename: str = "vcp.json") -> dict:
+    """
+    Load and parse a JSON configuration file from the correct package path.
+
+    Parameters:
+        filename (str): Name of the JSON file (e.g., 'vcp.json', 'scan_config.json').
+
+    Returns:
+        dict: Parsed JSON data.
+
+    Raises:
+        FileNotFoundError: If the file is not found at the expected location.
+        ValueError: If the JSON file contains invalid syntax.
+    """
+    try:
+        # Adjust base directory to point to 'raw2zarr' package root
+        package_root = Path(__file__).resolve().parent  # Get the raw2zarr directory
+
+        # Define the correct path inside raw2zarr/config/
+        config_path = package_root / "config" / filename
+
+        if not config_path.exists():
+            raise FileNotFoundError(f"{filename} not found at {config_path}")
+
+        # Read and parse the JSON file
+        with config_path.open("r", encoding="utf-8") as file:
+            config_data = json.load(file)
+
+        return config_data
+    except FileNotFoundError:
+        raise FileNotFoundError(
+            f"{filename} not found at expected location: {config_path}"
+        )
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Failed to parse {filename}: {e}")
+
+
+def get_vcp_values(vcp_name: str = "VCP-212") -> list[float]:
+    """
+    Retrieve VCP values from the loaded TOML config.
+
+    Args:
+        vcp_name (str): The specific VCP name (e.g., 'VCP-212').
+
+    Returns:
+        list[float]: The list of elevation angles for the given VCP.
+
+    Raises:
+        KeyError: If the engine or VCP name is not found in the config.
+    """
+    config = load_json_config("vcp.json")  # Load the configuration
+    try:
+        values = config[vcp_name]["elevations"]
+        if not isinstance(values, list):
+            raise ValueError(
+                f"Expected a list of floats for {vcp_name}, got {type(values).__name__}"
+            )
+        return values
+    except KeyError as e:
+        raise KeyError(f"VCP '{vcp_name}' not found.") from e
+
+
+def _get_missing_elevations(
+    default_list: list, second_list: list, tolerance: float = 0.05
+) -> list[float]:
+    i = 0  # Index for default_list
+    j = 0  # Index for second_list
+    while i < len(default_list) and j < len(second_list):
+        if abs(default_list[i] - second_list[j]) <= tolerance:
+            # Match: move both indices
+            i += 1
+            j += 1
+        else:
+            # Mismatch: skip the current element in the second list
+            j += 1
+
+    # Return indexes of remaining elements in the default list
+    return [idx for idx in range(i, len(default_list))]
+
+
+def check_dynamic_scan(dtree: xr.DataTree) -> bool:
     """
     Checks for the presence of adaptive scanning in radar data represented by a xarray DataTree.
 
@@ -495,25 +616,59 @@ def check_adaptative_scannig(dtree: xr.DataTree) -> bool:
     Example:
         >>> from xarray import DataTree
         >>> dtree = DataTree(...)  # Load your radar data into a DataTree
-        >>> is_adaptive = check_adaptative_scannig(dtree)
+        >>> is_adaptive = check_dynamic_scan(dtree)
         >>> print(is_adaptive)  # Outputs True or False based on the scan pattern.
     """
-    if len(dtree.match("*sweep_*")) <= 1:
-        return False
-
-    # Extract sweep_fixed_angle values for each sweep in the DataTree
+    current_vcp = dtree.attrs["scan_name"]
     elevations: list[float] = [
-        dtree[sweep]["sweep_fixed_angle"].item()
-        for sweep in dtree.match("*sweep_*").groups[2:]
+        dtree[sweep]["sweep_fixed_angle"].item() for sweep in dtree.match("*sweep_*")
     ]
+    VCP_REFERENCE = get_vcp_values(vcp_name=current_vcp)
 
-    # Count occurrences of each elevation angle and find the maximum frequency
-    adapt_scann = max(elevations.count(x) for x in set(elevations))
+    if not VCP_REFERENCE:
+        raise ValueError(
+            f"VCP type '{current_vcp}' not found in the reference dictionary."
+        )
 
-    # Return True if any elevation angle occurs more than twice
-    # Usually Split Cut mode perform two measurement for the same elevation (High/Low PRF)
-    # Therefore, more than 2 occurrences implies adaptative scans
-    if adapt_scann > 2:
+    # Check if the lengths of the lists match
+    if len(elevations) != len(VCP_REFERENCE):
         return True
+
+    # Compare each angle with the reference, allowing for a small tolerance
+    for extracted, reference in zip(elevations, VCP_REFERENCE):
+        if abs(extracted - reference) > 0.05:
+            return True
+
+    return False
+
+
+def dtree_full_like(dtree: DataTree, fill_value="NaN") -> DataTree:
+    if not isinstance(dtree, DataTree):
+        raise TypeError(
+            f"Please pass a DataTree. dtree_full_like does not support {type(dtree)}"
+        )
+
+    # Use subtree to iterate over all nodes
+    new_tree = {
+        node.path: xr.full_like(node.ds, fill_value=fill_value)
+        if node.ds is not None
+        else None
+        for node in dtree.subtree
+    }
+    return DataTree.from_dict(new_tree)
+
+
+def create_empty_dtree(vcp: str = "VCP-212") -> DataTree:
+    from raw2zarr.dtree_builder import align_dynamic_scan, load_radar_data
+
+    if vcp == "VCP-212":
+        file = "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_161526_V06"
+    engine = "nexradlevel2"
+    append_dim = "vcp_time"
+    dtree = load_radar_data(file, engine=engine)
+    dtree = (dtree.pipe(fix_angle)).xradar.georeference()
+    if (engine == "nexradlevel2") & check_dynamic_scan(dtree):
+        dtree = align_dynamic_scan(dtree, append_dim=append_dim, engine=engine)
     else:
-        return False
+        dtree = dtree.pipe(ensure_dimension, append_dim)
+    return dtree_full_like(dtree.isel(vcp_time=0), np.nan)

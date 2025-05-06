@@ -27,10 +27,23 @@ class ScanConfig(BaseModel):
     metadata: dict[str, str | float]
 
 
+class VcpConfig(BaseModel):
+    model_config = ConfigDict(frozen=True)
+    elevations: list[float]
+    scan_types: list[str]
+    dims: dict[str, list[int]]
+
+
 class ScanTemplateManager:
-    def __init__(self, config_path: Path = Path("config/scan_config.json")):
-        self.config_path = config_path
+    def __init__(
+        self,
+        scan_config_path: Path = Path("config/scan_config.json"),
+        vcp_config_path: Path = Path("config/vcp.json"),
+    ):
+        self.config_path = scan_config_path
         self._full_config = None
+        self.vcp_config_path = vcp_config_path
+        self._vcp_configs = None
 
     @property
     def config(self):
@@ -38,6 +51,13 @@ class ScanTemplateManager:
             with open(self.config_path) as f:
                 self._full_config = json.load(f)
         return self._full_config
+
+    @property
+    def vcp_config(self):
+        if self._vcp_configs is None:
+            with open(self.vcp_config_path) as f:
+                self._vcp_configs = json.load(f)
+        return self._vcp_configs
 
     @lru_cache(maxsize=32)
     def get_template(self, scan_type: str) -> ScanConfig:
@@ -47,16 +67,26 @@ class ScanTemplateManager:
             raise ValueError(f"Scan type {scan_type} not found in config")
         return ScanConfig(**self.config[scan_type])
 
+    @lru_cache(maxsize=32)
+    def get_vcp_info(self, vcp: str) -> VcpConfig:
+        """Get validated config for specific scan type"""
+        # 🛠️ Added error handling for missing scan types
+        if vcp not in self.vcp_config:
+            raise ValueError(f"VCP {vcp} not found in config")
+        return VcpConfig(**self.vcp_config[vcp])
+
     def create_scan_dataset(
-        self, scan_type: str, elevation: float, radar_info: dict
+        self, scan_type: str, sweep_idx: float, radar_info: dict
     ) -> xr.Dataset:
         """Generic scan dataset creation"""
         cfg = self.get_template(scan_type)
+        vcp = self.get_vcp_info(radar_info["vcp"])
+        elevation = vcp.elevations[sweep_idx]
+        az_cfg = vcp.dims["azimuth"][sweep_idx]
+        range_cfg = vcp.dims["range"][sweep_idx]
         ds = xr.Dataset()
-
         # 🛠️ Generalized coordinate creation
         # Add azimuth coordinate
-        az_cfg = cfg.coords["azimuth"]
         az_res = 360 / cfg.dims["azimuth"]  # 🛠️ Calculate resolution
         ds["azimuth"] = xr.DataArray(
             np.arange(az_res / 2, 360, az_res, dtype=az_cfg.dtype),
@@ -64,7 +94,7 @@ class ScanTemplateManager:
             attrs=az_cfg.attributes,
         )
         # Add range coordinate
-        range_cfg = cfg.coords["range"]
+
         ds["range"] = xr.DataArray(
             np.arange(
                 range_cfg.attributes["meters_to_center_of_first_gate"],
@@ -117,5 +147,7 @@ class ScanTemplateManager:
             dims="azimuth",
             attrs=cfg.coords["elevation"].attributes,
         )
-
+        ds = ds.set_coords(["time", "longitude", "latitude", "altitude", "elevation"])
+        # TO DO: add follow_mode, prt_mode, sweep_mode, sweep_fixed_angle
+        meta = cfg.metadata
         return ds.xradar.georeference()

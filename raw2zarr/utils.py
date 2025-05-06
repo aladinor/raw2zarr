@@ -650,9 +650,11 @@ def dtree_full_like(dtree: DataTree, fill_value="NaN") -> DataTree:
 
     # Use subtree to iterate over all nodes
     new_tree = {
-        node.path: xr.full_like(node.ds, fill_value=fill_value)
-        if node.ds is not None
-        else None
+        node.path: (
+            xr.full_like(node.ds, fill_value=fill_value)
+            if node.ds is not None
+            else None
+        )
         for node in dtree.subtree
     }
     return DataTree.from_dict(new_tree)

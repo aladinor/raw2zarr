@@ -207,6 +207,7 @@ def dtree_encoding(dtree, append_dim) -> dict:
         dict: A dictionary with encoding parameters for variables and coordinates.
     """
     from collections import defaultdict
+    from numpy.dtypes import StringDType
 
     time_enc = dict(
         units="nanoseconds since 1950-01-01T00:00:00.00",
@@ -232,12 +233,8 @@ def dtree_encoding(dtree, append_dim) -> dict:
         # will trigger warning. Still waiting for https://github.com/pydata/xarray/issues/10077
         for var_name, var in ds.data_vars.items():
             if var.dtype.kind in {"O", "U"}:
-                maxlen = max(
-                    len(str(val)) for val in var.values.ravel() if val is not None
-                )
                 encoding[path][var_name] = {
-                    "dtype": f"<U{maxlen}",
-                    "_FillValue": "",
+                    "dtype": np.dtypes.StringDType,
                 }
             else:
                 encoding[path][var_name] = var_enc
@@ -330,7 +327,7 @@ def prepare2read(filename: str, storage_options: dict = None):
     return file
 
 
-def exp_dim(dt: xr.DataTree, append_dim: str) -> xr.DataTree:
+def exp_dim(dtree: xr.DataTree, append_dim: str) -> xr.DataTree:
     """
     Add a new dimension to all datasets in a DataTree and initialize it with a specific value.
 
@@ -339,7 +336,7 @@ def exp_dim(dt: xr.DataTree, append_dim: str) -> xr.DataTree:
     is added as a coordinate. The new dimension is also expanded to allow additional values.
 
     Parameters:
-        dt (xr.DataTree): The DataTree containing radar datasets.
+        dtree (xr.DataTree): The DataTree containing radar datasets.
         append_dim (str): The name of the dimension to add.
 
     Returns:
@@ -353,23 +350,23 @@ def exp_dim(dt: xr.DataTree, append_dim: str) -> xr.DataTree:
     Example:
         Add a "vcp_time" dimension to all datasets in a DataTree:
 
-        >>> dt = exp_dim(dt, "vcp_time")
+        >>> dt = exp_dim(dtree, "vcp_time")
     """
-    start_time = pd.to_datetime(dt.time_coverage_start.item())
+    start_time = pd.to_datetime(dtree.time_coverage_start.item())
     if start_time.tzinfo is not None:
         start_time = start_time.tz_convert(None)
 
-    for node in dt.subtree:
+    for node in dtree.subtree:
         ds = node.to_dataset(inherit=False)  # Extract the dataset without inheritance
-        ds[append_dim] = (append_dim, np.array([start_time], dtype="datetime64[ns]"))
+        ds[append_dim] = start_time
         attrs = {
             "description": "Volume Coverage Pattern time since start of volume scan",
         }
         ds[append_dim].attrs = attrs
-        ds = ds.set_coords(append_dim)
-        dt[node.path].ds = ds
+        ds = ds.set_coords(append_dim).expand_dims(dim=append_dim, axis=0)
+        dtree[node.path].ds = ds
 
-    return dt
+    return dtree
 
 
 def ensure_dimension(dt: xr.DataTree, append_dim: str) -> xr.DataTree:

@@ -207,7 +207,6 @@ def dtree_encoding(dtree, append_dim) -> dict:
         dict: A dictionary with encoding parameters for variables and coordinates.
     """
     from collections import defaultdict
-    from numpy.dtypes import StringDType
 
     time_enc = dict(
         units="nanoseconds since 1950-01-01T00:00:00.00",

@@ -50,8 +50,9 @@ def _decompress_to_temp(gz_path: str) -> str:
     Returns:
         str: Path to a temporary uncompressed file
     """
-    with gzip.open(gz_path, "rb") as gz, tempfile.NamedTemporaryFile(
-        delete=False, suffix=".nexrad"
-    ) as tmp:
+    with (
+        gzip.open(gz_path, "rb") as gz,
+        tempfile.NamedTemporaryFile(delete=False, suffix=".nexrad") as tmp,
+    ):
         tmp.write(gz.read())
         return tmp.name

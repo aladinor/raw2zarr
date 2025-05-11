@@ -34,6 +34,6 @@ def prepare2read(
     if magic.startswith(b"\x1f\x8b"):
         return gzip.GzipFile(fileobj=file)
     elif magic.startswith(b"BZh"):
-        return bz2.BZ2File(fileobj=file)
+        return bz2.BZ2File(file)
 
     return file

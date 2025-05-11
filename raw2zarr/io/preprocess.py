@@ -1,8 +1,9 @@
 import gzip
 import tempfile
+from typing import Union
+
 import fsspec
 from s3fs.core import S3File
-from typing import Union
 
 
 def normalize_input_for_xradar(file: Union[str, S3File]) -> str:

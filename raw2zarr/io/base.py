@@ -1,7 +1,8 @@
-import gzip
 import bz2
+import gzip
+from typing import IO, Union
+
 import fsspec
-from typing import Union, IO
 
 
 def prepare2read(

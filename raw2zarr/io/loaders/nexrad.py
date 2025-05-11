@@ -1,5 +1,6 @@
-from xradar.io import open_nexradlevel2_datatree
 from xarray import DataTree
+from xradar.io import open_nexradlevel2_datatree
+
 from ..preprocess import normalize_input_for_xradar
 
 

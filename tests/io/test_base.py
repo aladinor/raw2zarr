@@ -1,7 +1,7 @@
-import gzip
 import bz2
+import gzip
 import io
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 from raw2zarr.io.base import prepare2read
 

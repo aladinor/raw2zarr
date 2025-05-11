@@ -1,5 +1,7 @@
 from unittest.mock import MagicMock, patch
+
 import pytest
+
 from raw2zarr.io.load import load_radar_data
 
 

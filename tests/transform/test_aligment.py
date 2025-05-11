@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+
 from raw2zarr.io.load import load_radar_data
 from raw2zarr.utils import fix_angle
 

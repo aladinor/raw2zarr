@@ -1,5 +1,6 @@
-from xradar.io import open_iris_datatree
 from xarray import DataTree
+from xradar.io import open_iris_datatree
+
 from ..base import prepare2read
 
 

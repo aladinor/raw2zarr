@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 import xradar as xd
-from xarray import DataTree, Dataset
+from xarray import Dataset, DataTree
 
 
 def fix_angle(dt: DataTree, tolerance: float = None, **kwargs) -> DataTree:

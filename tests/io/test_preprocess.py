@@ -1,7 +1,7 @@
-from unittest.mock import patch
 import gzip
 import os
-import pytest
+from unittest.mock import patch
+
 from raw2zarr.io.preprocess import normalize_input_for_xradar
 
 

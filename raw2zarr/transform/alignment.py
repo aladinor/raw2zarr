@@ -5,13 +5,37 @@ import xradar as xd
 from xarray import Dataset, DataTree
 
 
-def fix_angle(dt: DataTree, tolerance: float = None, **kwargs) -> DataTree:
+def reindex_angle(ds: Dataset, tolerance: float = None) -> Dataset:
+    ds = ds.copy(deep=True)
+    ds["time"] = ds.time.load()
+    ds = fix_azimuth(ds)
+    angle_dict = xd.util.extract_angle_parameters(ds)
+    start_ang = angle_dict["start_angle"]
+    stop_ang = angle_dict["stop_angle"]
+    direction = angle_dict["direction"]
+    ds = xd.util.remove_duplicate_rays(ds)
+    az = len(np.arange(start_ang, stop_ang))
+    ar = np.round(az / len(ds.azimuth.data), 2)
+    tolerance = ar if not tolerance else tolerance
+    ds = xd.util.reindex_angle(
+        ds,
+        start_ang,
+        stop_ang,
+        ar,
+        direction,
+        method="nearest",
+        tolerance=tolerance,
+    )
+    return ds
+
+
+def fix_angle(dtree: DataTree, tolerance: float = None, **kwargs) -> DataTree:
     """
     Reindexes all sweeps in a radar DataTree to consistent azimuth angles.
 
     Parameters
     ----------
-    dt : xarray.DataTree
+    dtree : xarray.DataTree
         DataTree with radar sweep nodes (e.g., "sweep_0", "sweep_1", ...)
     tolerance : float, optional
         Tolerance for reindexing angles. If not provided, it is estimated from sweep resolution.
@@ -30,29 +54,11 @@ def fix_angle(dt: DataTree, tolerance: float = None, **kwargs) -> DataTree:
     - Modifies `dt` in-place.
     """
     # TODO: this should work for single sweeps as well
-    for node in dt.match("sweep_*"):
-        ds = dt[node].to_dataset()
-        ds["time"] = ds.time.load()
-        ds = fix_azimuth(ds)
-        angle_dict = xd.util.extract_angle_parameters(ds)
-        start_ang = angle_dict["start_angle"]
-        stop_ang = angle_dict["stop_angle"]
-        direction = angle_dict["direction"]
-        ds = xd.util.remove_duplicate_rays(ds)
-        az = len(np.arange(start_ang, stop_ang))
-        ar = np.round(az / len(ds.azimuth.data), 2)
-        tolerance = ar if not tolerance else tolerance
-        ds = xd.util.reindex_angle(
-            ds,
-            start_ang,
-            stop_ang,
-            ar,
-            direction,
-            method="nearest",
-            tolerance=tolerance,
-        )
-        dt[node].ds = ds
-    return dt
+    return dtree.xradar.map_over_sweeps(
+        reindex_angle,
+        tolerance=tolerance,
+        **kwargs,
+    )
 
 
 def fix_azimuth(ds: Dataset, fill_value: str = "extrapolate") -> Dataset:

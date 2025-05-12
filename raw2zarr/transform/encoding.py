@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 import numpy as np
+from packaging.version import parse as parse_version
 from xarray import DataTree
 
 
@@ -40,8 +41,15 @@ def dtree_encoding(dtree: DataTree, append_dim: str) -> dict:
 
         for var_name, var in ds.data_vars.items():
             if var.dtype.kind in {"O", "U"}:
-                encoding[path][var_name] = {"dtype": np.dtypes.StringDType}
+                encoding[path][var_name] = {"dtype": get_string_dtype()}
             else:
                 encoding[path][var_name] = var_enc
 
     return dict(encoding)
+
+
+def get_string_dtype():
+    if parse_version(np.__version__) >= parse_version("2.0.0"):
+        return np.dtypes.StringDType
+    else:
+        return np.dtype("U")

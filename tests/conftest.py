@@ -81,9 +81,6 @@ def iris_aws_file():
     return "s3://s3-radaresideam/l2_data/2022/06/01/Guaviare/GUA220601112817.RAWP3AL"
 
 
-# --------- Generalized Fixtures for File or File-Like Objects ---------
-
-
 @pytest.fixture(params=["file", "filelike"])
 def file_or_filelike(request):
     """

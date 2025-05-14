@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 
 from raw2zarr.io.load import load_radar_data
+from raw2zarr.transform.alignment import check_dynamic_scan
 from raw2zarr.utils import fix_angle
 
 
@@ -19,3 +20,15 @@ def test_fix_angle_on_misaligned_sweep10(nexrad_aws_file_sweep10_misaligned):
     assert len(sweep_fixed.azimuth) == 360
     assert np.allclose(np.diff(sweep_fixed.azimuth), 1.0)
     assert np.allclose(sweep_fixed.azimuth.values, expected_azimuth, atol=0.01)
+
+
+def test_check_dynamic_scan(nexrad_aws_file_SAILS):
+    dtree = load_radar_data(nexrad_aws_file_SAILS, engine="nexradlevel2")
+    is_dynamic = check_dynamic_scan(dtree)
+    assert is_dynamic is True
+
+
+def test_check_dynamic_scan_detects_static(nexrad_local_uncompressed_file):
+    dtree = load_radar_data(nexrad_local_uncompressed_file, engine="nexradlevel2")
+    is_dynamic = check_dynamic_scan(dtree)
+    assert is_dynamic is False

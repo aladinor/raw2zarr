@@ -1,7 +1,7 @@
 import pytest
 
 import raw2zarr.transform.utils as transform_utils
-from raw2zarr.transform.alignment import get_vcp_values
+from raw2zarr.transform.utils import get_vcp_values
 
 
 def test_get_vcp_values_valid():

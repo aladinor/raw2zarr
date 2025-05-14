@@ -1,8 +1,13 @@
+from itertools import zip_longest
+from math import isclose
+
 import numpy as np
 import pandas as pd
 import xarray as xr
 import xradar as xd
 from xarray import Dataset, DataTree
+
+from .utils import get_vcp_values
 
 
 def reindex_angle(ds: Dataset, tolerance: float = None) -> Dataset:
@@ -109,3 +114,42 @@ def fix_azimuth(ds: Dataset, fill_value: str = "extrapolate") -> Dataset:
             ds["time"] = time_interpolated
             ds = ds.set_coords("time")
     return ds
+
+
+def check_dynamic_scan(dtree: xr.DataTree, tolerance: float = 0.05) -> bool:
+    """
+    Determine if a radar scan uses adaptive scanning (e.g., SAILS/MRLE) by comparing
+    its sweep elevations with expected VCP configuration.
+
+    Parameters:
+        dtree (xr.DataTree): Radar DataTree with sweep_* nodes.
+        tolerance (float): Allowed deviation in degrees when comparing angles.
+
+    Returns:
+        bool: True if adaptive scanning is detected (missing or repeated sweeps).
+    """
+    scan_name = dtree.attrs.get("scan_name")
+    if not scan_name:
+        raise ValueError("Missing 'scan_name' attribute in DataTree root.")
+
+    try:
+        reference_elevs = get_vcp_values(scan_name)
+    except KeyError:
+        raise ValueError(f"VCP reference not found for '{scan_name}'.")
+
+    extracted_elevs = []
+    for node in dtree.match("sweep_*").values():
+        try:
+            elev = node["sweep_fixed_angle"].values.item()
+            extracted_elevs.append(float(elev))
+        except Exception:
+            continue  # Skip malformed or missing sweep_fixed_angle
+
+    if len(extracted_elevs) != len(reference_elevs):
+        return True
+
+    for a, b in zip_longest(extracted_elevs, reference_elevs, fillvalue=None):
+        if a is None or b is None or not isclose(a, b, abs_tol=tolerance):
+            return True
+
+    return False

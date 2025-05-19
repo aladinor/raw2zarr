@@ -37,8 +37,8 @@ class VcpConfig(BaseModel):
 class ScanTemplateManager:
     def __init__(
         self,
-        scan_config_path: Path = Path("config/scan_config.json"),
-        vcp_config_path: Path = Path("config/vcp.json"),
+        scan_config_path: Path = Path("../config/scan_config.json"),
+        vcp_config_path: Path = Path("../config/vcp.json"),
     ):
         self.config_path = scan_config_path
         self._full_config = None
@@ -82,29 +82,32 @@ class ScanTemplateManager:
         cfg = self.get_template(scan_type)
         vcp = self.get_vcp_info(radar_info["vcp"])
         elevation = vcp.elevations[sweep_idx]
-        az_cfg = vcp.dims["azimuth"][sweep_idx]
-        range_cfg = vcp.dims["range"][sweep_idx]
         ds = xr.Dataset()
-        # 🛠️ Generalized coordinate creation
-        # Add azimuth coordinate
-        az_res = 360 / cfg.dims["azimuth"]  # 🛠️ Calculate resolution
+        total_azimuth = vcp.dims["azimuth"][sweep_idx]
+        total_bins = vcp.dims["range"][sweep_idx]
+        az_res = 360 / total_azimuth
         ds["azimuth"] = xr.DataArray(
-            np.arange(az_res / 2, 360, az_res, dtype=az_cfg.dtype),
+            np.arange(
+                az_res / 2,
+                cfg.dims["azimuth"],
+                az_res,
+                dtype=cfg.coords["azimuth"].dtype,
+            ),
             dims="azimuth",
-            attrs=az_cfg.attributes,
+            attrs=cfg.coords["azimuth"].attributes,
         )
         # Add range coordinate
 
         ds["range"] = xr.DataArray(
             np.arange(
-                range_cfg.attributes["meters_to_center_of_first_gate"],
-                range_cfg.attributes["meters_to_center_of_first_gate"]
-                + range_cfg.attributes["meters_between_gates"] * cfg.dims["range"],
-                range_cfg.attributes["meters_between_gates"],
-                dtype=range_cfg.dtype,
+                cfg.coords["range"].attributes["meters_to_center_of_first_gate"],
+                cfg.coords["range"].attributes["meters_to_center_of_first_gate"]
+                + cfg.coords["range"].attributes["meters_between_gates"] * total_bins,
+                cfg.coords["range"].attributes["meters_between_gates"],
+                dtype=cfg.coords["range"].dtype,
             ),
             dims="range",
-            attrs=range_cfg.attributes,
+            attrs=cfg.coords["range"].attributes,
         )
 
         # Add radar location
@@ -120,12 +123,9 @@ class ScanTemplateManager:
             radar_info["alt"], attrs={"standard_name": "altitude"}
         )
 
-        # Add variables
         for var_name, var_cfg in cfg.variables.items():
             ds[var_name] = xr.DataArray(
-                np.full(
-                    [cfg.dims[d] for d in var_cfg.dims], np.nan, dtype=var_cfg.dtype
-                ),
+                np.full([total_azimuth, total_bins], np.nan, dtype=var_cfg.dtype),
                 dims=var_cfg.dims,
                 attrs=var_cfg.attributes,
             )
@@ -133,7 +133,7 @@ class ScanTemplateManager:
         # Add time coordinates
         ds["time"] = xr.DataArray(
             np.full(
-                cfg.dims["azimuth"],
+                total_azimuth,
                 radar_info["reference_time"],
                 dtype="datetime64[ns]",
             ),
@@ -147,7 +147,7 @@ class ScanTemplateManager:
             dims="azimuth",
             attrs=cfg.coords["elevation"].attributes,
         )
-        ds = ds.set_coords(["time", "longitude", "latitude", "altitude", "elevation"])
         # TO DO: add follow_mode, prt_mode, sweep_mode, sweep_fixed_angle
-        # meta = cfg.metadata
+
+        ds = ds.set_coords(["time", "longitude", "latitude", "altitude", "elevation"])
         return ds.xradar.georeference()

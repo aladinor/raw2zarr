@@ -1,14 +1,9 @@
 {
     "CS-SZ2": {
-        "dims": {
-            "azimuth": 720,
-            "range": 1832
-        },
-        "coords": {
+        "dims": {"azimuth": 720, "range": 1832},
+        "cords": {
             "range": {
-                "dims": [
-                    "range"
-                ],
+                "dims": ["range"],
                 "dtype": "float32",
                 "attributes": {
                     "standard_name": "projection_range_coordinate",
@@ -16,114 +11,92 @@
                     "units": "meters",
                     "axis": "radial_range_coordinate",
                     "meters_between_gates": 250.0,
-                    "spacing_is_constant": true,
-                    "meters_to_center_of_first_gate": 2125.0
-                }
+                    "spacing_is_constant": "true",
+                    "meters_to_center_of_first_gate": 2125.0,
+                },
             },
             "azimuth": {
-                "dims": [
-                    "azimuth"
-                ],
+                "dims": ["azimuth"],
                 "dtype": "float64",
                 "attributes": {
                     "standard_name": "ray_azimuth_angle",
                     "long_name": "azimuth_angle_from_true_north",
                     "units": "degrees",
-                    "axis": "radial_azimuth_coordinate"
-                }
+                    "axis": "radial_azimuth_coordinate",
+                },
             },
             "elevation": {
-                "dims": [
-                    "azimuth"
-                ],
+                "dims": ["azimuth"],
                 "dtype": "float64",
                 "attributes": {
                     "standard_name": "ray_elevation_angle",
                     "long_name": "elevation_angle_from_horizontal_plane",
                     "units": "degrees",
-                    "axis": "radial_elevation_coordinate"
-                }
-            }
+                    "axis": "radial_elevation_coordinate",
+                },
+            },
         },
         "variables": {
             "DBZH": {
-                "dims": [
-                    "azimuth",
-                    "range"
-                ],
+                "dims": ["azimuth", "range"],
                 "dtype": "float64",
                 "fill_value": -999.0,
                 "attributes": {
                     "standard_name": "radar_equivalent_reflectivity_factor_h",
                     "long_name": "Equivalent reflectivity factor H",
-                    "units": "dBZ"
-                }
+                    "units": "dBZ",
+                },
             },
             "ZDR": {
-                "dims": [
-                    "azimuth",
-                    "range"
-                ],
+                "dims": ["azimuth", "range"],
                 "dtype": "float64",
                 "fill_value": -999.0,
                 "attributes": {
                     "standard_name": "radar_differential_reflectivity_hv",
                     "long_name": "Log differential reflectivity H/V",
-                    "units": "dB"
-                }
+                    "units": "dB",
+                },
             },
             "PHIDP": {
-                "dims": [
-                    "azimuth",
-                    "range"
-                ],
+                "dims": ["azimuth", "range"],
                 "dtype": "float64",
                 "fill_value": -999.0,
                 "attributes": {
                     "standard_name": "radar_differential_phase_hv",
                     "long_name": "Differential phase HV",
-                    "units": "degrees"
-                }
+                    "units": "degrees",
+                },
             },
             "RHOHV": {
-                "dims": [
-                    "azimuth",
-                    "range"
-                ],
+                "dims": ["azimuth", "range"],
                 "dtype": "float64",
                 "fill_value": -999.0,
                 "attributes": {
                     "standard_name": "radar_correlation_coefficient_hv",
                     "long_name": "Correlation coefficient HV",
-                    "units": "unitless"
-                }
+                    "units": "unitless",
+                },
             },
             "CCORH": {
-                "dims": [
-                    "azimuth",
-                    "range"
-                ],
+                "dims": ["azimuth", "range"],
                 "dtype": "float64",
                 "fill_value": -999.0,
                 "attributes": {
                     "standard_name": "clutter_correction_h",
                     "long_name": "Clutter Correction H",
-                    "units": "unitless"
-                }
-            }
+                    "units": "unitless",
+                },
+            },
         },
         "metadata": {
             "sweep_mode": "azimuth_surveillance",
             "prt_mode": "not_set",
             "follow_mode": "not_set",
-            "sweep_fixed_angle": 0.5273
-        }
+            "sweep_fixed_angle": 0.5273,
+        },
     },
     "CD-SZ2": {
-        "dims": {
-            "azimuth": 720,
-            "range": 1192
-        },
+        "dims": {"azimuth": 720, "range": 1192},
         "coords": {
             "range": {
                 "dims": ["range"],
@@ -134,9 +107,9 @@
                     "units": "meters",
                     "axis": "radial_range_coordinate",
                     "meters_between_gates": 250.0,
-                    "spacing_is_constant": true,
-                    "meters_to_center_of_first_gate": 2125.0
-                }
+                    "spacing_is_constant": "true",
+                    "meters_to_center_of_first_gate": 2125.0,
+                },
             },
             "azimuth": {
                 "dims": ["azimuth"],
@@ -145,87 +118,8 @@
                     "standard_name": "ray_azimuth_angle",
                     "long_name": "azimuth_angle_from_true_north",
                     "units": "degrees",
-                    "axis": "radial_azimuth_coordinate"
-                }
-            },
-            "elevation": {
-                "dims": ["azimuth"],
-                "dtype": "float64",
-                "attributes": {
-                    "standard_name": "ray_elevation_angle",
-                    "long_name": "elevation_angle_from_horizontal_plane",
-                    "units": "degrees",
-                    "axis": "radial_elevation_coordinate"
-                }
-            }
-        },
-        "variables": {
-            "DBZH": {
-                "dims": ["azimuth", "range"],
-                "dtype": "float64",
-                "fill_value": -999.0,
-                "attributes": {
-                    "standard_name": "radar_equivalent_reflectivity_factor_h",
-                    "long_name": "Equivalent reflectivity factor H",
-                    "units": "dBZ"
-                }
-            },
-            "VRADH": {
-                "dims": ["azimuth", "range"],
-                "dtype": "float64",
-                "fill_value": -999.0,
-                "attributes": {
-                    "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
-                    "long_name": "Radial velocity H",
-                    "units": "meters per seconds"
-                }
-            },
-            "WRADH": {
-                "dims": ["azimuth", "range"],
-                "dtype": "float64",
-                "fill_value": -999.0,
-                "attributes": {
-                    "standard_name": "radar_spectrum_width",
-                    "long_name": "Doppler spectrum width H",
-                    "units": "meters per seconds"
-                }
-            }
-        },
-        "metadata": {
-            "sweep_mode": "azimuth_surveillance",
-            "prt_mode": "not_set",
-            "follow_mode": "not_set",
-            "sweep_fixed_angle": 0.5273
-        }
-    },
-    "B": {
-        "dims": {
-            "azimuth": 360,
-            "range": 1316
-        },
-        "coords": {
-            "range": {
-                "dims": ["range"],
-                "dtype": "float32",
-                "attributes": {
-                    "standard_name": "projection_range_coordinate",
-                    "long_name": "range_to_measurement_volume",
-                    "units": "meters",
-                    "axis": "radial_range_coordinate",
-                    "meters_between_gates": 250.0,
-                    "spacing_is_constant": true,
-                    "meters_to_center_of_first_gate": 2125.0
-                }
-            },
-            "azimuth": {
-                "dims": ["azimuth"],
-                "dtype": "float64",
-                "attributes": {
-                    "standard_name": "ray_azimuth_angle",
-                    "long_name": "azimuth_angle_from_true_north",
-                    "units": "degrees",
-                    "axis": "radial_azimuth_coordinate"
-                }
+                    "axis": "radial_azimuth_coordinate",
+                },
             },
             "elevation": {
                 "dims": ["azimuth"],
@@ -235,9 +129,8 @@
                     "long_name": "elevation_angle_from_horizontal_plane",
                     "units": "degrees",
                     "axis": "radial_elevation_coordinate",
-                    "fixed_value": 2.461
-                }
-            }
+                },
+            },
         },
         "variables": {
             "DBZH": {
@@ -247,8 +140,8 @@
                 "attributes": {
                     "standard_name": "radar_equivalent_reflectivity_factor_h",
                     "long_name": "Equivalent reflectivity factor H",
-                    "units": "dBZ"
-                }
+                    "units": "dBZ",
+                },
             },
             "VRADH": {
                 "dims": ["azimuth", "range"],
@@ -257,8 +150,8 @@
                 "attributes": {
                     "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
                     "long_name": "Radial velocity H",
-                    "units": "m/s"
-                }
+                    "units": "meters per seconds",
+                },
             },
             "WRADH": {
                 "dims": ["azimuth", "range"],
@@ -267,8 +160,85 @@
                 "attributes": {
                     "standard_name": "radar_spectrum_width",
                     "long_name": "Doppler spectrum width H",
-                    "units": "m/s"
-                }
+                    "units": "meters per seconds",
+                },
+            },
+        },
+        "metadata": {
+            "sweep_mode": "azimuth_surveillance",
+            "prt_mode": "not_set",
+            "follow_mode": "not_set",
+            "sweep_fixed_angle": 0.5273,
+        },
+    },
+    "B": {
+        "dims": {"azimuth": 360, "range": 1316},
+        "coords": {
+            "range": {
+                "dims": ["range"],
+                "dtype": "float32",
+                "attributes": {
+                    "standard_name": "projection_range_coordinate",
+                    "long_name": "range_to_measurement_volume",
+                    "units": "meters",
+                    "axis": "radial_range_coordinate",
+                    "meters_between_gates": 250.0,
+                    "spacing_is_constant": "true",
+                    "meters_to_center_of_first_gate": 2125.0,
+                },
+            },
+            "azimuth": {
+                "dims": ["azimuth"],
+                "dtype": "float64",
+                "attributes": {
+                    "standard_name": "ray_azimuth_angle",
+                    "long_name": "azimuth_angle_from_true_north",
+                    "units": "degrees",
+                    "axis": "radial_azimuth_coordinate",
+                },
+            },
+            "elevation": {
+                "dims": ["azimuth"],
+                "dtype": "float64",
+                "attributes": {
+                    "standard_name": "ray_elevation_angle",
+                    "long_name": "elevation_angle_from_horizontal_plane",
+                    "units": "degrees",
+                    "axis": "radial_elevation_coordinate",
+                    "fixed_value": 2.461,
+                },
+            },
+        },
+        "variables": {
+            "DBZH": {
+                "dims": ["azimuth", "range"],
+                "dtype": "float64",
+                "fill_value": -999.0,
+                "attributes": {
+                    "standard_name": "radar_equivalent_reflectivity_factor_h",
+                    "long_name": "Equivalent reflectivity factor H",
+                    "units": "dBZ",
+                },
+            },
+            "VRADH": {
+                "dims": ["azimuth", "range"],
+                "dtype": "float64",
+                "fill_value": -999.0,
+                "attributes": {
+                    "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+                    "long_name": "Radial velocity H",
+                    "units": "m/s",
+                },
+            },
+            "WRADH": {
+                "dims": ["azimuth", "range"],
+                "dtype": "float64",
+                "fill_value": -999.0,
+                "attributes": {
+                    "standard_name": "radar_spectrum_width",
+                    "long_name": "Doppler spectrum width H",
+                    "units": "m/s",
+                },
             },
             "ZDR": {
                 "dims": ["azimuth", "range"],
@@ -277,8 +247,8 @@
                 "attributes": {
                     "standard_name": "radar_differential_reflectivity_hv",
                     "long_name": "Log differential reflectivity H/V",
-                    "units": "dB"
-                }
+                    "units": "dB",
+                },
             },
             "PHIDP": {
                 "dims": ["azimuth", "range"],
@@ -287,8 +257,8 @@
                 "attributes": {
                     "standard_name": "radar_differential_phase_hv",
                     "long_name": "Differential phase HV",
-                    "units": "degrees"
-                }
+                    "units": "degrees",
+                },
             },
             "RHOHV": {
                 "dims": ["azimuth", "range"],
@@ -297,8 +267,8 @@
                 "attributes": {
                     "standard_name": "radar_correlation_coefficient_hv",
                     "long_name": "Correlation coefficient HV",
-                    "units": "unitless"
-                }
+                    "units": "unitless",
+                },
             },
             "CCORH": {
                 "dims": ["azimuth", "range"],
@@ -307,22 +277,19 @@
                 "attributes": {
                     "standard_name": "clutter_correction_h",
                     "long_name": "Clutter Correction H",
-                    "units": "unitless"
-                }
-            }
+                    "units": "unitless",
+                },
+            },
         },
         "metadata": {
             "sweep_mode": "azimuth_surveillance",
             "prt_mode": "not_set",
             "follow_mode": "not_set",
-            "sweep_fixed_angle": 2.461
-            }
+            "sweep_fixed_angle": 2.461,
         },
+    },
     "CD/WO": {
-        "dims": {
-            "azimuth": 360,
-            "range": 804
-        },
+        "dims": {"azimuth": 360, "range": 804},
         "coords": {
             "range": {
                 "dims": ["range"],
@@ -333,9 +300,9 @@
                     "units": "meters",
                     "axis": "radial_range_coordinate",
                     "meters_between_gates": 250.0,
-                    "spacing_is_constant": true,
-                    "meters_to_center_of_first_gate": 2125.0
-                }
+                    "spacing_is_constant": "true",
+                    "meters_to_center_of_first_gate": 2125.0,
+                },
             },
             "azimuth": {
                 "dims": ["azimuth"],
@@ -344,8 +311,8 @@
                     "standard_name": "ray_azimuth_angle",
                     "long_name": "azimuth_angle_from_true_north",
                     "units": "degrees",
-                    "axis": "radial_azimuth_coordinate"
-                }
+                    "axis": "radial_azimuth_coordinate",
+                },
             },
             "elevation": {
                 "dims": ["azimuth"],
@@ -355,9 +322,9 @@
                     "long_name": "elevation_angle_from_horizontal_plane",
                     "units": "degrees",
                     "axis": "radial_elevation_coordinate",
-                    "fixed_value": 5.142
-                }
-            }
+                    "fixed_value": 5.142,
+                },
+            },
         },
         "variables": {
             "DBZH": {
@@ -367,8 +334,8 @@
                 "attributes": {
                     "standard_name": "radar_equivalent_reflectivity_factor_h",
                     "long_name": "Equivalent reflectivity factor H",
-                    "units": "dBZ"
-                }
+                    "units": "dBZ",
+                },
             },
             "VRADH": {
                 "dims": ["azimuth", "range"],
@@ -377,8 +344,8 @@
                 "attributes": {
                     "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
                     "long_name": "Radial velocity H",
-                    "units": "m/s"
-                }
+                    "units": "m/s",
+                },
             },
             "WRADH": {
                 "dims": ["azimuth", "range"],
@@ -387,15 +354,15 @@
                 "attributes": {
                     "standard_name": "radar_spectrum_width",
                     "long_name": "Doppler spectrum width H",
-                    "units": "m/s"
-                }
-            }
+                    "units": "m/s",
+                },
+            },
         },
         "metadata": {
             "sweep_mode": "azimuth_surveillance",
             "prt_mode": "not_set",
             "follow_mode": "not_set",
-            "sweep_fixed_angle": 5.142
-        }
-    }
+            "sweep_fixed_angle": 5.142,
+        },
+    },
 }

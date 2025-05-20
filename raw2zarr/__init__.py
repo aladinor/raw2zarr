@@ -13,17 +13,15 @@ __author__ = "Alfonso Ladino"
 __email__ = "alfonso8@illinois.edu"
 __version__ = "2025.1.0"
 
-from raw2zarr.builder.dtree_builder import (
+from raw2zarr.builder.dtree_radar import radar_datatree
+from raw2zarr.builder.runner import (
     append_parallel,
     append_sequential,
-    datatree_builder,
-    process_file,
 )
 from raw2zarr.writer.zarr_writer import dtree2zarr
 
 __all__ = [
-    "datatree_builder",
-    "process_file",
+    "radar_datatree",
     "append_sequential",
     "append_parallel",
     "dtree2zarr",

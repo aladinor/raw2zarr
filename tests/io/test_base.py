@@ -3,8 +3,6 @@ import gzip
 import io
 from unittest.mock import MagicMock, patch
 
-import pytest
-
 from raw2zarr.io.base import prepare2read
 
 

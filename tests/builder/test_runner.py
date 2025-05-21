@@ -26,6 +26,7 @@ def output_zarr(tmp_path_factory):
         shutil.rmtree(path)
 
 
+@requires_numpy2_and_zarr3
 def test_append_sequential_creates_zarr(sample_nexrad_files, output_zarr):
     append_dim = "vcp_time"
     append_sequential(
@@ -93,6 +94,7 @@ def test_append_parallel_creates_zarr(sample_nexrad_files, output_zarr):
         ), f"Expected {vcp_time} values in {group}"
 
 
+@requires_numpy2_and_zarr3
 def test_parallel_vs_sequential_equivalence(sample_nexrad_file, tmp_path):
     zarr_seq = tmp_path / "zarr_seq.zarr"
     zarr_par = tmp_path / "zarr_par.zarr"

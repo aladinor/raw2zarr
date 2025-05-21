@@ -1,10 +1,19 @@
 import os
 import shutil
 
+import numpy as np
 import pytest
 import xarray as xr
+from packaging.version import parse as parse_version
 
 from raw2zarr.builder.runner import append_parallel, append_sequential
+
+_numpy_version = parse_version(np.__version__)
+
+requires_numpy2 = pytest.mark.skipif(
+    _numpy_version < parse_version("2.0.0"),
+    reason="NumPy >= 2.0.0 is required for this test.",
+)
 
 
 @pytest.fixture(scope="session")
@@ -57,6 +66,7 @@ def test_append_sequential_creates_zarr(sample_nexrad_files, output_zarr):
         ), f"Expected {vcp_time} values in {group}."
 
 
+@requires_numpy2
 @pytest.mark.serial
 def test_append_parallel_creates_zarr(sample_nexrad_files, output_zarr):
     append_dim = "vcp_time"

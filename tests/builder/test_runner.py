@@ -13,6 +13,11 @@ def sample_nexrad_file(nexrad_local_gz_file):
 
 
 @pytest.fixture(scope="session")
+def sample_nexrad_files(nexrad_local_gz_files):
+    return nexrad_local_gz_files
+
+
+@pytest.fixture(scope="session")
 def output_zarr(tmp_path_factory):
     path = tmp_path_factory.mktemp("zarr_test") / "output.zarr"
     yield str(path)
@@ -20,10 +25,10 @@ def output_zarr(tmp_path_factory):
         shutil.rmtree(path)
 
 
-def test_append_sequential_creates_zarr(sample_nexrad_file, output_zarr):
+def test_append_sequential_creates_zarr(sample_nexrad_files, output_zarr):
     append_dim = "vcp_time"
     append_sequential(
-        radar_files=[sample_nexrad_file, sample_nexrad_file],
+        radar_files=sample_nexrad_files,
         append_dim=append_dim,
         zarr_store=output_zarr,
         engine="nexradlevel2",
@@ -52,10 +57,11 @@ def test_append_sequential_creates_zarr(sample_nexrad_file, output_zarr):
         ), f"Expected {vcp_time} values in {group}."
 
 
-def test_append_parallel_creates_zarr(sample_nexrad_file, output_zarr):
+@pytest.mark.serial
+def test_append_parallel_creates_zarr(sample_nexrad_files, output_zarr):
     append_dim = "vcp_time"
     append_parallel(
-        radar_files=[sample_nexrad_file, sample_nexrad_file],
+        radar_files=sample_nexrad_files,
         append_dim=append_dim,
         zarr_store=output_zarr,
         engine="nexradlevel2",

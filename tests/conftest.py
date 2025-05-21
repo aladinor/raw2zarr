@@ -53,6 +53,28 @@ def nexrad_local_gz_file(tmp_path_factory):
 
 
 @pytest.fixture(scope="session")
+def nexrad_local_gz_files(tmp_path_factory):
+    """
+    Download two distinct GZIP NEXRAD files from AWS S3 for testing.
+    """
+    s3_urls = [
+        "s3://noaa-nexrad-level2/2012/01/29/KVNX/KVNX20120129_000840_V06.gz",
+        "s3://noaa-nexrad-level2/2012/01/29/KVNX/KVNX20120129_180249_V06.gz",
+    ]
+    tmp_dir = tmp_path_factory.mktemp("nexrad_data")
+    local_paths = []
+
+    for i, url in enumerate(s3_urls):
+        local_path = tmp_dir / f"KVNX_{i}.gz"
+        with fsspec.open(url, anon=True) as s3_file:
+            with open(local_path, "wb") as local_file:
+                local_file.write(s3_file.read())
+        local_paths.append(str(local_path))
+
+    return local_paths
+
+
+@pytest.fixture(scope="session")
 def nexrad_s3_file(tmp_path_factory):
     """
     Passing s3 file directly

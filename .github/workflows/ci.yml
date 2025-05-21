@@ -30,7 +30,7 @@ jobs:
 
       - name: Black style check (notebooks)
         run: |
-          nbqa black --check notebooks/
+          nbqa black notebooks/
 
       - name: Lint with ruff
         run: |

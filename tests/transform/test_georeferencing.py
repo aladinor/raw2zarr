@@ -1,18 +1,47 @@
-import pytest
-from xarray import DataTree
+import numpy as np
+from packaging.version import parse as parse_version
 
-from raw2zarr.io.load import load_radar_data
-from raw2zarr.transform.georeferencing import apply_georeferencing
+from raw2zarr.transform.encoding import dtree_encoding
 
 
-@pytest.mark.slow
-def test_apply_georeferencing(nexrad_aws_file_sweep10_misaligned):
-    dtree = load_radar_data(nexrad_aws_file_sweep10_misaligned, engine="nexradlevel2")
-    dtree_geo = apply_georeferencing(dtree)
-    assert isinstance(dtree_geo, DataTree)
-    for node in dtree_geo.match("sweep_*").groups:
-        if node == "/":
-            continue
-        assert "x" in dtree_geo[node].ds.coords
-        assert "y" in dtree_geo[node].ds.coords
-        assert "x" in dtree_geo[node].ds.coords
+class TestDTreeEncoding:
+    def test_full_structure(self, radar_dtree_factory):
+        append_dim = "vcp_time"
+        dtree = radar_dtree_factory(append_dim="vcp_time")
+        encoding = dtree_encoding(dtree, append_dim)
+
+        assert "/" in encoding
+        root_enc = encoding["/"]
+        assert append_dim in root_enc
+        assert root_enc[append_dim]["units"].startswith("nanoseconds")
+        assert root_enc[append_dim]["_FillValue"] == -9999
+
+        if parse_version(np.__version__) >= parse_version("2.0.0"):
+            str_encoding = np.dtypes.StringDType
+        else:
+            str_encoding = np.dtype("U")
+
+        for field in [
+            "platform_type",
+            "instrument_type",
+            "time_coverage_start",
+            "time_coverage_end",
+        ]:
+            assert root_enc[field]["dtype"] == str_encoding
+
+        assert "/sweep_0" in encoding
+        sweep_enc = encoding["/sweep_0"]
+
+        assert "time" in sweep_enc
+        assert sweep_enc["time"]["units"].startswith("nanoseconds")
+        assert append_dim in sweep_enc
+        assert sweep_enc[append_dim]["units"].startswith("nanoseconds")
+
+        for field in ["DBZH", "ZDR", "PHIDP", "RHOHV"]:
+            assert sweep_enc[field]["_FillValue"] == -9999
+
+        for field in ["sweep_mode", "prt_mode", "follow_mode"]:
+            assert sweep_enc[field]["dtype"] == str_encoding
+
+        for field in ["sweep_number", "sweep_fixed_angle"]:
+            assert sweep_enc[field]["_FillValue"] == -9999

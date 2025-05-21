@@ -10,6 +10,9 @@ requires-python = ">=3.9"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+    "serial: marks tests that should run serially (not with xdist)"
+]
 
 [tool.setuptools.packages.find]
 include = ['raw2zarr']

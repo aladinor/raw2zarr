@@ -2,8 +2,7 @@ import numpy as np
 import pytest
 
 from raw2zarr.io.load import load_radar_data
-from raw2zarr.transform.alignment import check_dynamic_scan
-from raw2zarr.utils import fix_angle
+from raw2zarr.transform.alignment import check_dynamic_scan, fix_angle
 
 
 @pytest.mark.slow

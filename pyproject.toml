@@ -10,6 +10,10 @@ requires-python = ">=3.9"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+    "serial: mark a test that must not be run in parallel",
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')"
+]
 
 [tool.setuptools.packages.find]
 include = ['raw2zarr']

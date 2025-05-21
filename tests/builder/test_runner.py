@@ -5,8 +5,7 @@ import pytest
 import xarray as xr
 
 from raw2zarr.builder.runner import append_parallel, append_sequential
-
-from .conftest import requires_numpy2_and_zarr3
+from tests.builder.conftest import requires_numpy2_and_zarr3
 
 
 @pytest.fixture(scope="session")

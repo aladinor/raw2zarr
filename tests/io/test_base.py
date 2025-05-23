@@ -47,4 +47,4 @@ class TestPrepare2Read:
         out = prepare2read(s3_path)
 
         mock_fsspec_open.assert_called_once()
-        assert out.read() == content
+        assert out == content

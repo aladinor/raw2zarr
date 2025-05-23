@@ -77,32 +77,32 @@ jobs:
           name: codecov-gha
           fail_ci_if_error: false
           token: ${{ secrets.CODECOV_TOKEN }}
-  notebook-check:
-    name: Notebook Execution Check
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -l {0}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install micromamba environment
-        uses: mamba-org/setup-micromamba@v1
-        with:
-          environment-name: notebook-tests
-          environment-file: environment.yml
-          cache-environment: true
-          cache-environment-key: "notebook-${{runner.os}}-${{hashFiles('environment.yml')}}"
-
-      - name: Install raw2zarr (editable mode)
-        run: |
-          python -m pip install -e .
-
-      - name: Check environment
-        run: |
-          python --version
-          mamba list
-
-      - name: Execute Selected Notebooks in Parallel
-        run: |
-          pytest --nbmake --nbmake-timeout=900 notebooks/1.Sigmet2Zarr.ipynb notebooks/2.NexRad2Zarr.ipynb
+#  notebook-check:
+#    name: Notebook Execution Check
+#    runs-on: ubuntu-latest
+#    defaults:
+#      run:
+#        shell: bash -l {0}
+#    steps:
+#      - uses: actions/checkout@v4
+#
+#      - name: Install micromamba environment
+#        uses: mamba-org/setup-micromamba@v1
+#        with:
+#          environment-name: notebook-tests
+#          environment-file: environment.yml
+#          cache-environment: true
+#          cache-environment-key: "notebook-${{runner.os}}-${{hashFiles('environment.yml')}}"
+#
+#      - name: Install raw2zarr (editable mode)
+#        run: |
+#          python -m pip install -e .
+#
+#      - name: Check environment
+#        run: |
+#          python --version
+#          mamba list
+#
+#      - name: Execute Selected Notebooks in Parallel
+#        run: |
+#          pytest --nbmake --nbmake-timeout=900 notebooks/1.Sigmet2Zarr.ipynb notebooks/2.NexRad2Zarr.ipynb

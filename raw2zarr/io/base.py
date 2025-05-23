@@ -24,9 +24,10 @@ def prepare2read(
         return filename
 
     if isinstance(filename, str) and filename.startswith("s3://"):
-        return fsspec.open(
+        stream = fsspec.open(
             filename, mode="rb", compression="infer", **storage_options
         ).open()
+        return stream.read()
 
     file = open(filename, "rb")
     magic = file.read(3)

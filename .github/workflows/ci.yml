@@ -85,6 +85,7 @@ jobs:
         shell: bash -l {0}
     steps:
       - uses: actions/checkout@v4
+
       - name: Install micromamba environment
         uses: mamba-org/setup-micromamba@v1
         with:
@@ -92,10 +93,16 @@ jobs:
           environment-file: environment.yml
           cache-environment: true
           cache-environment-key: "notebook-${{runner.os}}-${{hashFiles('environment.yml')}}"
+
+      - name: Install raw2zarr (editable mode)
+        run: |
+          python -m pip install -e .
+
       - name: Check environment
         run: |
           python --version
           mamba list
+
       - name: Execute Selected Notebooks
         run: |
           pytest --nbmake notebooks/1.Sigmet2Zarr.ipynb notebooks/2.NexRad2Zarr.ipynb

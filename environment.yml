@@ -8,10 +8,12 @@ dependencies:
   - cartopy
   - fsspec
   - jupyterlab
+  - notebook
+  - ipykernel
   - dask
   - netcdf4
   - bottleneck
-  - zarr
+  - zarr>=3.0
   - ca-certificates
   - certifi
   - openssl
@@ -26,7 +28,9 @@ dependencies:
   - pytest-doctestplus
   - pytest-sugar
   - pytest-xdist
+  - nbmake
   - pydantic
+  - icechunk
   - pip
   - pip:
       - .

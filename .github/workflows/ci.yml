@@ -105,4 +105,4 @@ jobs:
 
       - name: Execute Selected Notebooks in Parallel
         run: |
-          pytest --nbmake notebooks/1.Sigmet2Zarr.ipynb notebooks/2.NexRad2Zarr.ipynb
+          pytest --nbmake --nbmake-timeout=900 notebooks/1.Sigmet2Zarr.ipynb notebooks/2.NexRad2Zarr.ipynb

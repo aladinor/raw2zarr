@@ -1,7 +1,7 @@
 from xarray import DataTree
 
 from ..config.utils import load_json_config
-from ..templates.template_manager import ScanTemplateManager
+from ..templates.template_manager import VcpTemplateManager
 
 
 def get_vcp_values(
@@ -72,7 +72,7 @@ def create_empty_vcp_datatree(vcp_id: str, radar_info: dict) -> DataTree:
     """
     # Load VCP configuration
     vcp_config = load_json_config("vcp.json")[vcp_id]
-    template_mgr = ScanTemplateManager()
+    template_mgr = VcpTemplateManager()
 
     # Create empty datasets for all scans in VCP
     empty_datasets = {}

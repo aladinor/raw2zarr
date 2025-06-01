@@ -6,8 +6,8 @@ from xarray import DataTree
 from xarray.core.types import ZarrWriteModes
 
 
-def dtree2zarr(
-    dt: DataTree,
+def dtree_to_zarr(
+    dtree: DataTree,
     store: MutableMapping | str | PathLike[str],
     mode: ZarrWriteModes = "w-",
     encoding: Mapping[str, Any] | None = None,
@@ -16,65 +16,45 @@ def dtree2zarr(
     write_inherited_coords: bool = False,
     compute: Literal[True] = True,
     zarr_format: int = 3,
+    region: dict[str, slice] | None = None,
+    append_dim: str | None = None,
     **kwargs,
-):
+) -> None:
     """This function creates an appropriate datastore for writing a datatree
     to a zarr store.
 
     See `DataTree.to_zarr` for full API docs.
     """
 
-    from zarr import consolidate_metadata
-
     if group is not None:
         raise NotImplementedError(
             "specifying a root group for the tree has not been implemented"
         )
 
-    if not compute:
-        raise NotImplementedError("compute=False has not been implemented yet")
-
     if encoding is None:
         encoding = {}
 
-    # In the future, we may want to expand this check to insure all the provided encoding
-    # options are valid. For now, this simply checks that all provided encoding keys are
-    # groups in the datatree.
-    if set(encoding) - set(dt.groups):
+    if set(encoding) - set(dtree.groups):
         raise ValueError(
-            f"unexpected encoding group name(s) provided: {set(encoding) - set(dt.groups)}"
+            f"unexpected encoding group name(s) provided: {set(encoding) - set(dtree.groups)}"
         )
-    append_dim = kwargs.pop("append_dim", None)
-    for node in dt.subtree:
-        at_root = node is dt
+    for node in dtree.subtree:
+
+        at_root = node is dtree
         if node.is_empty | node.is_root:
             continue
+
         ds = node.to_dataset(inherit=write_inherited_coords or at_root)
-        group_path = None if at_root else "/" + node.relative_to(dt)
-        try:
-            ds.to_zarr(
-                store,
-                group=group_path,
-                mode=mode,
-                consolidated=consolidated,
-                append_dim=append_dim,
-                zarr_format=zarr_format,
-                **kwargs,
-            )
-        # ValueError is raised as no append_dimension was found in the store
-        except ValueError:
-            ds.to_zarr(
-                store,
-                group=group_path,
-                mode="a-",
-                encoding=encoding.get(node.path),
-                consolidated=consolidated,
-                zarr_format=zarr_format,
-                **kwargs,
-            )
-
-        if "w" in mode:
-            mode = "a"
-
-    if consolidated:
-        consolidate_metadata(store)
+        group_path = None if at_root else "/" + node.relative_to(dtree)
+        ds.to_zarr(
+            store,
+            group=group_path,
+            mode=mode,
+            encoding=encoding.get(group_path, {}),
+            zarr_format=zarr_format,
+            consolidated=consolidated,
+            compute=compute,
+            append_dim=append_dim,
+            region=region,
+            **kwargs,
+        )

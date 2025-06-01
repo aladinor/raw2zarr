@@ -2,9 +2,21 @@ import json
 from functools import lru_cache
 from pathlib import Path
 
+import dask.array as da
 import numpy as np
+import pandas as pd
 import xarray as xr
 from pydantic import BaseModel, ConfigDict, Field
+
+from ..transform.encoding import dtree_encoding
+from .template_utils import (
+    create_additional_groups,
+    create_common_coords,
+    create_root,
+    remove_string_vars,
+)
+
+# from ..transform.alignment import fix_angle
 
 
 class ScanCoordConfig(BaseModel):
@@ -34,13 +46,17 @@ class VcpConfig(BaseModel):
     dims: dict[str, list[int]]
 
 
-class ScanTemplateManager:
+class VcpTemplateManager:
     def __init__(
         self,
-        scan_config_path: Path = Path("../config/scan_config.json"),
-        vcp_config_path: Path = Path("../config/vcp.json"),
+        scan_config_file: str = "scan_config.json",
+        vcp_config_file: str = "vcp.json",
     ):
-        self.config_path = scan_config_path
+        config_dir = Path(__file__).resolve().parent.parent / "config"
+        vcp_config_path = config_dir / vcp_config_file
+        scan_config_path = config_dir / scan_config_file
+
+        self.scan_config_path = scan_config_path
         self._full_config = None
         self.vcp_config_path = vcp_config_path
         self._vcp_configs = None
@@ -48,7 +64,7 @@ class ScanTemplateManager:
     @property
     def config(self):
         if self._full_config is None:
-            with open(self.config_path) as f:
+            with open(self.scan_config_path) as f:
                 self._full_config = json.load(f)
         return self._full_config
 
@@ -76,78 +92,136 @@ class ScanTemplateManager:
         return VcpConfig(**self.vcp_config[vcp])
 
     def create_scan_dataset(
-        self, scan_type: str, sweep_idx: float, radar_info: dict
+        self,
+        scan_type: str,
+        sweep_idx: float,
+        radar_info: dict,
+        append_dim: str = "vcp_time",
+        size_append_dim: int = 1,
+        append_dim_time: list[pd.Timestamp] | None = None,
     ) -> xr.Dataset:
         """Generic scan dataset creation"""
         cfg = self.get_template(scan_type)
         vcp = self.get_vcp_info(radar_info["vcp"])
-        elevation = vcp.elevations[sweep_idx]
-        ds = xr.Dataset()
+
+        time_array = (
+            np.array(append_dim_time, dtype="datetime64[ns]")
+            if append_dim_time
+            else np.array(range(size_append_dim), dtype="datetime64[ns]")
+        )
+
         total_azimuth = vcp.dims["azimuth"][sweep_idx]
         total_bins = vcp.dims["range"][sweep_idx]
+        elevation = vcp.elevations[sweep_idx]
         az_res = 360 / total_azimuth
-        ds["azimuth"] = xr.DataArray(
-            np.arange(
-                az_res / 2,
-                cfg.dims["azimuth"],
-                az_res,
-                dtype=cfg.coords["azimuth"].dtype,
-            ),
-            dims="azimuth",
-            attrs=cfg.coords["azimuth"].attributes,
-        )
-        # Add range coordinate
 
-        ds["range"] = xr.DataArray(
-            np.arange(
-                cfg.coords["range"].attributes["meters_to_center_of_first_gate"],
-                cfg.coords["range"].attributes["meters_to_center_of_first_gate"]
-                + cfg.coords["range"].attributes["meters_between_gates"] * total_bins,
-                cfg.coords["range"].attributes["meters_between_gates"],
-                dtype=cfg.coords["range"].dtype,
-            ),
-            dims="range",
-            attrs=cfg.coords["range"].attributes,
+        ds = xr.Dataset()
+        coord_ds = create_common_coords(
+            cfg=cfg,
+            radar_info=radar_info,
+            elevation=elevation,
+            total_bins=total_bins,
+            total_azimuth=total_azimuth,
+            az_res=az_res,
+            append_dim=append_dim,
+            size_append_dim=size_append_dim,
+            time_array=time_array,
         )
-
-        # Add radar location
-        ds["longitude"] = xr.DataArray(
-            radar_info["lon"], attrs={"standard_name": "longitude"}
-        )
-
-        ds["latitude"] = xr.DataArray(
-            radar_info["lat"], attrs={"standard_name": "latitude"}
-        )
-
-        ds["altitude"] = xr.DataArray(
-            radar_info["alt"], attrs={"standard_name": "altitude"}
-        )
+        ds.update(coord_ds)
 
         for var_name, var_cfg in cfg.variables.items():
+            dims = (append_dim, "azimuth", "range")  # ensure consistent dimension order
+            shape = (size_append_dim, total_azimuth, total_bins)
+
             ds[var_name] = xr.DataArray(
-                np.full([total_azimuth, total_bins], np.nan, dtype=var_cfg.dtype),
-                dims=var_cfg.dims,
+                da.full(shape, da.nan, dtype=var_cfg.dtype),
+                dims=dims,
                 attrs=var_cfg.attributes,
             )
 
-        # Add time coordinates
-        ds["time"] = xr.DataArray(
-            np.full(
-                total_azimuth,
-                radar_info["reference_time"],
-                dtype="datetime64[ns]",
-            ),
-            dims="azimuth",
-            attrs={"standard_name": "time"},
+        for var in cfg.metadata:
+            ds[var] = xr.DataArray(
+                da.from_array(
+                    np.full(size_append_dim, cfg.metadata[var], dtype="U35"),
+                    chunks=(1,),
+                ),
+                dims=(append_dim,),
+            )
+
+        ds["sweep_number"] = xr.DataArray(
+            da.full((size_append_dim,), sweep_idx, dtype=float, chunks=(1,)),
+            dims=(append_dim,),
         )
 
-        # Add elevation array
-        ds["elevation"] = xr.DataArray(
-            np.full(cfg.dims["azimuth"], elevation, dtype=np.float64),
-            dims="azimuth",
-            attrs=cfg.coords["elevation"].attributes,
+        ds["sweep_fixed_angle"] = xr.DataArray(
+            da.full((size_append_dim,), elevation, dtype=float, chunks=(1,)),
+            dims=(append_dim,),
         )
-        # TO DO: add follow_mode, prt_mode, sweep_mode, sweep_fixed_angle
 
-        ds = ds.set_coords(["time", "longitude", "latitude", "altitude", "elevation"])
-        return ds.xradar.georeference()
+        ds = ds.set_coords(
+            ["time", "longitude", "latitude", "altitude", "elevation", "crs_wkt"]
+        )
+
+        az_chunksize = int(total_azimuth // 2)
+        range_chunksize = int(total_bins // 4)
+
+        ds = ds.chunk(
+            {"azimuth": az_chunksize, "range": range_chunksize, append_dim: 1}
+        )
+
+        ds = ds.xradar.georeference()
+        ds["x"] = ds["x"].compute()
+        ds["y"] = ds["y"].compute()
+        ds["z"] = ds["z"].compute()
+        return ds
+
+    def create_empty_vcp_tree(
+        self,
+        radar_info: dict,
+        append_dim: str,
+        size_append_dim: int = 1,
+        remove_strings: bool = True,  # remove after zarr v3 supports string dtypes
+        append_dim_time: pd.Timestamp | None = None,
+    ) -> xr.DataTree:
+
+        vcp = radar_info["vcp"]
+        vcp_info = self.get_vcp_info(vcp)
+
+        root_ds = create_root(
+            radar_info,
+            append_dim=append_dim,
+            size_append_dim=size_append_dim,
+            append_dim_time=append_dim_time,
+        )
+        other_groups = create_additional_groups(
+            vcp,
+            append_dim=append_dim,
+            size_append_dim=size_append_dim,
+            radar_info=radar_info,
+            append_dim_time=append_dim_time,
+        )
+        sweep_dict: dict = {}
+        for sweep_idx in range(len(vcp_info.elevations)):
+            scan_type = vcp_info.scan_types[sweep_idx]
+            ds = self.create_scan_dataset(
+                scan_type,
+                sweep_idx,
+                radar_info,
+                append_dim=append_dim,
+                size_append_dim=size_append_dim,
+                append_dim_time=append_dim_time,
+            )
+            drop_vars = ["longitude", "latitude", "altitude", "crs_wkt"]
+            sweep_dict[f"{vcp}/sweep_{sweep_idx}"] = ds.drop_vars(drop_vars)
+        radar_dt = root_ds | other_groups | sweep_dict
+        radar_dtree = xr.DataTree.from_dict(radar_dt)
+        radar_dtree.encoding = dtree_encoding(
+            radar_dtree,
+            append_dim=append_dim,
+        )
+        # TODO: remove this when zarr v3 support string dtypes
+        if remove_strings:
+            clean_tree = remove_string_vars(radar_dtree)
+            clean_tree.encoding = dtree_encoding(clean_tree, append_dim=append_dim)
+            return clean_tree
+        return radar_dtree

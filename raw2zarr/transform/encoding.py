@@ -5,7 +5,10 @@ from packaging.version import parse as parse_version
 from xarray import DataTree
 
 
-def dtree_encoding(dtree: DataTree, append_dim: str) -> dict:
+def dtree_encoding(
+    dtree: DataTree,
+    append_dim: str,
+) -> dict:
     """
     Encoding dictionary for time, append_dim, and all data variables within a radar DataTree.
 
@@ -20,8 +23,8 @@ def dtree_encoding(dtree: DataTree, append_dim: str) -> dict:
         "units": "nanoseconds since 1950-01-01T00:00:00.00",
         "dtype": "int64",
         "_FillValue": -9999,
+        "chunks": (1,),
     }
-    var_enc = {"_FillValue": -9999}
     encoding = defaultdict(dict)
 
     if not isinstance(dtree, DataTree):
@@ -32,7 +35,7 @@ def dtree_encoding(dtree: DataTree, append_dim: str) -> dict:
             continue
 
         path = node.path
-        ds = node.ds
+        ds = node.ds.copy(deep=True)
 
         if "time" in ds:
             encoding[path]["time"] = time_enc
@@ -40,10 +43,62 @@ def dtree_encoding(dtree: DataTree, append_dim: str) -> dict:
             encoding[path][append_dim] = time_enc
 
         for var_name, var in ds.data_vars.items():
-            if var.dtype.kind in {"O", "U"}:
-                encoding[path][var_name] = {"dtype": get_string_dtype()}
+            dims = var.dims
+            dtype_kind = var.dtype.kind
+
+            if dtype_kind in {"O", "U"}:
+                encoding[path][var_name] = {
+                    "dtype": "U50",
+                    "chunks": (1,) * len(dims),
+                    # TODO fix this after zarrv3 string enconding dtype is accepted
+                    # "_FillValue": "None",
+                }
+            elif dims == (append_dim,):
+                encoding[path][var_name] = {
+                    "dtype": "float32" if dtype_kind == "f" else var.dtype,
+                    "chunks": (1,),
+                    "_FillValue": -9999,
+                }
+            elif set(dims) == {"azimuth", "range"}:
+                az_chunksize = int((len(var["azimuth"])) // 2)
+                range_chunksize = int(len(var.range) // 4)
+                encoding[path][var_name] = {
+                    "dtype": "float32" if dtype_kind == "f" else var.dtype,
+                    "chunks": (
+                        az_chunksize,
+                        range_chunksize,
+                    ),  # example, customize as needed
+                    "_FillValue": -9999,
+                }
+            elif dims == ("range",):
+                encoding[path][var_name] = {
+                    "dtype": var.dtype,
+                    "chunks": (len(ds["range"]),),
+                    "_FillValue": -9999,
+                }
+            elif dims == ("azimuth",):
+                encoding[path][var_name] = {
+                    "dtype": var.dtype,
+                    "chunks": (len(ds["azimuth"]),),
+                    "_FillValue": -9999,
+                }
+            elif set(dims) == {append_dim, "azimuth", "range"}:
+                az_chunksize = int((len(var["azimuth"])) // 2)
+                range_chunksize = int(len(var.range) // 4)
+                if dims != (append_dim, "azimuth", "range"):
+                    var = var.transpose(append_dim, "azimuth", "range")
+                    ds[var_name] = var
+                encoding[path][var_name] = {
+                    "dtype": "float32",
+                    "chunks": (1, az_chunksize, range_chunksize),
+                    "_FillValue": -999.0,
+                }
             else:
-                encoding[path][var_name] = var_enc
+                encoding[path][var_name] = {
+                    "dtype": var.dtype,
+                    "chunks": tuple(1 for _ in dims),
+                    "_FillValue": -9999,
+                }
 
     return dict(encoding)
 

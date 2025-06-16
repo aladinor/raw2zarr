@@ -1,7 +1,7 @@
 import pytest
 
-import raw2zarr.transform.utils as transform_utils
-from raw2zarr.transform.utils import get_vcp_values
+import raw2zarr.transform.tranform_utils as transform_utils
+from raw2zarr.transform.tranform_utils import get_vcp_values
 
 
 class TestGetVCPValues:

@@ -8,10 +8,10 @@ import xarray as xr
 import xradar as xd
 from xarray import Dataset, DataTree
 
-from ..templates.template_manager import ScanTemplateManager
+from ..config.utils import load_json_config
+from ..templates.template_manager import VcpTemplateManager
 from ..transform.dimension import ensure_dimension
-from ..transform.utils import load_json_config
-from .utils import (
+from .tranform_utils import (
     _get_missing_elevations,
     create_empty_vcp_datatree,
     get_root_datasets,
@@ -128,7 +128,7 @@ def fix_azimuth(ds: Dataset, fill_value: str = "extrapolate") -> Dataset:
 def check_dynamic_scan(dtree: xr.DataTree, tolerance: float = 0.05) -> bool:
     """
     Determine if a radar scan uses adaptive scanning (e.g., SAILS/MRLE) by comparing
-    its sweep elevations with expected VCP configuration.
+    its sweep elevations with the expected VCP configuration.
 
     Parameters:
         dtree (xr.DataTree): Radar DataTree with sweep_* nodes.
@@ -348,7 +348,7 @@ def fill_missing_sweeps(
     vcp_config_path = config_dir / config_file
     scan_config_path = config_dir / "scan_config.json"
 
-    template_mgr = ScanTemplateManager(
+    template_mgr = VcpTemplateManager(
         scan_config_path=scan_config_path,
         vcp_config_path=vcp_config_path,
     )

@@ -154,15 +154,14 @@ def append_parallel(
         for dtree in dtree_list:
             if not dtree:
                 continue
-            writer_args = dict(
+            writer_args = resolve_zarr_write_options(
                 store=zarr_store,
-                mode="a-",
+                group_path=None,
                 encoding=dtree.encoding,
-                zarr_format=zarr_format,
                 append_dim=append_dim,
+                zarr_format=zarr_format,
                 consolidated=consolidated,
-                write_inherited_coords=True,
-                **kwargs,
+                compute=True,
             )
             dtree_to_zarr(dtree, **writer_args)
         del bag, dtree_list

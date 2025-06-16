@@ -17,9 +17,13 @@ class TestDTreeEncoding:
         assert root_enc[append_dim]["_FillValue"] == -9999
 
         if parse_version(np.__version__) >= parse_version("2.0.0"):
-            str_encoding = np.dtypes.StringDType
+            # TODO recheck this test after dtype pr is merge in zarr v3
+            # str_encoding = np.dtypes.StringDType
+            str_encoding = "U50"
         else:
-            str_encoding = np.dtype("U")
+            # TODO recheck this test after dtype pr is merge in zarr v3
+            # str_encoding = np.dtype("U")
+            str_encoding = "U50"
 
         for field in [
             "platform_type",
@@ -29,7 +33,7 @@ class TestDTreeEncoding:
         ]:
             # TODO recheck this test after dtype pr is merge in zarr v3
             # assert root_enc[field]["dtype"] == str_encoding
-            assert root_enc[field]["dtype"] == "U50"
+            assert root_enc[field]["dtype"] == str_encoding
 
         assert "/sweep_0" in encoding
         sweep_enc = encoding["/sweep_0"]
@@ -45,7 +49,7 @@ class TestDTreeEncoding:
         for field in ["sweep_mode", "prt_mode", "follow_mode"]:
             #
             # assert sweep_enc[field]["dtype"] == str_encoding
-            assert sweep_enc[field]["dtype"] == "U50"
+            assert sweep_enc[field]["dtype"] == str_encoding
 
         for field in ["sweep_number", "sweep_fixed_angle"]:
             assert sweep_enc[field]["_FillValue"] == -9999

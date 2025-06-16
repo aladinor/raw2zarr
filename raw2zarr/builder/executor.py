@@ -180,20 +180,23 @@ def append_parallel_region(
     engine: str = "nexradlevel2",
     dashboard_address: str = "127.0.0.1:8785",
     branch: str = "main",
+    remove_strings: bool = True,
     **kwargs,
 ) -> None:
-    # from dask.distributed import Client, LocalCluster
+    import dask
+    from dask.distributed import Client, LocalCluster
+    from icechunk.distributed import merge_sessions
 
-    # cluster = LocalCluster(dashboard_address=dashboard_address, memory_limit="10GB")
-    # client = Client(cluster)
     session = repo.writable_session(branch=branch)
-    with session.allow_pickling():
-        ...
+
+    cluster = LocalCluster(dashboard_address=dashboard_address, memory_limit="10GB")
+    client = Client(cluster)
+
     append_dim_time = [extract_timestamp(f) for f in radar_files]
     file_indices = list(enumerate(radar_files))
-    first_idx, first_file = file_indices.pop(0)
-    _init_zarr_store(
-        first_file=first_file,
+
+    remaining_files = _init_zarr_store(
+        files=file_indices,
         session=session,
         append_dim=append_dim,
         engine=engine,
@@ -204,36 +207,31 @@ def append_parallel_region(
         **kwargs,
     )
 
-    for file_ix, file in file_indices:
-        session = repo.writable_session(branch=branch)
-        write_dtree_region(
-            file=file,
-            idx=file_ix,
-            session=session,
-            zarr_format=zarr_format,
-            append_dim=append_dim,
-            consolidated=consolidated,
-            engine=engine,
-            **kwargs,
-        )
+    session = repo.writable_session(branch=branch)
+    # TODO: add if statement to check if use region to fill empty store or
+    with session.allow_pickling():
+        tasks = [
+            dask.delayed(write_dtree_region)(
+                f,
+                i,
+                session,
+                append_dim,
+                engine,
+                zarr_format,
+                consolidated,
+                remove_strings,
+            )
+            for i, f in remaining_files
+        ]
+        print(f"Issuing {len(tasks)} tasks.")
+        sessions = dask.compute(*tasks, scheduler=client)
 
-    # bag = db.from_sequence(file_indices).map(
-    #     lambda pair: write_dtree_region(
-    #         file=pair[1],
-    #         idx=pair[0],
-    #         zarr_store=zarr_store,
-    #         zarr_format=zarr_format,
-    #         append_dim=append_dim,
-    #         consolidated=consolidated,
-    #         engine=engine,
-    #         **kwargs
-    #     )
-    # )
-    # bag.compute()
+    session = merge_sessions(session, *sessions)
+    session.commit("write Nexrad files to zarr store")
 
 
 def _init_zarr_store(
-    first_file: str,
+    files: list[tuple[int, str]],
     session: Session,
     append_dim: str,
     engine: str,
@@ -243,7 +241,7 @@ def _init_zarr_store(
     remove_strings: bool = True,
     append_dim_time: pd.Timestamp | None = None,
     **kwargs,
-) -> None:
+) -> list[tuple[int, str]]:
     from ..templates.template_manager import VcpTemplateManager
 
     exis_zarr_store = zarr_store_has_append_dim(
@@ -251,8 +249,8 @@ def _init_zarr_store(
         append_dim=append_dim,
     )
     if not exis_zarr_store:
+        idx, first_file = files.pop(0)
         dtree = radar_datatree(first_file, engine=engine)
-
         vcp = dtree[dtree.groups[1]].attrs["scan_name"]
         radar_info = {
             "lon": dtree[vcp].longitude.item(),
@@ -283,11 +281,11 @@ def _init_zarr_store(
             encoding=empty_tree.encoding,
             append_dim=append_dim,
             zarr_format=zarr_format,
+            consolidated=consolidated,
             compute=False,
         )
 
         dtree_to_zarr(empty_tree, **writer_args)
-        print(1)
         # TODO: remove this after strings are supported by zarr v3
         if remove_strings:
             dtree = remove_string_vars(dtree)
@@ -307,6 +305,8 @@ def _init_zarr_store(
         dtree_to_zarr(dtree_append, **writer_args)
         session.commit("Initial commit: zarr store initialization")
         print("Initial commit: zarr store initialization")
+        return files
+    return files
 
 
 def write_dtree_region(
@@ -319,7 +319,7 @@ def write_dtree_region(
     consolidated: bool = False,
     remove_strings=True,
     **kwargs,
-):
+) -> icechunk.Session:
     dtree = radar_datatree(file, engine=engine)
     # TODO: remove this after strings are supported by zarr v3
     if remove_strings:
@@ -327,7 +327,6 @@ def write_dtree_region(
         dtree.encoding = dtree_encoding(dtree, append_dim=append_dim)
 
     region = {append_dim: slice(idx, idx + 1)}
-    # session = get_icechunk_repo(zarr_store=zarr_store)
 
     writer_args = dict(
         store=session.store,
@@ -340,5 +339,4 @@ def write_dtree_region(
     )
     dtree_append = drop_vars_region(dtree, append_dim=append_dim)
     dtree_to_zarr(dtree_append, **writer_args)
-    session.commit(f"adding {file} with region {region}")
-    print(f"adding {file} with region {region}")
+    return session

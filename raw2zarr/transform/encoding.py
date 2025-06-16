@@ -50,7 +50,8 @@ def dtree_encoding(
                 encoding[path][var_name] = {
                     "dtype": "U50",
                     "chunks": (1,) * len(dims),
-                    "_FillValue": "",
+                    # TODO fix this after zarrv3 string enconding dtype is accepted
+                    # "_FillValue": "None",
                 }
             elif dims == (append_dim,):
                 encoding[path][var_name] = {

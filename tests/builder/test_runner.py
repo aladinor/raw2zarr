@@ -4,7 +4,7 @@ import shutil
 import pytest
 import xarray as xr
 
-from raw2zarr.builder.runner import append_parallel, append_sequential
+from raw2zarr.builder.executor import append_parallel, append_sequential
 from tests.builder.conftest import requires_numpy2_and_zarr3
 
 

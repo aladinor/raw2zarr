@@ -16,7 +16,7 @@ markers = [
 ]
 
 [tool.setuptools.packages.find]
-include = ['raw2zarr']
+include = ['raw2zarr', 'raw2zarr.*']
 exclude = ["data", "notebooks"]
 
 [tool.black]

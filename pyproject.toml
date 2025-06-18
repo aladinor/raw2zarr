@@ -15,9 +15,6 @@ markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')"
 ]
 
-[tool.setuptools]
-packages = { find = {} }
-
 [tool.setuptools.packages.find]
 include = ["raw2zarr", "raw2zarr.*"]
 exclude = ["data", "notebooks"]

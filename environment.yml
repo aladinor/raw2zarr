@@ -13,7 +13,7 @@ dependencies:
   - dask
   - netcdf4
   - bottleneck
-  - zarr>=3.0
+  - zarr>=3.0.8
   - ca-certificates
   - certifi
   - openssl
@@ -32,6 +32,8 @@ dependencies:
   - icechunk
   - pandas
   - numpy
+  - icechunk
+  - pandas
   - pip
   - pip:
       - .

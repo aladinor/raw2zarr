@@ -25,6 +25,7 @@ setup(
         "datashader",
         "xarray>=2025",
         "xradar>=0.9.0",
+        "icechunk",
     ],
     extras_require={
         "dev": ["pytest", "pytest-cov", "flake8"],

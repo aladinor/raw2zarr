@@ -43,9 +43,7 @@ def append_sequential(
     append_dim: str,
     repo: icechunk.Repository,
     zarr_format: int = 3,
-    consolidated: bool = False,
     engine: str = "iris",
-    group_path: str = None,
     mode: str = "a",
     remove_strings: bool = True,
     branch: str = "main",
@@ -91,6 +89,8 @@ def append_sequential(
                 dtree = remove_string_vars(dtree)
                 dtree.encoding = dtree_encoding(dtree, append_dim=append_dim)
 
+            group_path = dtree.groups[1]
+
             writer_args = resolve_zarr_write_options(
                 store=session.store,
                 group_path=group_path,
@@ -113,7 +113,6 @@ def append_parallel(
     append_dim: str,
     repo: icechunk.Repository,
     zarr_format: int = 3,
-    consolidated: bool = False,
     engine: str = "nexradlevel2",
     batch_size: int = None,
     branch: str = "main",

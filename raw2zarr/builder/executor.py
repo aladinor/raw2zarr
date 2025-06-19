@@ -164,11 +164,11 @@ def append_parallel(
                     dtree.encoding = dtree_encoding(dtree, append_dim=append_dim)
 
                 session = repo.writable_session(branch)
-
+                group_path = dtree.groups[1]
                 writer_args = resolve_zarr_write_options(
                     store=session.store,
                     encoding=dtree.encoding,
-                    group_path=None,
+                    group_path=group_path,
                     default_mode=mode,
                     append_dim=append_dim,
                     zarr_format=zarr_format,

@@ -9,9 +9,10 @@ setup(
     url="https://github.com/aladinor/raw2zarr",
     packages=find_packages(include=["raw2zarr", "raw2zarr.*"]),
     include_package_data=True,
-    package_data={"raw2zarr.config": ["*.toml"]},
+    package_data={"raw2zarr.config": ["*.json"]},
     python_requires=">=3.12",
     install_requires=[
+        "pydantic",
         "cartopy",
         "fsspec",
         "dask",
@@ -24,6 +25,7 @@ setup(
         "datashader",
         "xarray>=2025",
         "xradar>=0.9.0",
+        "icechunk",
     ],
     extras_require={
         "dev": ["pytest", "pytest-cov", "flake8"],

@@ -4,9 +4,9 @@ import shutil
 import pytest
 import xarray as xr
 
+from raw2zarr.builder.builder_utils import get_icechunk_repo
 from raw2zarr.builder.executor import append_parallel, append_sequential
 from tests.builder.conftest import requires_numpy2_and_zarr3
-from raw2zarr.builder.builder_utils import get_icechunk_repo
 
 
 @pytest.fixture(scope="session")
@@ -66,8 +66,10 @@ def test_append_sequential_creates_zarr(sample_nexrad_files, output_zarr):
 @pytest.mark.serial
 def test_append_parallel_creates_zarr(sample_nexrad_files, output_zarr):
     append_dim = "vcp_time"
+    repo = get_icechunk_repo(output_zarr)
     append_parallel(
         radar_files=sample_nexrad_files,
+        repo=repo,
         append_dim=append_dim,
         zarr_store=output_zarr,
         engine="nexradlevel2",
@@ -77,8 +79,9 @@ def test_append_parallel_creates_zarr(sample_nexrad_files, output_zarr):
 
     ngroups = 11
     vcp_time = 2
+    session = repo.readonly_session("main")
     radar_dtree = xr.open_datatree(
-        output_zarr,
+        session.store,
         engine="zarr",
         consolidated=False,
         chunks={},
@@ -102,33 +105,34 @@ def test_append_parallel_creates_zarr(sample_nexrad_files, output_zarr):
 def test_parallel_vs_sequential_equivalence(sample_nexrad_file, tmp_path):
     zarr_seq = tmp_path / "zarr_seq.zarr"
     zarr_par = tmp_path / "zarr_par.zarr"
-    repo = get_icechunk_repo(zarr_seq)
+    repo_seq = get_icechunk_repo(zarr_seq)
     append_sequential(
         radar_files=[sample_nexrad_file],
-        repo=repo,
+        repo=repo_seq,
         append_dim="vcp_time",
         zarr_store=str(zarr_seq),
         engine="nexradlevel2",
         remove_strings=False,
     )
-
+    repo_par = get_icechunk_repo(zarr_par)
     append_parallel(
+        repo=repo_par,
         radar_files=[sample_nexrad_file],
         append_dim="vcp_time",
         zarr_store=str(zarr_par),
         engine="nexradlevel2",
     )
-    session = repo.readonly_session("main")
+    session_par = repo_seq.readonly_session("main")
     tree_seq = xr.open_datatree(
-        session.store,
+        session_par.store,
         engine="zarr",
         consolidated=False,
         chunks={},
         zarr_format=3,
     )
-
+    session_par = repo_seq.readonly_session("main")
     tree_par = xr.open_datatree(
-        str(zarr_par),
+        session_par.store,
         engine="zarr",
         consolidated=False,
         chunks={},

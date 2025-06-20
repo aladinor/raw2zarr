@@ -9,6 +9,7 @@ from ..transform.alignment import align_dynamic_scan, check_dynamic_scan, fix_an
 from ..transform.dimension import ensure_dimension
 from ..transform.encoding import dtree_encoding
 from ..transform.georeferencing import apply_georeferencing
+from .builder_utils import remove_dims
 
 
 def radar_datatree(
@@ -50,7 +51,8 @@ def radar_datatree(
 
     filename_or_obj = _normalize_path(filename_or_obj)
     dtree = load_radar_data(filename_or_obj, engine=engine)
-
+    if engine == "iris":
+        dtree = remove_dims(dtree, "sweep")
     task_name = dtree.attrs.get("scan_name", "").strip()
     if not task_name:
         raise ValueError("Missing 'scan_name' in radar data attributes.")

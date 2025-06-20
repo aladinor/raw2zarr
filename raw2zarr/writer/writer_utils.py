@@ -53,11 +53,7 @@ def resolve_zarr_write_options(
         enc = None
     else:
         app_dim = append_dim if has_dim else None
-        enc = (
-            None
-            if has_dim
-            else (encoding if group_path in ["/", None] else encoding[group_path])
-        )
+        enc = None if has_dim else encoding
         mode = "a-" if has_dim else default_mode
 
     return {

@@ -43,9 +43,7 @@ def append_sequential(
     append_dim: str,
     repo: icechunk.Repository,
     zarr_format: int = 3,
-    consolidated: bool = False,
     engine: str = "iris",
-    group_path: str = None,
     mode: str = "a",
     remove_strings: bool = True,
     branch: str = "main",
@@ -91,6 +89,8 @@ def append_sequential(
                 dtree = remove_string_vars(dtree)
                 dtree.encoding = dtree_encoding(dtree, append_dim=append_dim)
 
+            group_path = dtree.groups[1]
+
             writer_args = resolve_zarr_write_options(
                 store=session.store,
                 group_path=group_path,
@@ -111,11 +111,13 @@ def append_sequential(
 def append_parallel(
     radar_files: Iterable[str | os.PathLike],
     append_dim: str,
-    zarr_store: str,
+    repo: icechunk.Repository,
     zarr_format: int = 3,
-    consolidated: bool = False,
     engine: str = "nexradlevel2",
     batch_size: int = None,
+    branch: str = "main",
+    mode: str = "a",
+    remove_strings: bool = True,
     **kwargs,
 ) -> None:
     """
@@ -145,29 +147,44 @@ def append_parallel(
     builder = partial(radar_datatree, engine=engine)
 
     if not batch_size:
-        batch_size = sum(client.ncores().values())
-
-    for radar_files_batch in batch(radar_files, n=batch_size):
-        bag = db.from_sequence(radar_files_batch, npartitions=batch_size).map(builder)
-        dtree_list: list[DataTree] = bag.compute()
-
-        for dtree in dtree_list:
-            if not dtree:
-                continue
-            writer_args = resolve_zarr_write_options(
-                store=zarr_store,
-                group_path=None,
-                encoding=dtree.encoding,
-                append_dim=append_dim,
-                zarr_format=zarr_format,
-                consolidated=consolidated,
-                compute=True,
+        batch_size = sum(client.ncores().values()) - 2
+    try:
+        for radar_files_batch in batch(radar_files, n=batch_size):
+            bag = db.from_sequence(radar_files_batch, npartitions=batch_size).map(
+                builder
             )
-            dtree_to_zarr(dtree, **writer_args)
-        del bag, dtree_list
-        gc.collect()
-    client.close()
-    cluster.close()
+            dtree_list: list[DataTree] = bag.compute()
+
+            for idx, dtree in enumerate(dtree_list):
+                if not dtree:
+                    continue
+                # TODO: remove this after strings are supported by zarr v3
+                if remove_strings:
+                    dtree = remove_string_vars(dtree)
+                    dtree.encoding = dtree_encoding(dtree, append_dim=append_dim)
+
+                session = repo.writable_session(branch)
+                group_path = dtree.groups[1]
+                writer_args = resolve_zarr_write_options(
+                    store=session.store,
+                    encoding=dtree.encoding,
+                    group_path=group_path,
+                    default_mode=mode,
+                    append_dim=append_dim,
+                    zarr_format=zarr_format,
+                )
+
+                dtree_to_zarr(dtree, **writer_args)
+                snapshot_id = session.commit(f"Added file {radar_files_batch[idx]}")
+                print(
+                    f"[icechunk] Committed {radar_files_batch[idx]} as snapshot {snapshot_id}"
+                )
+            del bag, dtree_list
+            gc.collect()
+    finally:
+        client.shutdown()
+        client.close()
+        cluster.close()
 
 
 def append_parallel_region(

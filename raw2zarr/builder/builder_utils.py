@@ -1,6 +1,8 @@
+import re
+
 import icechunk
 import pandas as pd
-import re
+from xarray import Dataset, DataTree
 
 
 def get_icechunk_repo(
@@ -25,3 +27,13 @@ def extract_timestamp(filename: str) -> pd.Timestamp:
         return pd.to_datetime(f"{date_part}{time_part}", format="%y%m%d%H%M%S")
 
     raise ValueError(f"Could not parse timestamp from filename: {filename}")
+
+
+def remove_dims(dtree: DataTree, dim: str = "sweep") -> DataTree:
+    def remove(ds: Dataset, dim: str = "sweep"):
+        try:
+            return ds.drop_dims(dim)
+        except ValueError:
+            return ds
+
+    return dtree.map_over_datasets(remove, dim)

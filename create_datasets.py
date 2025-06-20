@@ -6,6 +6,7 @@ from raw2zarr.builder.convert import convert_files
 from raw2zarr.utils import timer_func
 
 
+@timer_func
 def create_ideam_dt():
     radar = "Guaviare"
     append_dim = "vcp_time"
@@ -70,7 +71,7 @@ def create_nexrad_dt():
         zarr_store=zarr_store,
         zarr_format=zarr_format,
         engine=engine,
-        process_mode="parallel",
+        process_mode="parallel-region",
         remove_strings=True,
         consolidated=consolidated,
     )
@@ -94,7 +95,7 @@ def create_nexrad_dt():
 
 
 def main():
-    # create_nexrad_dt()
+    create_nexrad_dt()
     create_ideam_dt()
     print(1)
 

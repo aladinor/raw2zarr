@@ -30,7 +30,7 @@ dependencies:
   - pytest-xdist
   - nbmake
   - pydantic
-  - icechunk
+  - icechunk>=1.0.0
   - pandas
   - numpy
   - icechunk

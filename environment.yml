@@ -13,15 +13,16 @@ dependencies:
   - dask
   - netcdf4
   - bottleneck
-  - zarr>=3.0.8
+  - zarr>=3.1.0
   - ca-certificates
   - certifi
   - openssl
-  - s3fs>=2024.3.1
+  - s3fs>=2025.5.1
   - wradlib
   - hvplot
   - datashader
-  - xarray
+  - xarray>=2025.07.1
+  - xradar>=0.10.0
   - pytest
   - pytest-cov
   - pytest-doctestplus
@@ -37,4 +38,3 @@ dependencies:
   - pip
   - pip:
       - .
-      - git+https://github.com/openradar/xradar.git

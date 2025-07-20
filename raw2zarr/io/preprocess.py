@@ -6,27 +6,58 @@ import fsspec
 from s3fs.core import S3File
 
 
-def normalize_input_for_xradar(file: Union[str, S3File]) -> str:
+def normalize_input_for_xradar(
+    file: Union[str, S3File], storage_options: dict = None
+) -> Union[str, bytes]:
     """
-    Ensures a local, uncompressed file path suitable for xradar loaders (e.g., NEXRAD).
+    Prepares radar data for xradar loaders.
 
-    Handles:
-    - S3 files (via fsspec and simplecache)
-    - .gz compression (via temporary decompression)
-    - Local uncompressed files (passed as-is)
+    Automatically detects local vs S3 files:
+    - S3 files (s3://): Uses streaming with automatic gzip decompression
+    - Local files: Returns file path, decompresses .gz to temp file if needed
 
     Parameters:
         file (str or S3File): Path or object pointing to radar data.
+        storage_options (dict, optional): Additional storage options for fsspec
 
     Returns:
-        str: Local file path, guaranteed to be uncompressed.
+        Union[str, bytes]: Local file path (for local files) or bytes data (for S3 files)
     """
-    is_s3 = isinstance(file, S3File) or (
+    if storage_options is None:
+        storage_options = {}
+
+    is_remote = isinstance(file, S3File) or (
         isinstance(file, str) and file.startswith("s3://")
     )
     is_gz = isinstance(file, str) and file.endswith(".gz")
 
-    if is_s3:
+    # Use streaming for remote files
+    if is_remote and isinstance(file, str):
+        # Determine compression from file extension
+        compression = None
+        if is_gz:
+            compression = "gzip"
+        elif file.endswith(".bz2"):
+            compression = "bz2"
+
+        # Set default anonymous access for S3
+        if file.startswith("s3://") and "anon" not in storage_options:
+            storage_options["anon"] = True
+
+        try:
+            # Stream the data directly
+            with fsspec.open(
+                file, mode="rb", compression=compression, **storage_options
+            ) as f:
+                return f.read()
+        except Exception as e:
+            print(
+                f"[Warning] Streaming failed for {file}: {e}. Falling back to local processing."
+            )
+            # Fall through to original logic
+
+    # Handle S3File objects or fallback for remote files
+    if isinstance(file, S3File) or (isinstance(file, str) and file.startswith("s3://")):
         s3_path = f"simplecache::{file.path if isinstance(file, S3File) else file}"
         local_file = fsspec.open_local(
             s3_path, s3={"anon": True}, filecache={"cache_storage": "."}
@@ -35,9 +66,11 @@ def normalize_input_for_xradar(file: Union[str, S3File]) -> str:
             return _decompress_to_temp(local_file)
         return local_file
 
+    # Local files - decompress .gz if needed
     elif is_gz:
         return _decompress_to_temp(file)
 
+    # Local uncompressed files
     return file
 
 

@@ -116,7 +116,7 @@ class VcpTemplateManager:
         elevation = vcp.elevations[sweep_idx]
         az_res = 360 / total_azimuth
 
-        ds = xr.Dataset()
+        # Create coords first with VCP-specific dimensions
         coord_ds = create_common_coords(
             cfg=cfg,
             radar_info=radar_info,
@@ -128,17 +128,21 @@ class VcpTemplateManager:
             size_append_dim=size_append_dim,
             time_array=time_array,
         )
-        ds.update(coord_ds)
 
+        # Create data variables with VCP-specific dimensions
+        data_vars = {}
         for var_name, var_cfg in cfg.variables.items():
             dims = (append_dim, "azimuth", "range")  # ensure consistent dimension order
             shape = (size_append_dim, total_azimuth, total_bins)
 
-            ds[var_name] = xr.DataArray(
+            data_vars[var_name] = xr.DataArray(
                 da.full(shape, da.nan, dtype=var_cfg.dtype),
                 dims=dims,
                 attrs=var_cfg.attributes,
             )
+
+        # Create dataset with all components at once to avoid alignment issues
+        ds = xr.Dataset(data_vars, coords=coord_ds)
 
         for var in cfg.metadata:
             ds[var] = xr.DataArray(
@@ -174,10 +178,13 @@ class VcpTemplateManager:
             {"azimuth": az_chunksize, "range": range_chunksize, append_dim: 1}
         )
 
-        ds = ds.xradar.georeference()
-        ds["x"] = ds["x"].compute()
-        ds["y"] = ds["y"].compute()
-        ds["z"] = ds["z"].compute()
+        # Compute georeference coordinates to avoid task graph conflicts
+        with xr.set_options(keep_attrs=True):
+            ds = ds.xradar.georeference()
+            # Force computation to avoid Dask task key conflicts in multi-VCP scenarios
+            ds["x"] = ds["x"].compute()
+            ds["y"] = ds["y"].compute()
+            ds["z"] = ds["z"].compute()
         return ds
 
     def create_empty_vcp_tree(
@@ -229,4 +236,154 @@ class VcpTemplateManager:
             clean_tree = remove_string_vars(radar_dtree)
             clean_tree.encoding = dtree_encoding(clean_tree, append_dim=append_dim)
             return clean_tree
+        return radar_dtree
+
+    def create_multi_vcp_tree(
+        self,
+        radar_info: dict,
+        vcp_time_mapping: dict,
+        append_dim: str,
+        remove_strings: bool = True,
+        dim_chunksize: dict = None,
+    ) -> xr.DataTree:
+        """
+        Create a DataTree template that supports multiple VCP patterns.
+
+        Each VCP gets its own time block within the append dimension.
+
+        Parameters:
+            radar_info: Basic radar metadata (location, instrument, etc.)
+            vcp_time_mapping: VCP-time mapping from _create_vcp_time_mapping()
+            append_dim: Time dimension name (e.g., 'vcp_time')
+            remove_strings: Whether to remove string variables
+            dim_chunksize: Optional custom chunk sizes
+
+        Returns:
+            xr.DataTree: Multi-VCP template with hierarchical structure
+        """
+        # Calculate total time dimension size across all VCPs
+        total_time_size = sum(info["file_count"] for info in vcp_time_mapping.values())
+
+        # Create consolidated timestamp array for all VCPs
+        all_timestamps = []
+        for vcp_name in sorted(vcp_time_mapping.keys()):
+            all_timestamps.extend(vcp_time_mapping[vcp_name]["timestamps"])
+
+        # Create consolidated timestamp array for all VCPs
+        all_timestamps = []
+        for vcp_name in sorted(vcp_time_mapping.keys()):
+            all_timestamps.extend(vcp_time_mapping[vcp_name]["timestamps"])
+
+        # Create VCP-level groups using individual VCP time dimensions (working approach)
+        vcp_groups = {}
+        for vcp_name in vcp_time_mapping.keys():
+            vcp_info = vcp_time_mapping[vcp_name]
+            vcp_radar_info = radar_info.copy()
+            vcp_radar_info["vcp"] = vcp_name
+
+            # Use the original create_root approach for each VCP
+            from .template_utils import create_root, create_additional_groups
+
+            vcp_root_dict = create_root(
+                vcp_radar_info,
+                append_dim=append_dim,
+                size_append_dim=total_time_size,  # Each VCP gets full time dimension for region writing
+                append_dim_time=all_timestamps,  # Use all timestamps for consistent structure
+            )
+
+            # Extract the VCP dataset from the dictionary (remove the VCP key wrapper)
+            vcp_groups[vcp_name] = list(vcp_root_dict.values())[0]
+
+            # Add additional groups for this VCP
+            additional_groups = create_additional_groups(
+                vcp_name,
+                append_dim=append_dim,
+                size_append_dim=total_time_size,  # Each VCP gets full time dimension for region writing
+                radar_info=vcp_radar_info,
+                append_dim_time=all_timestamps,
+            )
+
+            # Add additional groups to the structure (they'll be added later in radar_dt)
+            for group_path, group_ds in additional_groups.items():
+                # Extract just the group name (remove VCP prefix)
+                group_name = group_path.split("/")[-1]
+                vcp_groups[f"{vcp_name}/{group_name}"] = group_ds
+
+        # Create sweep datasets for each VCP
+        sweep_dict = {}
+
+        for vcp_name, vcp_info in vcp_time_mapping.items():
+            vcp_config = self.get_vcp_info(vcp_name)
+
+            # Update radar_info for this specific VCP
+            vcp_radar_info = radar_info.copy()
+            vcp_radar_info["vcp"] = vcp_name
+
+            print(
+                f"  📡 Creating template for {vcp_name}: {len(vcp_config.elevations)} sweeps"
+            )
+
+            # Create sweeps for this VCP using the FULL time dimension
+            for sweep_idx in range(len(vcp_config.elevations)):
+                scan_type = vcp_config.scan_types[sweep_idx]
+
+                # Clear dask caches to avoid task key conflicts between VCPs/sweeps
+                import gc
+
+                try:
+                    import dask
+
+                    dask.base.clear_cache()
+                except (ImportError, AttributeError):
+                    pass
+                gc.collect()
+
+                # Create dataset for this sweep with TOTAL time dimension
+                # The region writing will handle placing data in correct time slices
+                ds = self.create_scan_dataset(
+                    scan_type,
+                    sweep_idx,
+                    vcp_radar_info,
+                    append_dim=append_dim,
+                    size_append_dim=total_time_size,  # Use TOTAL time size across all VCPs
+                    append_dim_time=all_timestamps,  # Use ALL timestamps from all VCPs
+                    dim_chunksize=dim_chunksize,
+                )
+
+                drop_vars = ["longitude", "latitude", "altitude", "crs_wkt"]
+                sweep_dict[f"{vcp_name}/sweep_{sweep_idx}"] = ds.drop_vars(drop_vars)
+
+                print(
+                    f"    🔹 Sweep {sweep_idx}: {vcp_config.elevations[sweep_idx]:.1f}° | {scan_type} | "
+                    f"Az:{vcp_config.dims['azimuth'][sweep_idx]} R:{vcp_config.dims['range'][sweep_idx]}"
+                )
+
+        # Combine all components into proper multi-VCP structure (no root dataset)
+        radar_dt = {
+            **{
+                f"/{vcp_name}": vcp_ds
+                for vcp_name, vcp_ds in vcp_groups.items()
+                if "/" not in vcp_name
+            },  # VCP groups
+            **{f"/{path}": ds for path, ds in sweep_dict.items()},  # Sweep datasets
+        }
+        radar_dtree = xr.DataTree.from_dict(radar_dt)
+
+        # Apply encoding
+        radar_dtree.encoding = dtree_encoding(
+            radar_dtree,
+            append_dim=append_dim,
+            dim_chunksize=dim_chunksize,
+        )
+
+        # Remove string variables if requested
+        if remove_strings:
+            clean_tree = remove_string_vars(radar_dtree)
+            clean_tree.encoding = dtree_encoding(
+                clean_tree,
+                append_dim=append_dim,
+                dim_chunksize=dim_chunksize,
+            )
+            return clean_tree
+
         return radar_dtree

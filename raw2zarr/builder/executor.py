@@ -18,7 +18,7 @@ from ..writer.writer_utils import (
     zarr_store_has_append_dim,
 )
 from ..writer.zarr_writer import dtree_to_zarr
-from .builder_utils import extract_timestamp
+from .builder_utils import extract_file_metadata
 from .dtree_radar import radar_datatree
 
 # Suppress the specific warning about `vlen-utf8` codec from Zarr
@@ -205,11 +205,32 @@ def append_parallel_region(
 
     session = repo.writable_session(branch=branch)
 
-    cluster = LocalCluster(dashboard_address=dashboard_address, memory_limit="10GB")
-    client = Client(cluster)
+    # Configure cluster to handle task key conflicts more gracefully
+    cluster = LocalCluster(
+        dashboard_address=dashboard_address, memory_limit="10GB", silence_logs=False
+    )
+    client = Client(
+        cluster,
+        # Configure client to be more tolerant of task key reuse
+        timeout="60s",
+        heartbeat_interval="10s",
+    )
 
-    append_dim_time = [extract_timestamp(f) for f in radar_files]
+    metadata_tasks = [
+        dask.delayed(extract_file_metadata)(f, engine) for f in radar_files
+    ]
+    metadata_results = dask.compute(*metadata_tasks)
+
+    # Unpack timestamps and VCP numbers
+    append_dim_time, vcps = zip(*metadata_results)
+    append_dim_time = list(append_dim_time)
+    vcps = list(vcps)
     file_indices = list(enumerate(radar_files))
+
+    # Create VCP-time mapping for multi-VCP support
+    vcp_time_mapping = _create_vcp_time_mapping(
+        radar_files, append_dim_time, vcps, file_indices
+    )
 
     remaining_files = _init_zarr_store(
         files=file_indices,
@@ -220,16 +241,30 @@ def append_parallel_region(
         consolidated=consolidated,
         size_append_dim=len(radar_files),
         append_dim_time=append_dim_time,
+        vcp_time_mapping=vcp_time_mapping,
         **kwargs,
     )
 
     session = repo.writable_session(branch=branch)
     # TODO: add if statement to check if use region to fill empty store or
     with session.allow_pickling():
+        # Create VCP-aware file mapping for multi-VCP scenarios
+        file_vcp_mapping = {}
+        if vcp_time_mapping and len(vcp_time_mapping) > 1:
+            # Multi-VCP: map files to their VCP-specific time indices
+            for vcp_name, vcp_info in vcp_time_mapping.items():
+                start_idx, end_idx = vcp_info["time_range"]
+                for local_idx, file_info in enumerate(vcp_info["files"]):
+                    global_time_idx = start_idx + local_idx
+                    file_vcp_mapping[file_info["filepath"]] = {
+                        "time_index": global_time_idx,
+                        "vcp": vcp_name,
+                    }
+
         tasks = [
             dask.delayed(write_dtree_region)(
                 f,
-                i,
+                file_vcp_mapping.get(f, {"time_index": i, "vcp": None})["time_index"],
                 session,
                 append_dim,
                 engine,
@@ -239,7 +274,7 @@ def append_parallel_region(
             )
             for i, f in remaining_files
         ]
-        print(f"Issuing {len(tasks)} tasks.")
+        print(f"Issuing {len(tasks)} tasks with VCP-aware time mapping.")
         sessions = dask.compute(*tasks, scheduler=client)
 
     session = merge_sessions(session, *sessions)
@@ -256,6 +291,7 @@ def _init_zarr_store(
     size_append_dim: int,
     remove_strings: bool = True,
     append_dim_time: pd.Timestamp | None = None,
+    vcp_time_mapping: dict | None = None,
     **kwargs,
 ) -> list[tuple[int, str]]:
     from ..templates.template_manager import VcpTemplateManager
@@ -283,13 +319,31 @@ def _init_zarr_store(
             "time_coverage_end": dtree[vcp].time_coverage_end.item(),
         }
 
-        empty_tree = VcpTemplateManager().create_empty_vcp_tree(
-            radar_info=radar_info,
-            append_dim=append_dim,
-            size_append_dim=size_append_dim,
-            remove_strings=remove_strings,
-            append_dim_time=append_dim_time,
-        )
+        template_manager = VcpTemplateManager()
+
+        # Choose template based on VCP diversity
+        if vcp_time_mapping and len(vcp_time_mapping) > 1:
+            # Multi-VCP scenario: create template for all VCPs
+            print(
+                f"[DEBUG] Creating multi-VCP template for {len(vcp_time_mapping)} VCPs"
+            )
+            empty_tree = template_manager.create_multi_vcp_tree(
+                radar_info=radar_info,
+                vcp_time_mapping=vcp_time_mapping,
+                append_dim=append_dim,
+                remove_strings=remove_strings,
+                dim_chunksize=kwargs.get("dim_chunksize"),
+            )
+        else:
+            # Single VCP scenario: use original approach
+            print(f"[DEBUG] Creating single-VCP template for VCP {vcp}")
+            empty_tree = template_manager.create_empty_vcp_tree(
+                radar_info=radar_info,
+                append_dim=append_dim,
+                size_append_dim=size_append_dim,
+                remove_strings=remove_strings,
+                append_dim_time=append_dim_time,
+            )
 
         writer_args = resolve_zarr_write_options(
             store=session.store,
@@ -314,10 +368,7 @@ def _init_zarr_store(
             zarr_format=zarr_format,
             append_dim=append_dim,
         )
-        dtree_append = drop_vars_region(
-            dtree,
-            append_dim=append_dim,
-        )
+        dtree_append = drop_vars_region(dtree, append_dim=append_dim)
         dtree_to_zarr(dtree_append, **writer_args)
         session.commit("Initial commit: zarr store initialization")
         print("Initial commit: zarr store initialization")
@@ -356,3 +407,73 @@ def write_dtree_region(
     dtree_append = drop_vars_region(dtree, append_dim=append_dim)
     dtree_to_zarr(dtree_append, **writer_args)
     return session
+
+
+def _create_vcp_time_mapping(
+    radar_files: list[str],
+    timestamps: list[pd.Timestamp],
+    vcps: list[str],
+    file_indices: list[tuple[int, str]],
+) -> dict:
+    """
+    Create VCP-time mapping for multi-VCP template creation.
+
+    Groups files by VCP and creates time blocks for each VCP pattern.
+
+    Parameters:
+        radar_files: List of radar file paths
+        timestamps: List of timestamps extracted from files
+        vcps: List of VCP numbers extracted from files
+        file_indices: List of (index, filepath) tuples
+
+    Returns:
+        dict: VCP mapping structure with time blocks and file locations
+    """
+    from collections import defaultdict
+
+    # Group files by VCP
+    vcp_groups = defaultdict(list)
+
+    for i, (file_idx, filepath) in enumerate(file_indices):
+        vcp = f"VCP-{vcps[i]}"
+        vcp_groups[vcp].append(
+            {
+                "file_index": file_idx,
+                "filepath": filepath,
+                "timestamp": timestamps[i],
+                "original_position": i,
+            }
+        )
+
+    # Sort each VCP group by timestamp
+    for vcp in vcp_groups:
+        vcp_groups[vcp].sort(key=lambda x: x["timestamp"])
+
+    # Create time blocks for each VCP
+    vcp_time_mapping = {}
+    global_time_index = 0
+
+    for vcp, files in vcp_groups.items():
+        # Create continuous time block for this VCP
+        start_time_idx = global_time_index
+        end_time_idx = global_time_index + len(files)
+
+        vcp_time_mapping[vcp] = {
+            "files": files,
+            "time_range": (start_time_idx, end_time_idx),
+            "timestamps": [f["timestamp"] for f in files],
+            "file_count": len(files),
+        }
+
+        global_time_index = end_time_idx
+
+    # Debug output
+    print(f"\n[DEBUG] Multi-VCP Analysis:")
+    print(f"Total files: {len(radar_files)}")
+    print(f"Unique VCPs found: {list(vcp_time_mapping.keys())}")
+
+    for vcp, info in vcp_time_mapping.items():
+        print(f"  {vcp}: {info['file_count']} files, time range {info['time_range']}")
+        print(f"    Time span: {info['timestamps'][0]} to {info['timestamps'][-1]}")
+
+    return vcp_time_mapping

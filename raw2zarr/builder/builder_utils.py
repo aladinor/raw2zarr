@@ -3,14 +3,52 @@ import re
 import icechunk
 import pandas as pd
 from xarray import Dataset, DataTree
+from xradar.io.backends.nexrad_level2 import NEXRADLevel2File
+from ..io.preprocess import normalize_input_for_xradar
 
 
 def get_icechunk_repo(
     zarr_store: str,
+    use_manifest_config: bool = True,
 ) -> icechunk.Repository:
     storage = icechunk.local_filesystem_storage(zarr_store)
+
+    repo_config = None
+    if use_manifest_config:
+        split_config = icechunk.ManifestSplittingConfig.from_dict(
+            {
+                icechunk.ManifestSplitCondition.AnyArray(): {
+                    icechunk.ManifestSplitDimCondition.DimensionName(
+                        "vcp_time"
+                    ): 65000  # ~1 year at mixed intervals
+                }
+            }
+        )
+
+        var_condition = icechunk.ManifestPreloadCondition.name_matches(
+            r"^(vcp_time|azimuth|range|x|y|z)$"
+        )
+        size_condition = icechunk.ManifestPreloadCondition.num_refs(
+            0, 100
+        )  # Small arrays
+
+        preload_if = icechunk.ManifestPreloadCondition.and_conditions(
+            [var_condition, size_condition]
+        )
+
+        preload_config = icechunk.ManifestPreloadConfig(
+            max_total_refs=1000,
+            preload_if=preload_if,
+        )
+
+        repo_config = icechunk.RepositoryConfig(
+            manifest=icechunk.ManifestConfig(
+                splitting=split_config, preload=preload_config
+            ),
+        )
+
     try:
-        return icechunk.Repository.create(storage)
+        return icechunk.Repository.create(storage, config=repo_config)
     except icechunk.IcechunkError:
         return icechunk.Repository.open(storage)
 
@@ -37,3 +75,32 @@ def remove_dims(dtree: DataTree, dim: str = "sweep") -> DataTree:
             return ds
 
     return dtree.map_over_datasets(remove, dim)
+
+
+def extract_file_metadata(
+    radar_file, engine="nexradlevel2"
+) -> tuple[pd.Timestamp, str]:
+    """
+    Extract both timestamp and VCP number from radar file in single operation.
+
+    More efficient than separate calls since it only reads the file once.
+
+    Parameters:
+        radar_file (str): Path to radar file
+        engine (str): Radar file engine type
+
+    Returns:
+        tuple: (timestamp: pd.Timestamp, vcp_number: int)
+    """
+    # Extract timestamp from filename (fast regex operation)
+    timestamp = extract_timestamp(radar_file)
+
+    # Extract VCP from file header (requires file read)
+    if engine == "nexradlevel2":
+        vcp_number = NEXRADLevel2File(
+            normalize_input_for_xradar(radar_file)
+        ).get_msg_5_data()["pattern_number"]
+    else:
+        raise ValueError(f"Engine not supported: {engine}")
+
+    return timestamp, vcp_number

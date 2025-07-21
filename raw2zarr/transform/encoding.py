@@ -47,13 +47,15 @@ def dtree_encoding(
         for var_name, var in ds.data_vars.items():
             dims = var.dims
             dtype_kind = var.dtype.kind
-            
+
             def get_chunk_sizes():
                 if dim_chunksize is None:
                     az_chunksize = int(len(var["azimuth"]))
                     range_chunksize = int(len(var["range"]))
                 else:
-                    az_chunksize = dim_chunksize.get("azimuth", int(len(var["azimuth"])))
+                    az_chunksize = dim_chunksize.get(
+                        "azimuth", int(len(var["azimuth"]))
+                    )
                     range_chunksize = dim_chunksize.get("range", int(len(var["range"])))
                 return az_chunksize, range_chunksize
 

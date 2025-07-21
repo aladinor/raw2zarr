@@ -206,9 +206,7 @@ def append_parallel_region(
     session = repo.writable_session(branch=branch)
 
     # Configure cluster to handle task key conflicts more gracefully
-    cluster = LocalCluster(
-        dashboard_address=dashboard_address, memory_limit="10GB", silence_logs=False
-    )
+    cluster = LocalCluster(dashboard_address=dashboard_address, memory_limit="10GB")
     client = Client(
         cluster,
         # Configure client to be more tolerant of task key reuse

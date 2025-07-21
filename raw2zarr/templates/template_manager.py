@@ -99,6 +99,7 @@ class VcpTemplateManager:
         append_dim: str = "vcp_time",
         size_append_dim: int = 1,
         append_dim_time: list[pd.Timestamp] | None = None,
+        dim_chunksize: dict = None,
     ) -> xr.Dataset:
         """Generic scan dataset creation"""
         cfg = self.get_template(scan_type)
@@ -162,8 +163,12 @@ class VcpTemplateManager:
             ["time", "longitude", "latitude", "altitude", "elevation", "crs_wkt"]
         )
 
-        az_chunksize = int(total_azimuth // 2)
-        range_chunksize = int(total_bins // 4)
+        if dim_chunksize is None:
+            az_chunksize = int(total_azimuth)
+            range_chunksize = int(total_bins)
+        else:
+            az_chunksize = dim_chunksize.get("azimuth", int(total_azimuth))
+            range_chunksize = dim_chunksize.get("range", int(total_bins))
 
         ds = ds.chunk(
             {"azimuth": az_chunksize, "range": range_chunksize, append_dim: 1}

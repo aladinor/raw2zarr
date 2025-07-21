@@ -1,6 +1,6 @@
 import gzip
 import os
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 from raw2zarr.io.preprocess import normalize_input_for_xradar
 

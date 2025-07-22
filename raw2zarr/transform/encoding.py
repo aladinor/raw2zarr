@@ -1,8 +1,21 @@
 from collections import defaultdict
+from collections.abc import Generator
 
 import numpy as np
 from packaging.version import parse as parse_version
 from xarray import DataTree
+
+
+def _iter_dtree_nodes(dtree: DataTree) -> Generator[DataTree, None, None]:
+    """
+    Iterate over all nodes in a DataTree, similar to xarray's _iter_zarr_groups.
+
+    This ensures we capture all groups in multi-VCP structures where
+    dtree.subtree might miss some nodes.
+    """
+    yield dtree
+    for child in dtree.children.values():
+        yield from _iter_dtree_nodes(child)
 
 
 def dtree_encoding(
@@ -32,7 +45,8 @@ def dtree_encoding(
     if not isinstance(dtree, DataTree):
         return {}
 
-    for node in dtree.subtree:
+    # Use proper iteration over all groups, similar to xarray's internal _iter_zarr_groups
+    for node in _iter_dtree_nodes(dtree):
         if node.is_empty:
             continue
 

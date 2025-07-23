@@ -2,6 +2,13 @@ from typing import Any
 
 import xarray as xr
 from icechunk import Session
+from icechunk.session import Session as IcechunkSession
+
+from ..builder.dtree_radar import radar_datatree
+from ..templates.template_utils import remove_string_vars
+from ..templates.vcp_utils import create_multi_vcp_template
+from ..transform.encoding import dtree_encoding
+from .zarr_writer import dtree_to_zarr
 
 
 def zarr_store_has_append_dim(
@@ -69,9 +76,81 @@ def resolve_zarr_write_options(
     }
 
 
-def drop_vars_region(dtree: xr.DataTree, append_dim: str) -> xr.DataTree:
-    def drop_vars_no_append_dim(ds: xr.Dataset, append_dim: str) -> xr.Dataset:
-        drop_list = [var for var in ds.variables if append_dim not in ds[var].dims]
-        return ds.drop_vars(drop_list)
+def init_zarr_store(
+    files: list[tuple[int, str]],
+    session: IcechunkSession,
+    append_dim: str,
+    engine: str,
+    zarr_format: int,
+    consolidated: bool,
+    remove_strings: bool = True,
+    vcp_time_mapping: dict | None = None,
+) -> list[tuple[int, str]]:
+    """
+    Initialize Zarr store with VCP-specific templates if it doesn't exist.
 
-    return dtree.map_over_datasets(drop_vars_no_append_dim, append_dim)
+    Args:
+        files: List of (index, filepath) tuples
+        session: Icechunk session for store access
+        append_dim: Dimension name for appending data
+        engine: Engine for reading radar files
+        zarr_format: Zarr format version
+        consolidated: Whether to consolidate metadata
+        remove_strings: Whether to remove string variables
+        vcp_time_mapping: VCP time mapping for multi-VCP support
+
+    Returns:
+        List of remaining files to process
+    """
+    exis_zarr_store = zarr_store_has_append_dim(
+        session.store,
+        append_dim=append_dim,
+    )
+    if not exis_zarr_store:
+        idx, first_file = files.pop(0)
+        dtree = radar_datatree(first_file, engine=engine)
+        vcp = dtree[dtree.groups[1]].attrs["scan_name"]
+        radar_info = {
+            "lon": dtree[vcp].longitude.item(),
+            "lat": dtree[vcp].latitude.item(),
+            "alt": dtree[vcp].altitude.item(),
+            "crs_wkt": dtree[f"{vcp}/sweep_0"].ds["crs_wkt"].attrs,
+            "reference_time": dtree[vcp].time_coverage_start.item(),
+            "vcp": vcp,
+            "instrument_name": dtree[vcp].attrs["instrument_name"],
+            "volume_number": dtree[vcp].volume_number.item(),
+            "platform_type": dtree[vcp].platform_type.item(),
+            "instrument_type": dtree[vcp].instrument_type.item(),
+            "time_coverage_start": dtree[vcp].time_coverage_start.item(),
+            "time_coverage_end": dtree[vcp].time_coverage_end.item(),
+        }
+
+        # Create individual VCP templates and combine them
+        final_tree = create_multi_vcp_template(
+            vcp_time_mapping=vcp_time_mapping,
+            base_radar_info=radar_info,
+            append_dim=append_dim,
+            remove_strings=remove_strings,
+        )
+        if remove_strings:
+            final_tree = remove_string_vars(final_tree)
+            final_tree.encoding = dtree_encoding(final_tree, append_dim=append_dim)
+
+        # Write combined template to store
+        writer_args = resolve_zarr_write_options(
+            store=session.store,
+            group_path=None,
+            encoding=final_tree.encoding,
+            append_dim=append_dim,
+            zarr_format=zarr_format,
+            consolidated=consolidated,
+            compute=False,
+        )
+        dtree_to_zarr(final_tree, **writer_args)
+
+        session.commit("Initial commit: VCP-specific xarray template created")
+
+        # Return all files including the first one for region writing
+        files.insert(0, (idx, first_file))
+        return files
+    return files

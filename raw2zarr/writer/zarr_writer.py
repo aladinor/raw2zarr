@@ -2,8 +2,14 @@ from collections.abc import Mapping, MutableMapping
 from os import PathLike
 from typing import Any, Literal
 
+import icechunk
+import xarray as xr
 from xarray import DataTree
 from xarray.core.types import ZarrWriteModes
+
+from ..builder.dtree_radar import radar_datatree
+from ..templates.template_utils import remove_string_vars
+from ..transform.encoding import dtree_encoding
 
 
 def dtree_to_zarr(
@@ -58,3 +64,72 @@ def dtree_to_zarr(
             region=region,
             **kwargs,
         )
+
+
+def drop_vars_region(dtree: xr.DataTree, append_dim: str) -> xr.DataTree:
+    """
+    Drop variables that don't have the append dimension for region writing.
+
+    Args:
+        dtree: DataTree to process
+        append_dim: Dimension name for appending data
+
+    Returns:
+        DataTree with variables filtered for region writing
+    """
+
+    def drop_vars_no_append_dim(ds: xr.Dataset, append_dim: str) -> xr.Dataset:
+        drop_list = [var for var in ds.variables if append_dim not in ds[var].dims]
+        return ds.drop_vars(drop_list)
+
+    return dtree.map_over_datasets(drop_vars_no_append_dim, append_dim)
+
+
+def write_dtree_region(
+    file: str,
+    idx: int,
+    session: icechunk.Session,
+    append_dim: str,
+    engine: str,
+    zarr_format: int = 3,
+    consolidated: bool = False,
+    remove_strings=True,
+    **kwargs,
+) -> icechunk.Session:
+    """
+    Write radar data to a specific region in an existing Zarr store.
+
+    Args:
+        file: Path to radar file to process
+        idx: Index position for writing in the append dimension
+        session: Icechunk session for store access
+        append_dim: Dimension name for appending data
+        engine: Engine for reading radar files
+        zarr_format: Zarr format version
+        consolidated: Whether to consolidate metadata
+        remove_strings: Whether to remove string variables
+        **kwargs: Additional arguments passed to dtree_to_zarr
+
+    Returns:
+        Updated icechunk session
+    """
+    dtree = radar_datatree(file, engine=engine)
+    # TODO: remove this after strings are supported by zarr v3
+    if remove_strings:
+        dtree = remove_string_vars(dtree)
+        dtree.encoding = dtree_encoding(dtree, append_dim=append_dim)
+
+    region = {append_dim: slice(idx, idx + 1)}
+
+    writer_args = dict(
+        store=session.store,
+        mode="a-",
+        zarr_format=zarr_format,
+        consolidated=consolidated,
+        write_inherited_coords=True,
+        region=region,
+        **kwargs,
+    )
+    dtree_append = drop_vars_region(dtree, append_dim=append_dim)
+    dtree_to_zarr(dtree_append, **writer_args)
+    return session

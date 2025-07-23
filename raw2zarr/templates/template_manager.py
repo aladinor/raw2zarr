@@ -191,14 +191,13 @@ class VcpTemplateManager:
         self,
         radar_info: dict,
         append_dim: str,
-        size_append_dim: int = 1,
         remove_strings: bool = True,  # remove after zarr v3 supports string dtypes
         append_dim_time: pd.Timestamp | None = None,
     ) -> xr.DataTree:
 
         vcp = radar_info["vcp"]
         vcp_info = self.get_vcp_info(vcp)
-
+        size_append_dim = len(append_dim_time)
         root_ds = create_root(
             radar_info,
             append_dim=append_dim,
@@ -282,7 +281,7 @@ class VcpTemplateManager:
             vcp_radar_info["vcp"] = vcp_name
 
             # Use the original create_root approach for each VCP
-            from .template_utils import create_root, create_additional_groups
+            from .template_utils import create_additional_groups, create_root
 
             vcp_root_dict = create_root(
                 vcp_radar_info,

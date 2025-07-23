@@ -156,7 +156,6 @@ def append_parallel(
 
     import dask
     from dask.distributed import Client, LocalCluster
-    from icechunk.distributed import merge_sessions
 
     logging.getLogger("distributed.scheduler").setLevel(logging.ERROR)
 

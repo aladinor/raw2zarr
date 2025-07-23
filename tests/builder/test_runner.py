@@ -1,6 +1,7 @@
 import os
 import shutil
 
+import numpy as np
 import pytest
 import xarray as xr
 
@@ -35,7 +36,6 @@ def test_append_sequential_creates_zarr(sample_nexrad_files, output_zarr):
         radar_files=sample_nexrad_files,
         repo=repo,
         append_dim=append_dim,
-        zarr_store=output_zarr,
         engine="nexradlevel2",
     )
 
@@ -71,7 +71,6 @@ def test_append_parallel_creates_zarr(sample_nexrad_files, output_zarr):
         radar_files=sample_nexrad_files,
         repo=repo,
         append_dim=append_dim,
-        zarr_store=output_zarr,
         engine="nexradlevel2",
     )
 
@@ -110,27 +109,26 @@ def test_parallel_vs_sequential_equivalence(sample_nexrad_file, tmp_path):
         radar_files=[sample_nexrad_file],
         repo=repo_seq,
         append_dim="vcp_time",
-        zarr_store=str(zarr_seq),
         engine="nexradlevel2",
-        remove_strings=False,
+        remove_strings=True,
     )
     repo_par = get_icechunk_repo(zarr_par)
     append_parallel(
         repo=repo_par,
         radar_files=[sample_nexrad_file],
         append_dim="vcp_time",
-        zarr_store=str(zarr_par),
         engine="nexradlevel2",
+        remove_strings=True,
     )
-    session_par = repo_seq.readonly_session("main")
+    session_seq = repo_seq.readonly_session("main")
     tree_seq = xr.open_datatree(
-        session_par.store,
+        session_seq.store,
         engine="zarr",
         consolidated=False,
         chunks={},
         zarr_format=3,
     )
-    session_par = repo_seq.readonly_session("main")
+    session_par = repo_par.readonly_session("main")
     tree_par = xr.open_datatree(
         session_par.store,
         engine="zarr",
@@ -144,8 +142,8 @@ def test_parallel_vs_sequential_equivalence(sample_nexrad_file, tmp_path):
     ), "Mismatch in group structure"
 
     for group in tree_seq.groups:
-        ds_seq = tree_seq[group].ds
-        ds_par = tree_par[group].ds
+        ds_seq = tree_seq[group].ds  # .compute()
+        ds_par = tree_par[group].ds  # .compute()
 
         assert ds_seq.dims == ds_par.dims, f"Dimension mismatch in {group}"
         assert set(ds_seq.data_vars) == set(
@@ -153,4 +151,12 @@ def test_parallel_vs_sequential_equivalence(sample_nexrad_file, tmp_path):
         ), f"Data variables mismatch in {group}"
 
         for var in ds_seq.data_vars:
-            xr.testing.assert_allclose(ds_seq[var], ds_par[var], rtol=1e-5)
+            # Compare data values only, not coordinate metadata/chunking
+            seq_values = ds_seq[var].values
+            par_values = ds_par[var].values
+            np.testing.assert_allclose(
+                seq_values,
+                par_values,
+                rtol=1e-5,
+                err_msg=f"Data values differ for variable {var} in {group}",
+            )

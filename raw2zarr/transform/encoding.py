@@ -1,13 +1,27 @@
 from collections import defaultdict
+from collections.abc import Generator
 
 import numpy as np
 from packaging.version import parse as parse_version
 from xarray import DataTree
 
 
+def _iter_dtree_nodes(dtree: DataTree) -> Generator[DataTree, None, None]:
+    """
+    Iterate over all nodes in a DataTree, similar to xarray's _iter_zarr_groups.
+
+    This ensures we capture all groups in multi-VCP structures where
+    dtree.subtree might miss some nodes.
+    """
+    yield dtree
+    for child in dtree.children.values():
+        yield from _iter_dtree_nodes(child)
+
+
 def dtree_encoding(
     dtree: DataTree,
     append_dim: str,
+    dim_chunksize: dict = None,
 ) -> dict:
     """
     Encoding dictionary for time, append_dim, and all data variables within a radar DataTree.
@@ -15,6 +29,7 @@ def dtree_encoding(
     Parameters:
         dtree (DataTree): The xarray DataTree to process.
         append_dim (str): The dimension (e.g., 'vcp_time') to encode.
+        dim_chunksize (dict, optional): Custom chunk sizes for dimensions. If None, uses coordinate lengths.
 
     Returns:
         dict: Dictionary suitable for use in xarray's `to_zarr` or similar export methods.
@@ -30,7 +45,8 @@ def dtree_encoding(
     if not isinstance(dtree, DataTree):
         return {}
 
-    for node in dtree.subtree:
+    # Use proper iteration over all groups, similar to xarray's internal _iter_zarr_groups
+    for node in _iter_dtree_nodes(dtree):
         if node.is_empty:
             continue
 
@@ -46,6 +62,17 @@ def dtree_encoding(
             dims = var.dims
             dtype_kind = var.dtype.kind
 
+            def get_chunk_sizes():
+                if dim_chunksize is None:
+                    az_chunksize = int(len(var["azimuth"]))
+                    range_chunksize = int(len(var["range"]))
+                else:
+                    az_chunksize = dim_chunksize.get(
+                        "azimuth", int(len(var["azimuth"]))
+                    )
+                    range_chunksize = dim_chunksize.get("range", int(len(var["range"])))
+                return az_chunksize, range_chunksize
+
             if dtype_kind in {"O", "U"}:
                 encoding[path][var_name] = {
                     "dtype": "U50",
@@ -60,14 +87,10 @@ def dtree_encoding(
                     "_FillValue": -9999,
                 }
             elif set(dims) == {"azimuth", "range"}:
-                az_chunksize = int((len(var["azimuth"])) // 2)
-                range_chunksize = int(len(var.range) // 4)
+                az_chunksize, range_chunksize = get_chunk_sizes()
                 encoding[path][var_name] = {
                     "dtype": "float32" if dtype_kind == "f" else var.dtype,
-                    "chunks": (
-                        az_chunksize,
-                        range_chunksize,
-                    ),  # example, customize as needed
+                    "chunks": (az_chunksize, range_chunksize),
                     "_FillValue": -9999,
                 }
             elif dims == ("range",):
@@ -83,8 +106,7 @@ def dtree_encoding(
                     "_FillValue": -9999,
                 }
             elif set(dims) == {append_dim, "azimuth", "range"}:
-                az_chunksize = int((len(var["azimuth"])) // 2)
-                range_chunksize = int(len(var.range) // 4)
+                az_chunksize, range_chunksize = get_chunk_sizes()
                 if dims != (append_dim, "azimuth", "range"):
                     var = var.transpose(append_dim, "azimuth", "range")
                     ds[var_name] = var

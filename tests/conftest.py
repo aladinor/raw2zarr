@@ -45,7 +45,7 @@ def nexrad_local_gz_file(tmp_path_factory):
     Download a GZIP NEXRAD file from AWS S3 for testing.
     """
     aws_url = "s3://noaa-nexrad-level2/2012/01/29/KVNX/KVNX20120129_000840_V06.gz"
-    gz_path = tmp_path_factory.mktemp("nexrad_data") / "KILX20230629_154426_V06.gz"
+    gz_path = tmp_path_factory.mktemp("nexrad_data") / "KVNX20120129_000840_V06.gz"
     with fsspec.open(aws_url, anon=True) as s3_file:
         with open(gz_path, "wb") as local_file:
             local_file.write(s3_file.read())
@@ -65,7 +65,7 @@ def nexrad_local_gz_files(tmp_path_factory):
     local_paths = []
 
     for i, url in enumerate(s3_urls):
-        local_path = tmp_dir / f"KVNX_{i}.gz"
+        local_path = tmp_dir / f"{url.split('/')[-1]}"
         with fsspec.open(url, anon=True) as s3_file:
             with open(local_path, "wb") as local_file:
                 local_file.write(s3_file.read())

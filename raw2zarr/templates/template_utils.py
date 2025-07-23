@@ -22,7 +22,7 @@ def create_common_coords(
         da.linspace(
             az_res / 2,
             360 - az_res / 2,
-            cfg.dims["azimuth"],
+            total_azimuth,
             dtype=cfg.coords["azimuth"].dtype,
         ),
         dims="azimuth",

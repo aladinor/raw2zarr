@@ -65,7 +65,7 @@ def nexrad_local_gz_files(tmp_path_factory):
     local_paths = []
 
     for i, url in enumerate(s3_urls):
-        local_path = tmp_dir / f"KVNX_{i}.gz"
+        local_path = tmp_dir / f"{url.split(" / ")[-1]}"
         with fsspec.open(url, anon=True) as s3_file:
             with open(local_path, "wb") as local_file:
                 local_file.write(s3_file.read())

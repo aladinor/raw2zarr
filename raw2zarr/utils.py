@@ -191,8 +191,8 @@ def write_file_radar(file: str, path: str = "../results") -> None:
 
 
 def create_empty_dtree(vcp: str = "VCP-212") -> DataTree:
-    from .transform.alignment import align_dynamic_scan, fix_angle, check_dynamic_scan
     from .io.load import load_radar_data
+    from .transform.alignment import align_dynamic_scan, check_dynamic_scan, fix_angle
     from .transform.dimension import ensure_dimension
 
     if vcp == "VCP-212":
@@ -205,4 +205,4 @@ def create_empty_dtree(vcp: str = "VCP-212") -> DataTree:
         dtree = align_dynamic_scan(dtree, append_dim=append_dim)
     else:
         dtree = dtree.pipe(ensure_dimension, append_dim)
-    return dtree_full_like(dtree.isel(vcp_time=0), np.nan)
+    return dtree

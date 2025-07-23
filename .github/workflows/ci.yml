@@ -29,7 +29,7 @@ jobs:
         run: ruff check . --fix
 
   build_0:
-    name: raw2zarr unit tests - linux
+    name: raw2zarr unit tests - linux (py${{ matrix.python-version }}, numpy ${{ matrix.numpy-version }})
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -40,7 +40,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.12"]
-        numpy-version: ["1", "2"]
+        numpy-version: ["~=1.26.0", "~=2.2.0"]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -51,7 +51,7 @@ jobs:
           environment-name: raw2zarr-unit-tests
           environment-file: ${{env.CONDA_ENV_FILE}}
           cache-environment: true
-          cache-environment-key: "${{runner.os}}-${{runner.arch}}-py${{env.PYTHON_VERSION}}-${{env.TODAY}}-${{hashFiles(env.CONDA_ENV_FILE)}}"
+          cache-environment-key: "${{runner.os}}-${{runner.arch}}-py${{matrix.python-version}}-np${{matrix.numpy-version}}-${{hashFiles(env.CONDA_ENV_FILE)}}"
           create-args: >-
             python=${{matrix.python-version}}
             numpy=${{matrix.numpy-version}}
@@ -63,11 +63,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest pytest-xdist pytest-cov
       - name: Version Info
-        run: python -c "import raw2zarr; print(raw2zarr.__version__)"
+        run: |
+          python -c "import raw2zarr; print(f'raw2zarr: {raw2zarr.__version__}')"
+          python -c "import numpy; print(f'numpy: {numpy.__version__}')"
+          python -c "import zarr; print(f'zarr: {zarr.__version__}')"
+          python -c "import xarray; print(f'xarray: {xarray.__version__}')"
       - name: Run serial tests
         run: pytest --verbose --durations=15 --cov=raw2zarr --cov-append -m serial
       - name: Run parallel tests
         run: pytest -n auto --dist loadfile --verbose --durations=15 --cov=raw2zarr --cov-append -m "not serial"
+      - name: NumPy Compatibility Summary
+        run: |
+          echo "## NumPy ${{ matrix.numpy-version }} Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Environment: $(python -c 'import numpy; print(f"NumPy {numpy.__version__}")')" >> $GITHUB_STEP_SUMMARY
+          echo "- Tests requiring NumPy 2+: $(python -c 'import numpy; print("SKIPPED" if numpy.__version__.startswith("1") else "EXECUTED")')" >> $GITHUB_STEP_SUMMARY
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
@@ -77,32 +86,43 @@ jobs:
           name: codecov-gha
           fail_ci_if_error: false
           token: ${{ secrets.CODECOV_TOKEN }}
-#  notebook-check:
-#    name: Notebook Execution Check
-#    runs-on: ubuntu-latest
-#    defaults:
-#      run:
-#        shell: bash -l {0}
-#    steps:
-#      - uses: actions/checkout@v4
-#
-#      - name: Install micromamba environment
-#        uses: mamba-org/setup-micromamba@v1
-#        with:
-#          environment-name: notebook-tests
-#          environment-file: environment.yml
-#          cache-environment: true
-#          cache-environment-key: "notebook-${{runner.os}}-${{hashFiles('environment.yml')}}"
-#
-#      - name: Install raw2zarr (editable mode)
-#        run: |
-#          python -m pip install -e .
-#
-#      - name: Check environment
-#        run: |
-#          python --version
-#          mamba list
-#
-#      - name: Execute Selected Notebooks in Parallel
-#        run: |
-#          pytest --nbmake --nbmake-timeout=900 notebooks/1.Sigmet2Zarr.ipynb notebooks/2.NexRad2Zarr.ipynb
+  notebook-check:
+    name: Notebook Execution Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    env:
+      NOTEBOOK_TEST_FILES: "2"  # Use only 2 files for fast CI testing
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install micromamba environment
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-name: notebook-tests
+          environment-file: environment.yml
+          cache-environment: true
+          cache-environment-key: "notebook-${{runner.os}}-${{hashFiles('environment.yml')}}"
+          create-args: >-
+            python=3.12
+            numpy=2
+
+      - name: Install raw2zarr (editable mode)
+        run: |
+          python -m pip install -e . --no-deps
+
+      - name: Install Test Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest nbmake
+
+      - name: Version Info
+        run: |
+          python -c "import raw2zarr; print(f'raw2zarr: {raw2zarr.__version__}')"
+          python -c "import numpy; print(f'numpy: {numpy.__version__}')"
+          python -c "import zarr; print(f'zarr: {zarr.__version__}')"
+
+      - name: Execute Selected Notebooks
+        run: |
+          pytest --nbmake --nbmake-timeout=300 notebooks/1.Sigmet2Zarr.ipynb notebooks/2.NexRad2Zarr.ipynb

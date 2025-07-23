@@ -6,7 +6,7 @@ from typing import Literal
 
 import icechunk
 
-from .executor import append_parallel, append_parallel_region, append_sequential
+from .executor import append_parallel, append_sequential
 
 
 def convert_files(
@@ -68,15 +68,6 @@ def convert_files(
         )
     elif process_mode == "parallel":
         append_parallel(
-            radar_files,
-            append_dim=append_dim,
-            repo=repo,
-            engine=engine,
-            remove_strings=remove_strings,
-            **kwargs,
-        )
-    elif process_mode == "parallel-region":
-        append_parallel_region(
             radar_files,
             append_dim=append_dim,
             repo=repo,

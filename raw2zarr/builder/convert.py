@@ -23,7 +23,7 @@ def convert_files(
 
     This function serves as a unified interface for appending radar data into a Zarr store.
     It supports both serial and Dask-parallel strategies, controlled via the `process_mode` argument.
-    Internally, it delegates to `append_sequential` or `append_parallel_region`.
+    Internally, it delegates to `append_sequential` or `append_parallel`.
 
     Parameters:
         radar_files (Iterable[str | os.PathLike]):
@@ -77,5 +77,5 @@ def convert_files(
         )
     else:
         raise ValueError(
-            f"Unsupported mode: {process_mode}. Use 'sequential', 'parallel' or 'parallel-region'."
+            f"Unsupported mode: {process_mode}. Use 'sequential' or 'parallel'."
         )

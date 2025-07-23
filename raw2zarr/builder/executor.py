@@ -56,14 +56,18 @@ def append_sequential(
             Paths to the radar data files to be appended.
         append_dim (str):
             Name of the dimension along which data should be appended (e.g., "vcp_time").
-        session (str):
-            Icechunk session object.
+        repo (icechunk.Repository):
+            Icechunk repository object for managing the Zarr store.
         zarr_format (int, optional):
             Zarr format version to use (2 or 3). Defaults to 3.
-        consolidated (bool, optional):
-            Whether to consolidate Zarr metadata. Defaults to False.
         engine (str, optional):
             Radar file reading engine (e.g., "iris", "nexradlevel2"). Defaults to "iris".
+        mode (str, optional):
+            Zarr write mode. Defaults to "a".
+        remove_strings (bool, optional):
+            Whether to remove variables of string dtype. Defaults to True.
+        branch (str, optional):
+            Git-like branch name for icechunk versioning. Defaults to "main".
         **kwargs:
             Additional options passed to the Zarr writer.
 
@@ -114,11 +118,44 @@ def append_parallel(
     branch: str = "main",
     remove_strings: bool = True,
 ) -> None:
+    """
+    Append radar files to a Zarr store in parallel using Dask.
+
+    This function processes multiple radar files concurrently using Dask distributed
+    computing. It creates VCP-specific templates and uses region writing for efficient
+    parallel data ingestion. Requires icechunk 1.0+ with Session.fork() API.
+
+    Parameters:
+        radar_files (Iterable[str | os.PathLike]):
+            Paths to the radar data files to be appended.
+        append_dim (str):
+            Name of the dimension along which data should be appended (e.g., "vcp_time").
+        repo (icechunk.Repository):
+            Icechunk repository object for managing the Zarr store.
+        zarr_format (int, optional):
+            Zarr format version to use (2 or 3). Defaults to 3.
+        consolidated (bool, optional):
+            Whether to consolidate Zarr metadata. Defaults to False.
+        engine (str, optional):
+            Radar file reading engine (e.g., "iris", "nexradlevel2"). Defaults to "nexradlevel2".
+        dashboard_address (str, optional):
+            Dask dashboard address for monitoring. Defaults to "127.0.0.1:8785".
+        branch (str, optional):
+            Git-like branch name for icechunk versioning. Defaults to "main".
+        remove_strings (bool, optional):
+            Whether to remove variables of string dtype. Defaults to True.
+
+    Returns:
+        None
+
+    Note:
+        This function uses the new icechunk 1.0+ Session.fork() API for parallel
+        processing. The old allow_pickling() context manager is no longer supported.
+    """
     import logging
 
     import dask
     from dask.distributed import Client, LocalCluster
-    from icechunk.distributed import merge_sessions
 
     logging.getLogger("distributed.scheduler").setLevel(logging.ERROR)
 

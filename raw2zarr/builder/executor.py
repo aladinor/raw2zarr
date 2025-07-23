@@ -153,33 +153,33 @@ def append_parallel(
     )
 
     session = repo.writable_session(branch=branch)
-    # TODO: add if statement to check if use region to fill empty store or
-    with session.allow_pickling():
-        file_vcp_mapping = {}
+    fork = session.fork()  # Create a picklable session for parallel processing
 
-        # Always use VCP-specific mapping since we now use the refactored approach for all scenarios
-        for vcp_name, vcp_info in vcp_time_mapping.items():
-            for local_idx, file_info in enumerate(vcp_info["files"]):
-                # Map files to their VCP-specific time indices
-                file_vcp_mapping[file_info["filepath"]] = {
-                    "time_index": local_idx,  # VCP-specific time index
-                    "vcp": vcp_name,
-                }
+    file_vcp_mapping = {}
 
-        tasks = [
-            dask.delayed(write_dtree_region)(
-                f,
-                file_vcp_mapping.get(f, {"time_index": i, "vcp": None})["time_index"],
-                session,
-                append_dim,
-                engine,
-                zarr_format,
-                consolidated,
-                remove_strings,
-            )
-            for i, f in remaining_files
-        ]
-        sessions = dask.compute(*tasks, scheduler=client)
+    # Always use VCP-specific mapping since we now use the refactored approach for all scenarios
+    for vcp_name, vcp_info in vcp_time_mapping.items():
+        for local_idx, file_info in enumerate(vcp_info["files"]):
+            # Map files to their VCP-specific time indices
+            file_vcp_mapping[file_info["filepath"]] = {
+                "time_index": local_idx,  # VCP-specific time index
+                "vcp": vcp_name,
+            }
 
-    session = merge_sessions(session, *sessions)
+    tasks = [
+        dask.delayed(write_dtree_region)(
+            f,
+            file_vcp_mapping.get(f, {"time_index": i, "vcp": None})["time_index"],
+            fork,
+            append_dim,
+            engine,
+            zarr_format,
+            consolidated,
+            remove_strings,
+        )
+        for i, f in remaining_files
+    ]
+    remote_sessions = dask.compute(*tasks, scheduler=client)
+
+    session.merge(*remote_sessions)
     session.commit("write Nexrad files to zarr store")

@@ -16,8 +16,6 @@ from .template_utils import (
     remove_string_vars,
 )
 
-# from ..transform.alignment import fix_angle
-
 
 class ScanCoordConfig(BaseModel):
     model_config = ConfigDict(frozen=True)
@@ -178,13 +176,15 @@ class VcpTemplateManager:
             {"azimuth": az_chunksize, "range": range_chunksize, append_dim: 1}
         )
 
-        # Compute georeference coordinates to avoid task graph conflicts
         with xr.set_options(keep_attrs=True):
             ds = ds.xradar.georeference()
-            # Force computation to avoid Dask task key conflicts in multi-VCP scenarios
             ds["x"] = ds["x"].compute()
             ds["y"] = ds["y"].compute()
             ds["z"] = ds["z"].compute()
+            ds["longitude"] = ds["longitude"].compute()
+            ds["latitude"] = ds["latitude"].compute()
+            ds["altitude"] = ds["altitude"].compute()
+            ds["crs_wkt"] = ds["crs_wkt"].compute()
         return ds
 
     def create_empty_vcp_tree(
@@ -222,8 +222,8 @@ class VcpTemplateManager:
                 size_append_dim=size_append_dim,
                 append_dim_time=append_dim_time,
             )
-            drop_vars = ["longitude", "latitude", "altitude", "crs_wkt"]
-            sweep_dict[f"{vcp}/sweep_{sweep_idx}"] = ds.drop_vars(drop_vars)
+            # Keep scalar coordinates in sweep datasets for proper region writing
+            sweep_dict[f"{vcp}/sweep_{sweep_idx}"] = ds
         radar_dt = root_ds | other_groups | sweep_dict
         radar_dtree = xr.DataTree.from_dict(radar_dt)
         radar_dtree.encoding = dtree_encoding(
@@ -349,8 +349,8 @@ class VcpTemplateManager:
                     dim_chunksize=dim_chunksize,
                 )
 
-                drop_vars = ["longitude", "latitude", "altitude", "crs_wkt"]
-                sweep_dict[f"{vcp_name}/sweep_{sweep_idx}"] = ds.drop_vars(drop_vars)
+                # Keep scalar coordinates in sweep datasets for proper region writing
+                sweep_dict[f"{vcp_name}/sweep_{sweep_idx}"] = ds
 
                 print(
                     f"    🔹 Sweep {sweep_idx}: {vcp_config.elevations[sweep_idx]:.1f}° | {scan_type} | "

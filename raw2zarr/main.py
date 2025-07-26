@@ -1,16 +1,25 @@
-import glob
 from datetime import datetime
 
 import fsspec
 import numpy as np
 import xarray as xr
 
+from raw2zarr.builder.builder_utils import get_icechunk_repo
 from raw2zarr.builder.convert import convert_files
 from raw2zarr.utils import create_query, timer_func
-from raw2zarr.builder.builder_utils import get_icechunk_repo
 
 
-def get_radar_files(engine):
+def get_radar_files(engine, radar_site="KVNX", start_date="2011/05/20", num_days=2):
+    """
+    Get radar files for specified number of consecutive days.
+
+    Args:
+        engine: "iris" or "nexradlevel2"
+        radar_site: Radar site code (e.g., "KVNX", "KILX")
+        start_date: Start date in format "YYYY/MM/DD"
+        num_days: Number of consecutive days to fetch
+    """
+    from datetime import datetime, timedelta
 
     fs = fsspec.filesystem("s3", anon=True)
 
@@ -26,13 +35,25 @@ def get_radar_files(engine):
         zs = f"../zarr/{radar_name}2.zarr"
         return radar_files, zs, "iris"
     elif engine == "nexradlevel2":
-        # NEXRAD
-        radar = "KVNX"
+        radar = radar_site
         zs = f"../zarr/{radar}.zarr"
-        query = f"2011/05/20/{radar}/{radar}"
         str_bucket = "s3://noaa-nexrad-level2/"
-        radar_files = [f"s3://{i}" for i in sorted(fs.glob(f"{str_bucket}{query}*"))]
-        radar_files = radar_files
+
+        # Generate consecutive dates
+        start_dt = datetime.strptime(start_date, "%Y/%m/%d")
+        dates = []
+        for i in range(num_days):
+            date = start_dt + timedelta(days=i)
+            dates.append(date.strftime("%Y/%m/%d"))
+
+        radar_files = []
+        for date in dates:
+            query = f"{date}/{radar}/{radar}"
+            day_files = [f"s3://{i}" for i in sorted(fs.glob(f"{str_bucket}{query}*"))]
+            radar_files.extend(day_files)
+            print(f"Found {len(day_files)} files for {date}")
+
+        print(f"Total files for {num_days} days: {len(radar_files)}")
         return radar_files, zs, "nexradlevel2"
     return None
 
@@ -77,13 +98,14 @@ def get_dynamic_scans() -> list[str]:
 
 @timer_func
 def main():
-    import shutil
 
     # IRIS Colombia
     # radar_files, zarr_store, engine = get_radar_files("iris")
 
-    # NEXRAD
-    radar_files, zarr_store, engine = get_radar_files("nexradlevel2")
+    # NEXRAD - 2 days of data
+    radar_files, zarr_store, engine = get_radar_files(
+        engine="nexradlevel2", radar_site="KVNX", start_date="2011/05/20", num_days=2
+    )
     # t = load_radar_data(radar_files[0], engine=engine)
     # if dynamic scans
     # radar_files = get_dynamic_scans()
@@ -95,12 +117,12 @@ def main():
     zarr_version = 3
     append_dim = "vcp_time"
     convert_files(
-        radar_files[215:225],  # Just 2 files for quick test
+        radar_files,
         append_dim=append_dim,
         repo=repo,
         zarr_format=zarr_version,
         engine=engine,
-        process_mode="parallel-region",
+        process_mode="parallel",
         remove_strings=True,
     )
 

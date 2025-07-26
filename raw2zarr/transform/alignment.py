@@ -125,7 +125,7 @@ def fix_azimuth(ds: Dataset, fill_value: str = "extrapolate") -> Dataset:
     return ds
 
 
-def check_dynamic_scan(dtree: xr.DataTree, tolerance: float = 0.05) -> bool:
+def check_dynamic_scan(dtree: xr.DataTree, tolerance: float = 0.1) -> bool:
     """
     Determine if a radar scan uses adaptive scanning (e.g., SAILS/MRLE) by comparing
     its sweep elevations with the expected VCP configuration.
@@ -147,9 +147,9 @@ def check_dynamic_scan(dtree: xr.DataTree, tolerance: float = 0.05) -> bool:
         raise ValueError(f"VCP reference not found for '{scan_name}'.")
 
     extracted_elevs = []
-    for node in dtree.match("sweep_*").values():
+    for node in dtree.match("sweep_*").descendants:
         try:
-            elev = node["sweep_fixed_angle"].values.item()
+            elev = round(node["elevation"].mean().item(), 2)
             extracted_elevs.append(float(elev))
         except Exception:
             continue

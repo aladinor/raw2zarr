@@ -27,8 +27,8 @@ def create_ideam_dt():
         zarr_store=zarr_store,
         zarr_format=zarr_format,
         engine=engine,
-        process_mode="parallel",
-        remove_strings=True,
+        process_mode="sequential",
+        remove_strings=False,
         consolidated=consolidated,
     )
     session = repo.readonly_session("main")
@@ -39,6 +39,7 @@ def create_ideam_dt():
         consolidated=False,
         chunks={},
         mode="r",
+        remove_strings=False,
     )
     dtree.to_zarr(
         zarr_store,
@@ -65,14 +66,14 @@ def create_nexrad_dt():
     radar_files = [f"s3://{i}" for i in sorted(fs.glob(f"{str_bucket}{query}*"))]
     repo = get_icechunk_repo(zarr_store=zarr_store_ic)
     convert_files(
-        radar_files[130:170],
+        radar_files[130:131],
         append_dim=append_dim,
         repo=repo,
         zarr_store=zarr_store,
         zarr_format=zarr_format,
         engine=engine,
-        process_mode="parallel-region",
-        remove_strings=True,
+        process_mode="sequential",
+        remove_strings=False,
         consolidated=consolidated,
     )
     session = repo.readonly_session("main")
@@ -96,7 +97,7 @@ def create_nexrad_dt():
 
 def main():
     create_nexrad_dt()
-    create_ideam_dt()
+    # create_ideam_dt()
     print(1)
 
 

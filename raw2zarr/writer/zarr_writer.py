@@ -44,6 +44,7 @@ def dtree_to_zarr(
         raise ValueError(
             f"unexpected encoding group name(s) provided: {set(encoding) - set(dtree.groups)}"
         )
+
     for node in dtree.subtree:
 
         at_root = node is dtree

@@ -168,3 +168,6 @@ sigmet2zarr.egg-info
 
 #Notebooks
 raw2zarr/task2vcp.py
+
+# Claude Code session context (local development notes)
+CLAUDE.md

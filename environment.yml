@@ -38,5 +38,5 @@ dependencies:
   - pandas
   - coiled
   - pip
-  - pip:
-      - git+https://github.com/aladinor/raw2zarr.git
+
+

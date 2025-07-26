@@ -85,12 +85,17 @@ def extract_file_metadata(
 
     More efficient than separate calls since it only reads the file once.
 
+    Note: Error handling is now done at the batch level for distributed processing.
+
     Parameters:
         radar_file (str): Path to radar file
         engine (str): Radar file engine type
 
     Returns:
         tuple: (timestamp: pd.Timestamp, vcp_number: int)
+
+    Raises:
+        Exception: If file cannot be processed (handled by caller)
     """
     # Extract timestamp from filename (fast regex operation)
     timestamp = extract_timestamp(radar_file)
@@ -104,3 +109,26 @@ def extract_file_metadata(
         raise ValueError(f"Engine not supported: {engine}")
 
     return timestamp, vcp_number
+
+
+def _log_problematic_file(filepath: str, error_msg: str):
+    """
+    Log problematic files to output.txt with error details.
+
+    Parameters:
+        filepath (str): Path to the problematic file
+        error_msg (str): Error message description
+    """
+    import os
+    from datetime import datetime
+
+    log_entry = (
+        f"[{datetime.now().isoformat()}] SKIPPED: {filepath} | Error: {error_msg}\n"
+    )
+
+    # Write to output.txt in current working directory
+    with open("output.txt", "a", encoding="utf-8") as f:
+        f.write(log_entry)
+
+    # Also print to console for immediate feedback
+    print(f"⚠️  Skipping problematic file: {os.path.basename(filepath)} | {error_msg}")

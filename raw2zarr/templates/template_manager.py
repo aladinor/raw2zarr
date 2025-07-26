@@ -49,10 +49,21 @@ class VcpTemplateManager:
         self,
         scan_config_file: str = "scan_config.json",
         vcp_config_file: str = "vcp.json",
+        scan_config_path: str = None,  # Backward compatibility
+        vcp_config_path: str = None,  # Backward compatibility
     ):
         config_dir = Path(__file__).resolve().parent.parent / "config"
-        vcp_config_path = config_dir / vcp_config_file
-        scan_config_path = config_dir / scan_config_file
+
+        # Support both parameter styles for backward compatibility
+        if scan_config_path is not None:
+            scan_config_path = Path(scan_config_path)
+        else:
+            scan_config_path = config_dir / scan_config_file
+
+        if vcp_config_path is not None:
+            vcp_config_path = Path(vcp_config_path)
+        else:
+            vcp_config_path = config_dir / vcp_config_file
 
         self.scan_config_path = scan_config_path
         self._full_config = None

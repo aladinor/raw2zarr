@@ -125,7 +125,6 @@ def init_zarr_store(
             "time_coverage_end": dtree[vcp].time_coverage_end.item(),
         }
 
-        # Create individual VCP templates and combine them
         final_tree = create_multi_vcp_template(
             vcp_time_mapping=vcp_time_mapping,
             base_radar_info=radar_info,
@@ -136,7 +135,6 @@ def init_zarr_store(
             final_tree = remove_string_vars(final_tree)
             final_tree.encoding = dtree_encoding(final_tree, append_dim=append_dim)
 
-        # Write combined template to store
         writer_args = resolve_zarr_write_options(
             store=session.store,
             group_path=None,
@@ -150,7 +148,6 @@ def init_zarr_store(
 
         session.commit("Initial commit: VCP-specific xarray template created")
 
-        # Return all files including the first one for region writing
         files.insert(0, (idx, first_file))
         return files
     return files

@@ -39,4 +39,6 @@ dependencies:
   - coiled
   - pip
 
+  - pip:
+      - git+https://github.com/aladinor/raw2zarr.git@fix/notebook-ci-compatibility
 

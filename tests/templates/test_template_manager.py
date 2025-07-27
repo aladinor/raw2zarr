@@ -179,7 +179,7 @@ class TestVcpTemplateManager:
         )
 
         # Load VCP-12 configuration from unified config
-        vcp_config = template_manager.unified_config
+        vcp_config = template_manager.config
         vcp12_config = vcp_config["VCP-12"]
         expected_elevations = vcp12_config["elevations"]
 
@@ -265,10 +265,10 @@ class TestVcpTemplateManager:
     def test_unified_config_system(self, template_manager):
         """Test the unified VCP configuration system."""
         # Test unified config functionality
-        assert template_manager.unified_config is not None
+        assert template_manager.config is not None
 
         # Test VCP-21 specifically (our main fix)
-        if "VCP-21" in template_manager.unified_config:
+        if "VCP-21" in template_manager.config:
             vcp_info = template_manager.get_vcp_info("VCP-21")
             assert vcp_info is not None
             assert len(vcp_info.elevations) > 0
@@ -290,7 +290,7 @@ class TestVcpTemplateManager:
         """Test the specific VCP-21 PHIDP fix."""
 
         # Test that VCP-21 exists in unified config
-        unified_config = template_manager.unified_config
+        unified_config = template_manager.config
         assert "VCP-21" in unified_config, "VCP-21 should exist in unified config"
 
         vcp21_config = unified_config["VCP-21"]

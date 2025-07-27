@@ -4,6 +4,7 @@ import icechunk
 import pandas as pd
 from xarray import Dataset, DataTree
 from xradar.io.backends.nexrad_level2 import NEXRADLevel2File
+
 from ..io.preprocess import normalize_input_for_xradar
 
 
@@ -18,9 +19,9 @@ def get_icechunk_repo(
         split_config = icechunk.ManifestSplittingConfig.from_dict(
             {
                 icechunk.ManifestSplitCondition.AnyArray(): {
-                    icechunk.ManifestSplitDimCondition.DimensionName(
-                        "vcp_time"
-                    ): 65000  # ~1 year at mixed intervals
+                    icechunk.ManifestSplitDimCondition.DimensionName("vcp_time"): 12
+                    * 24
+                    * 365  # roughly one year of radar data
                 }
             }
         )
@@ -85,12 +86,17 @@ def extract_file_metadata(
 
     More efficient than separate calls since it only reads the file once.
 
+    Note: Error handling is now done at the batch level for distributed processing.
+
     Parameters:
         radar_file (str): Path to radar file
         engine (str): Radar file engine type
 
     Returns:
         tuple: (timestamp: pd.Timestamp, vcp_number: int)
+
+    Raises:
+        Exception: If file cannot be processed (handled by caller)
     """
     # Extract timestamp from filename (fast regex operation)
     timestamp = extract_timestamp(radar_file)
@@ -104,3 +110,31 @@ def extract_file_metadata(
         raise ValueError(f"Engine not supported: {engine}")
 
     return timestamp, vcp_number
+
+
+def _log_problematic_file(filepath: str, error_msg: str, log_file: str = None):
+    """
+    Log problematic files to output.txt with error details.
+
+    Parameters:
+        filepath (str): Path to the problematic file
+        error_msg (str): Error message description
+        log_file (str): Path to log file. If None, uses "output.txt" in current directory
+    """
+    import os
+    from datetime import datetime
+
+    # Use provided log_file or default to output.txt in current directory
+    if log_file is None:
+        log_file = "output.txt"
+
+    log_entry = (
+        f"{datetime.now().isoformat()}, SKIPPED: {filepath} | Error: {error_msg}\n"
+    )
+
+    # Write to log file
+    with open(log_file, "a", encoding="utf-8") as f:
+        f.write(log_entry)
+
+    # Also print to console for immediate feedback
+    print(f"Skipping problematic file: {os.path.basename(filepath)} | {error_msg}")

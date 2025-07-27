@@ -16,10 +16,16 @@ class TestGetVCPValues:
             get_vcp_values("FAKE-VCP")
 
     def test_get_vcp_values_invalid_structure(self, monkeypatch):
-        def mock_bad_config(_):
-            return {"VCP-212": {"elevations": "not_a_list"}}
+        # Mock VcpTemplateManager to return invalid config data
+        class MockVcpInfo:
+            def __init__(self):
+                self.elevations = "not_a_list"  # Invalid - should be a list
 
-        monkeypatch.setattr(transform_utils, "load_json_config", mock_bad_config)
+        class MockTemplateManager:
+            def get_vcp_info(self, vcp_name):
+                return MockVcpInfo()
+
+        monkeypatch.setattr(transform_utils, "VcpTemplateManager", MockTemplateManager)
 
         with pytest.raises(ValueError, match="Invalid 'elevations' list"):
             transform_utils.get_vcp_values("VCP-212")

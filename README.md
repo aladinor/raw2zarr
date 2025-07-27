@@ -70,5 +70,30 @@ If you are interested in running this material locally on your computer, you wil
     jupyter lab
     ```
 
+## Large-Scale Processing with Coiled
+
+For processing large radar datasets (months/years), the library supports distributed computing with Coiled clusters:
+
+```python
+import coiled
+from raw2zarr.builder.convert import convert_files
+
+# Create Coiled cluster
+cluster = coiled.Cluster(
+    name="radar-processing",
+    software="nexrad-env",
+    n_workers=200,
+    worker_memory="16GiB"
+)
+
+# Process with distributed cluster
+convert_files(
+    radar_files=files,
+    append_dim="vcp_time",
+    repo=icechunk_repo,
+    process_mode="parallel",
+    cluster=cluster  # Pass Coiled cluster
+)
+```
 ## References
 * R. P. Abernathey et al., "Cloud-Native Repositories for Big Scientific Data," in Computing in Science & Engineering, vol. 23, no. 2, pp. 26-35, 1 March-April 2021, doi: 10.1109/MCSE.2021.3059437.

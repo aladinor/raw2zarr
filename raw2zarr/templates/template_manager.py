@@ -30,7 +30,6 @@ class ScanVariableConfig(ScanCoordConfig):
 
 class ScanConfig(BaseModel):
     model_config = ConfigDict(frozen=True)
-    # 🛠️ Added missing required fields from JSON structure
     dims: dict[str, int]
     coords: dict[str, ScanCoordConfig]
     variables: dict[str, ScanVariableConfig]
@@ -45,63 +44,70 @@ class VcpConfig(BaseModel):
 
 
 class VcpTemplateManager:
-    def __init__(
-        self,
-        scan_config_file: str = "scan_config.json",
-        vcp_config_file: str = "vcp.json",
-    ):
+    def __init__(self, vcp_nexrad_config: str = "vcp_nexrad.json"):
         config_dir = Path(__file__).resolve().parent.parent / "config"
-        vcp_config_path = config_dir / vcp_config_file
-        scan_config_path = config_dir / scan_config_file
+        self.vcp_nexrad_path = config_dir / vcp_nexrad_config
 
-        self.scan_config_path = scan_config_path
-        self._full_config = None
-        self.vcp_config_path = vcp_config_path
-        self._vcp_configs = None
+        if not self.vcp_nexrad_path.exists():
+            raise FileNotFoundError(
+                f"Unified config file not found: {self.vcp_nexrad_path}. "
+                "Please ensure vcp_nexrad.json exists in the config directory."
+            )
+
+        self._unified_config = None
 
     @property
     def config(self):
-        if self._full_config is None:
-            with open(self.scan_config_path) as f:
-                self._full_config = json.load(f)
-        return self._full_config
+        """Get VCP configuration"""
+        if self._unified_config is None:
+            with open(self.vcp_nexrad_path) as f:
+                self._unified_config = json.load(f)
+        return self._unified_config
 
-    @property
-    def vcp_config(self):
-        if self._vcp_configs is None:
-            with open(self.vcp_config_path) as f:
-                self._vcp_configs = json.load(f)
-        return self._vcp_configs
+    def get_sweep_config(self, vcp: str, sweep_idx: int) -> dict:
+        """Get sweep configuration from config"""
+        config = self.config
+        if vcp not in config:
+            raise ValueError(f"VCP {vcp} not found in config")
 
-    @lru_cache(maxsize=32)
-    def get_template(self, scan_type: str) -> ScanConfig:
-        """Get validated config for specific scan type"""
-        # 🛠️ Added error handling for missing scan types
-        if scan_type not in self.config:
-            raise ValueError(f"Scan type {scan_type} not found in config")
-        return ScanConfig(**self.config[scan_type])
+        sweep_key = f"sweep_{sweep_idx}"
+        if sweep_key not in config[vcp]:
+            raise ValueError(f"Sweep {sweep_idx} not found in {vcp}")
+
+        return config[vcp][sweep_key]
 
     @lru_cache(maxsize=32)
     def get_vcp_info(self, vcp: str) -> VcpConfig:
-        """Get validated config for specific scan type"""
-        # 🛠️ Added error handling for missing scan types
-        if vcp not in self.vcp_config:
+        """Get validated config for specific VCP"""
+        config = self.config
+        if vcp not in config:
             raise ValueError(f"VCP {vcp} not found in config")
-        return VcpConfig(**self.vcp_config[vcp])
+
+        vcp_data = config[vcp]
+        elevations = vcp_data.get("elevations", [])
+        dims = vcp_data.get("dims", {"azimuth": [], "range": []})
+
+        # Create scan types for unified config
+        scan_types = [f"unified_sweep_{i}" for i in range(len(elevations))]
+
+        return VcpConfig(elevations=elevations, scan_types=scan_types, dims=dims)
 
     def create_scan_dataset(
         self,
         scan_type: str,
-        sweep_idx: float,
+        sweep_idx: int,
         radar_info: dict,
         append_dim: str = "vcp_time",
         size_append_dim: int = 1,
         append_dim_time: list[pd.Timestamp] | None = None,
         dim_chunksize: dict = None,
     ) -> xr.Dataset:
-        """Generic scan dataset creation"""
-        cfg = self.get_template(scan_type)
-        vcp = self.get_vcp_info(radar_info["vcp"])
+        """Generic scan dataset creation using unified config"""
+
+        # Get variables directly from sweep config
+        vcp_name = radar_info["vcp"]
+        sweep_config = self.get_sweep_config(vcp_name, sweep_idx)
+        vcp_info = self.get_vcp_info(vcp_name)
 
         time_array = (
             np.array(append_dim_time, dtype="datetime64[ns]")
@@ -109,14 +115,72 @@ class VcpTemplateManager:
             else np.array(range(size_append_dim), dtype="datetime64[ns]")
         )
 
-        total_azimuth = vcp.dims["azimuth"][sweep_idx]
-        total_bins = vcp.dims["range"][sweep_idx]
-        elevation = vcp.elevations[sweep_idx]
+        total_azimuth = vcp_info.dims["azimuth"][sweep_idx]
+        total_bins = vcp_info.dims["range"][sweep_idx]
+        elevation = vcp_info.elevations[sweep_idx]
         az_res = 360 / total_azimuth
 
-        # Create coords first with VCP-specific dimensions
+        # Create a dummy ScanConfig for coordinate creation
+        dummy_cfg = type(
+            "DummyConfig",
+            (),
+            {
+                "coords": {
+                    "range": type(
+                        "RangeConfig",
+                        (),
+                        {
+                            "dims": ["range"],
+                            "dtype": "float32",
+                            "attributes": {
+                                "standard_name": "projection_range_coordinate",
+                                "long_name": "range_to_measurement_volume",
+                                "units": "meters",
+                                "axis": "radial_range_coordinate",
+                                "meters_between_gates": 250.0,
+                                "spacing_is_constant": "true",
+                                "meters_to_center_of_first_gate": 2125.0,
+                            },
+                        },
+                    )(),
+                    "azimuth": type(
+                        "AzimuthConfig",
+                        (),
+                        {
+                            "dims": ["azimuth"],
+                            "dtype": "float64",
+                            "attributes": {
+                                "standard_name": "ray_azimuth_angle",
+                                "long_name": "azimuth_angle_from_true_north",
+                                "units": "degrees",
+                                "axis": "radial_azimuth_coordinate",
+                            },
+                        },
+                    )(),
+                    "elevation": type(
+                        "ElevationConfig",
+                        (),
+                        {
+                            "dims": ["azimuth"],
+                            "dtype": "float64",
+                            "attributes": {
+                                "standard_name": "ray_elevation_angle",
+                                "long_name": "elevation_angle_from_horizontal_plane",
+                                "units": "degrees",
+                                "axis": "radial_elevation_coordinate",
+                            },
+                        },
+                    )(),
+                },
+                "metadata": {
+                    "sweep_mode": sweep_config.get("scan_mode", "azimuth_surveillance")
+                },
+            },
+        )()
+
+        # Use existing coordinate creation function
         coord_ds = create_common_coords(
-            cfg=cfg,
+            cfg=dummy_cfg,
             radar_info=radar_info,
             elevation=elevation,
             total_bins=total_bins,
@@ -127,29 +191,33 @@ class VcpTemplateManager:
             time_array=time_array,
         )
 
-        # Create data variables with VCP-specific dimensions
+        # Create data variables directly from sweep config
         data_vars = {}
-        for var_name, var_cfg in cfg.variables.items():
-            dims = (append_dim, "azimuth", "range")  # ensure consistent dimension order
+        for var_name, var_config in sweep_config["variables"].items():
+            dims = (append_dim, "azimuth", "range")
             shape = (size_append_dim, total_azimuth, total_bins)
 
             data_vars[var_name] = xr.DataArray(
-                da.full(shape, da.nan, dtype=var_cfg.dtype),
+                da.full(shape, da.nan, dtype=var_config["dtype"]),
                 dims=dims,
-                attrs=var_cfg.attributes,
+                attrs=var_config["attributes"],
             )
 
-        # Create dataset with all components at once to avoid alignment issues
+        # Create dataset
         ds = xr.Dataset(data_vars, coords=coord_ds)
 
-        for var in cfg.metadata:
-            ds[var] = xr.DataArray(
-                da.from_array(
-                    np.full(size_append_dim, cfg.metadata[var], dtype="U35"),
-                    chunks=(1,),
+        # Add metadata
+        ds["sweep_mode"] = xr.DataArray(
+            da.from_array(
+                np.full(
+                    size_append_dim,
+                    sweep_config.get("scan_mode", "azimuth_surveillance"),
+                    dtype="U35",
                 ),
-                dims=(append_dim,),
-            )
+                chunks=(1,),
+            ),
+            dims=(append_dim,),
+        )
 
         ds["sweep_number"] = xr.DataArray(
             da.full((size_append_dim,), sweep_idx, dtype=float, chunks=(1,)),
@@ -165,6 +233,7 @@ class VcpTemplateManager:
             ["time", "longitude", "latitude", "altitude", "elevation", "crs_wkt"]
         )
 
+        # Common chunking and georeferencing
         if dim_chunksize is None:
             az_chunksize = int(total_azimuth)
             range_chunksize = int(total_bins)
@@ -191,7 +260,7 @@ class VcpTemplateManager:
         self,
         radar_info: dict,
         append_dim: str,
-        remove_strings: bool = True,  # remove after zarr v3 supports string dtypes
+        remove_strings: bool = True,
         append_dim_time: pd.Timestamp | None = None,
     ) -> xr.DataTree:
 
@@ -213,7 +282,7 @@ class VcpTemplateManager:
         )
         sweep_dict: dict = {}
         for sweep_idx in range(len(vcp_info.elevations)):
-            scan_type = vcp_info.scan_types[sweep_idx]
+            scan_type = f"unified_sweep_{sweep_idx}"
             ds = self.create_scan_dataset(
                 scan_type,
                 sweep_idx,
@@ -268,15 +337,9 @@ class VcpTemplateManager:
         for vcp_name in sorted(vcp_time_mapping.keys()):
             all_timestamps.extend(vcp_time_mapping[vcp_name]["timestamps"])
 
-        # Create consolidated timestamp array for all VCPs
-        all_timestamps = []
-        for vcp_name in sorted(vcp_time_mapping.keys()):
-            all_timestamps.extend(vcp_time_mapping[vcp_name]["timestamps"])
-
         # Create VCP-level groups using individual VCP time dimensions (working approach)
         vcp_groups = {}
         for vcp_name in vcp_time_mapping.keys():
-            vcp_info = vcp_time_mapping[vcp_name]
             vcp_radar_info = radar_info.copy()
             vcp_radar_info["vcp"] = vcp_name
 
@@ -286,8 +349,8 @@ class VcpTemplateManager:
             vcp_root_dict = create_root(
                 vcp_radar_info,
                 append_dim=append_dim,
-                size_append_dim=total_time_size,  # Each VCP gets full time dimension for region writing
-                append_dim_time=all_timestamps,  # Use all timestamps for consistent structure
+                size_append_dim=total_time_size,
+                append_dim_time=all_timestamps,
             )
 
             # Extract the VCP dataset from the dictionary (remove the VCP key wrapper)
@@ -297,7 +360,7 @@ class VcpTemplateManager:
             additional_groups = create_additional_groups(
                 vcp_name,
                 append_dim=append_dim,
-                size_append_dim=total_time_size,  # Each VCP gets full time dimension for region writing
+                size_append_dim=total_time_size,
                 radar_info=vcp_radar_info,
                 append_dim_time=all_timestamps,
             )
@@ -324,7 +387,7 @@ class VcpTemplateManager:
 
             # Create sweeps for this VCP using the FULL time dimension
             for sweep_idx in range(len(vcp_config.elevations)):
-                scan_type = vcp_config.scan_types[sweep_idx]
+                scan_type = f"unified_sweep_{sweep_idx}"
 
                 # Clear dask caches to avoid task key conflicts between VCPs/sweeps
                 import gc
@@ -344,8 +407,8 @@ class VcpTemplateManager:
                     sweep_idx,
                     vcp_radar_info,
                     append_dim=append_dim,
-                    size_append_dim=total_time_size,  # Use TOTAL time size across all VCPs
-                    append_dim_time=all_timestamps,  # Use ALL timestamps from all VCPs
+                    size_append_dim=total_time_size,
+                    append_dim_time=all_timestamps,
                     dim_chunksize=dim_chunksize,
                 )
 

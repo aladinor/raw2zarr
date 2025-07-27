@@ -327,7 +327,6 @@ def fill_missing_sweeps(
     append_dim: str,
     radar_info: dict,
     vcp: str,
-    config_file: str = "vcp.json",
 ) -> dict[str, xr.Dataset]:
     """
     Generate placeholder sweep datasets for missing VCP indices using scan templates.
@@ -338,25 +337,16 @@ def fill_missing_sweeps(
         append_dim (str): Name of the dimension to use (e.g., "vcp_time").
         radar_info (dict): Metadata including lon, lat, alt, and reference_time.
         vcp (str): Volume Coverage Pattern name (e.g., "VCP-212").
-        config_file (str): JSON config file containing VCP templates.
 
     Returns:
         dict[str, xr.Dataset]: Mapping of group paths (e.g., "sweep_3") to xarray datasets.
     """
 
-    config_dir = Path(__file__).resolve().parent.parent / "config"
-    vcp_config_path = config_dir / config_file
-    scan_config_path = config_dir / "scan_config.json"
-
-    template_mgr = VcpTemplateManager(
-        scan_config_path=scan_config_path,
-        vcp_config_path=vcp_config_path,
-    )
-    vcp_config = load_json_config(vcp_config_path)[vcp]
+    template_mgr = VcpTemplateManager()
 
     filled = {}
     for idx in missing_idx:
-        scan_type = vcp_config["scan_types"][idx]
+        scan_type = f"unified_sweep_{idx}"
 
         empty_ds = template_mgr.create_scan_dataset(
             scan_type=scan_type, sweep_idx=idx, radar_info=radar_info

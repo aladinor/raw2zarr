@@ -43,33 +43,30 @@ def test_load_json_config():
         }
     }
     vcp = "VCP-11"
-    test_config = load_json_config("vcp.json")
+    test_config = load_json_config("vcp_nexrad.json")
     assert vcp in config, f"{vcp} not found in loaded config"
 
     vcp_spec = test_config["VCP-11"]
 
-    # Ensure required keys exist
+    # Ensure required keys exist for unified config
     assert "elevations" in vcp_spec
-    assert "scan_types" in vcp_spec
+    assert "dims" in vcp_spec
 
-    assert len(vcp_spec["elevations"]) == len(
-        vcp_spec["scan_types"]
-    ), "Mismatch in elevation vs scan_type count"
+    # Check that we have sweep configurations
+    sweep_count = 0
+    for key in vcp_spec.keys():
+        if key.startswith("sweep_"):
+            sweep_count += 1
+
+    assert sweep_count > 0, "No sweep configurations found"
+    assert sweep_count == len(
+        vcp_spec["elevations"]
+    ), "Mismatch in elevation count vs sweep count"
+
     assert all(
-        isinstance(e, (float, str)) for e in vcp_spec["elevations"]
+        isinstance(e, (float, int)) for e in vcp_spec["elevations"]
     ), "Non-numeric elevation found"
-    assert all(
-        isinstance(s, str) for s in vcp_spec["scan_types"]
-    ), "Non-string scan_type found"
 
     assert (
         vcp_spec["elevations"] == config["VCP-11"]["elevations"]
     ), "Elevations do not match"
-    # This test is canceled until we get the final scan types
-    # assert (
-    #     vcp_spec["scan_types"] == config["VCP-11"]["scan_types"]
-    # ), "Scan types do not match"
-    for vcp in config.keys():
-        assert len(config[vcp]["elevations"]) == len(
-            config[vcp]["scan_types"]
-        ), "Mismatch in elevation vs scan_type count"

@@ -14,7 +14,9 @@ from ..writer.writer_utils import (
     resolve_zarr_write_options,
 )
 from ..writer.zarr_writer import dtree_to_zarr, write_dtree_region
-from .builder_utils import extract_file_metadata
+from .builder_utils import _log_problematic_file
+
+# _log_problematic_file not available on Coiled workers - using local logging
 from .dtree_radar import radar_datatree
 
 warnings.filterwarnings(
@@ -117,6 +119,8 @@ def append_parallel(
     dashboard_address: str = "127.0.0.1:8785",
     branch: str = "main",
     remove_strings: bool = True,
+    cluster=None,
+    skip_vcps: list = None,
 ) -> None:
     """
     Append radar files to a Zarr store in parallel using Dask.
@@ -144,6 +148,8 @@ def append_parallel(
             Git-like branch name for icechunk versioning. Defaults to "main".
         remove_strings (bool, optional):
             Whether to remove variables of string dtype. Defaults to True.
+        cluster (optional):
+            Pre-configured Dask cluster (e.g., Coiled cluster). If None, uses LocalCluster.
 
     Returns:
         None
@@ -154,30 +160,115 @@ def append_parallel(
     """
     import logging
 
-    import dask
     from dask.distributed import Client, LocalCluster
 
     logging.getLogger("distributed.scheduler").setLevel(logging.ERROR)
 
+    if not cluster:
+        print("Using local Dask cluster")
+        cluster = LocalCluster(dashboard_address=dashboard_address, memory_limit="10GB")
+
+    client = Client(cluster, timeout="60s", heartbeat_interval="10s")
+
     session = repo.writable_session(branch=branch)
 
-    cluster = LocalCluster(dashboard_address=dashboard_address, memory_limit="10GB")
-    client = Client(
-        cluster,
-        timeout="60s",
-        heartbeat_interval="10s",
+    # Step 1: Extract metadata (parallel) - using Client.map() for fastest graph construction
+    def extract_single_metadata(file_info):
+        """Extract metadata from a single file - optimized for Client.map()"""
+        original_index, file = file_info
+        try:
+            from xradar.io.backends.nexrad_level2 import NEXRADLevel2File
+
+            from raw2zarr.builder.builder_utils import extract_timestamp
+            from raw2zarr.io.preprocess import normalize_input_for_xradar
+
+            # Extract timestamp from filename (fast regex operation)
+            timestamp = extract_timestamp(file)
+
+            # Extract VCP from file header (requires file read)
+            vcp_number = NEXRADLevel2File(
+                normalize_input_for_xradar(file)
+            ).get_msg_5_data()["pattern_number"]
+
+            return (original_index, file, (timestamp, vcp_number))
+
+        except Exception as e:
+            _log_problematic_file(file, f"Metadata extraction failed: {str(e)}")
+            return (original_index, file, ("ERROR", str(e)))
+
+    print(f"🖥️  Detected {len(client.scheduler_info()['workers'])} workers")
+    print(
+        f"⚡ Using Client.map() for fastest graph construction with {len(radar_files)} files"
     )
 
-    metadata_tasks = [
-        dask.delayed(extract_file_metadata)(f, engine) for f in radar_files
-    ]
-    metadata_results = dask.compute(*metadata_tasks)
-    append_dim_time, vcps = zip(*metadata_results)
+    # Ultra-fast graph construction with Client.map()
+    radar_files_with_indices = list(enumerate(radar_files))
+    futures = client.map(extract_single_metadata, radar_files_with_indices)
+    metadata_results = client.gather(futures)
+
+    # Filter out problematic files and unwanted VCPs
+    valid_results = []
+    valid_files = []
+    problematic_files = []
+    skipped_vcps = []
+
+    for original_index, file, result in metadata_results:
+        if result[0] != "ERROR":
+            timestamp, vcp_number = result
+            vcp_name = f"VCP-{vcp_number}"
+
+            # Check if this VCP should be skipped
+            if skip_vcps and vcp_name in skip_vcps:
+                skipped_vcps.append((file, vcp_name))
+                _log_problematic_file(file, f"Skipped {vcp_name} (configured to skip)")
+                continue
+
+            # Valid result with (timestamp, vcp_number)
+            valid_results.append(result)
+            valid_files.append((original_index, file))
+        else:
+            # Problematic file with error info
+            problematic_files.append((file, result[1]))
+
+    # Note: Metadata failures are already logged by _log_problematic_file in extract_single_metadata
+
+    if not valid_results:
+        print("❌ No valid files found after filtering problematic files.")
+        return
+
+    # Report file filtering statistics
+    total_skipped = len(radar_files) - len(valid_results)
+    if total_skipped > 0:
+        if skipped_vcps:
+            print(
+                f"⚠️  Skipped {len(skipped_vcps)} files from filtered VCPs: {skip_vcps}"
+            )
+        problematic_count = len(problematic_files)
+        if problematic_count > 0:
+            print(
+                f"⚠️  Filtered out {problematic_count} problematic files (see output.txt for details)"
+            )
+        print(f"✅ Processing {len(valid_results)} valid files")
+
+    append_dim_time, vcps = zip(*valid_results)
+    file_indices = valid_files
     append_dim_time = list(append_dim_time)
     vcps = list(vcps)
-    file_indices = list(enumerate(radar_files))
 
     vcp_time_mapping = create_vcp_time_mapping(append_dim_time, vcps, file_indices)
+
+    # Report discovered VCPs for monitoring and vcp.json validation
+    vcp_names = list(vcp_time_mapping.keys())
+    total_files = sum(info["file_count"] for info in vcp_time_mapping.values())
+    print(f"📡 Discovered {len(vcp_names)} VCP patterns in {total_files} files:")
+    print(f"  📊 VCPs found: {', '.join(vcp_names)}")
+    print()
+    print("🔍 Sample files for vcp.json validation:")
+    for vcp_name, vcp_info in vcp_time_mapping.items():
+        time_span = vcp_info["timestamps"][-1] - vcp_info["timestamps"][0]
+        sample_file = vcp_info["files"][0]["filepath"]  # First file as sample
+        print(f"  🔹 {vcp_name}: {vcp_info['file_count']} files ({time_span})")
+        print(f"     📄 Sample file: {sample_file}")
 
     remaining_files = init_zarr_store(
         files=file_indices,
@@ -188,35 +279,70 @@ def append_parallel(
         consolidated=consolidated,
         vcp_time_mapping=vcp_time_mapping,
     )
-
+    print("start writing files in parallel")
     session = repo.writable_session(branch=branch)
-    fork = session.fork()  # Create a picklable session for parallel processing
+    fork = session.fork()
 
     file_vcp_mapping = {}
-
-    # Always use VCP-specific mapping since we now use the refactored approach for all scenarios
     for vcp_name, vcp_info in vcp_time_mapping.items():
         for local_idx, file_info in enumerate(vcp_info["files"]):
-            # Map files to their VCP-specific time indices
             file_vcp_mapping[file_info["filepath"]] = {
-                "time_index": local_idx,  # VCP-specific time index
+                "time_index": local_idx,
                 "vcp": vcp_name,
             }
 
-    tasks = [
-        dask.delayed(write_dtree_region)(
-            f,
-            file_vcp_mapping.get(f, {"time_index": i, "vcp": None})["time_index"],
-            fork,
-            append_dim,
-            engine,
-            zarr_format,
-            consolidated,
-            remove_strings,
-        )
-        for i, f in remaining_files
-    ]
-    remote_sessions = dask.compute(*tasks, scheduler=client)
+    def write_single_file(file_info):
+        """Write a single file using region writing - optimized for Client.map()"""
+        i, input_file = file_info
+        try:
+            meta = file_vcp_mapping.get(input_file, {"time_index": i, "vcp": None})
+            return write_dtree_region(
+                input_file,
+                meta["time_index"],
+                fork,
+                append_dim,
+                engine,
+                zarr_format,
+                consolidated,
+                remove_strings,
+            )
+        except Exception as e:
+            _log_problematic_file(input_file, f"Write operation failed: {str(e)}")
+            # Return error info instead of session for problematic files
+            return {"error": f"Write operation failed: {str(e)}", "file": input_file}
 
-    session.merge(*remote_sessions)
-    session.commit("write Nexrad files to zarr store")
+    print(
+        f"⚡ Using Client.map() for fastest graph construction with {len(remaining_files)} files"
+    )
+
+    # Ultra-fast graph construction with Client.map()
+    write_futures = client.map(write_single_file, remaining_files)
+    write_results = client.gather(write_futures)
+
+    # Separate successful sessions from failed files
+    successful_sessions = []
+    write_failed_files = []
+
+    for result in write_results:
+        if isinstance(result, dict) and "error" in result:
+            # Failed file
+            write_failed_files.append((result["file"], result["error"]))
+        else:
+            # Successful session
+            successful_sessions.append(result)
+
+    # Note: Write failures are already logged by _log_problematic_file in write_single_file
+
+    # Only merge successful sessions
+    if successful_sessions:
+        session.merge(*successful_sessions)
+        session.commit(
+            f"writing {len(successful_sessions)}/{len(radar_files)} Nexrad files to zarr store"
+        )
+
+        if write_failed_files:
+            print(
+                f"✅ Successfully wrote {len(successful_sessions)} files, {len(write_failed_files)} failures logged"
+            )
+    else:
+        print("❌ No files were successfully written")

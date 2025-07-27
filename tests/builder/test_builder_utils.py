@@ -179,3 +179,96 @@ def temp_zarr_store():
     """Temporary zarr store for testing."""
     with tempfile.TemporaryDirectory() as tmp_dir:
         yield os.path.join(tmp_dir, "test.zarr")
+
+
+class TestLogProblematicFile:
+    """Test the _log_problematic_file function."""
+
+    def test_log_problematic_file_creates_output_file(self, tmp_path):
+        """Test that _log_problematic_file creates output.txt file."""
+        from raw2zarr.builder.builder_utils import _log_problematic_file
+
+        # Change to temp directory to avoid affecting real output.txt
+        original_cwd = os.getcwd()
+        os.chdir(tmp_path)
+
+        try:
+            # Log a problematic file
+            test_filepath = "s3://bucket/KVNX20110503_122230_V06.gz"
+            test_error = "Template mismatch: PHIDP dimension error"
+
+            _log_problematic_file(test_filepath, test_error)
+
+            # Verify output.txt was created
+            output_file = tmp_path / "output.txt"
+            assert output_file.exists(), "output.txt should be created"
+
+            # Verify content
+            with open(output_file, "r") as f:
+                content = f.read()
+
+            assert test_filepath in content
+            assert test_error in content
+            assert "SKIPPED:" in content
+
+        finally:
+            os.chdir(original_cwd)
+
+    def test_log_problematic_file_appends_to_existing(self, tmp_path):
+        """Test that _log_problematic_file appends to existing output.txt."""
+        from raw2zarr.builder.builder_utils import _log_problematic_file
+
+        original_cwd = os.getcwd()
+        os.chdir(tmp_path)
+
+        try:
+            # Create initial output.txt
+            output_file = tmp_path / "output.txt"
+            with open(output_file, "w") as f:
+                f.write("Initial content\n")
+
+            # Log a problematic file
+            test_filepath = "KVNX20110503_122230_V06.gz"
+            test_error = "VCP-21 dimension error"
+
+            _log_problematic_file(test_filepath, test_error)
+
+            # Verify content was appended
+            with open(output_file, "r") as f:
+                content = f.read()
+
+            assert "Initial content" in content
+            assert test_filepath in content
+            assert test_error in content
+
+            # Should have both old and new content
+            lines = content.strip().split("\n")
+            assert len(lines) >= 2
+
+        finally:
+            os.chdir(original_cwd)
+
+    def test_log_problematic_file_encoding(self, tmp_path):
+        """Test that _log_problematic_file handles UTF-8 encoding correctly."""
+        from raw2zarr.builder.builder_utils import _log_problematic_file
+
+        original_cwd = os.getcwd()
+        os.chdir(tmp_path)
+
+        try:
+            # Test with special characters
+            test_filepath = "файл_with_unicode.gz"  # Cyrillic characters
+            test_error = "Error with unicode: ñoñó"
+
+            _log_problematic_file(test_filepath, test_error)
+
+            # Verify file can be read back correctly
+            output_file = tmp_path / "output.txt"
+            with open(output_file, "r", encoding="utf-8") as f:
+                content = f.read()
+
+            assert test_filepath in content
+            assert test_error in content
+
+        finally:
+            os.chdir(original_cwd)

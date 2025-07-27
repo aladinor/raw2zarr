@@ -167,4 +167,7 @@ sigmet2zarr.egg-info
 #.idea/
 
 #Notebooks
-raw2zarr/task2vcp.py
+KVNX-ingestion.py
+create_dataset.py
+raw2zarr/main.py
+profiler.py

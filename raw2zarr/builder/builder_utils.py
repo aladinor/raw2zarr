@@ -51,7 +51,7 @@ def get_icechunk_repo(
     try:
         return icechunk.Repository.create(storage, config=repo_config)
     except icechunk.IcechunkError:
-        return icechunk.Repository.open(storage)
+        return icechunk.Repository.open(storage, config=repo_config)
 
 
 def extract_timestamp(filename: str) -> pd.Timestamp:

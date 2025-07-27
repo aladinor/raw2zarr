@@ -69,40 +69,34 @@ def create_multi_vcp_template(
         local_template_manager = VcpTemplateManager()
 
         # Pre-load config data locally
-        scan_config_data = local_template_manager.config
-        vcp_config_data = local_template_manager.vcp_config
+        config_data = local_template_manager.config
 
         # Scatter config data to workers
-        scan_config_future = client.scatter(scan_config_data, broadcast=True)
-        vcp_config_future = client.scatter(vcp_config_data, broadcast=True)
+        config_future = client.scatter(config_data, broadcast=True)
 
         def create_vcp_template_optimized(vcp_data):
             """Optimized VCP template creation with pre-loaded config data"""
             (
                 vcp_name,
                 vcp_info,
-                base_radar_info,
-                append_dim,
-                remove_strings,
-                scan_config,
-                vcp_config,
+                radar_info_data,
+                append_dim_data,
+                remove_strings_data,
+                config_data,
             ) = vcp_data
 
-            # Create template manager with pre-loaded data (no file I/O on remote workers)
+            # Create template manager with pre-loaded config (no file I/O on remote workers)
             template_mgr = VcpTemplateManager()
-            template_mgr._full_config = scan_config  # Inject pre-loaded config
-            template_mgr._vcp_configs = vcp_config  # Inject pre-loaded VCP config
+            template_mgr._unified_config = config_data  # Inject pre-loaded config
 
-            vcp_radar_info = base_radar_info.copy()
-            vcp_radar_info["vcp"] = vcp_name
+            radar_info_copy = radar_info_data.copy()
+            radar_info_copy["vcp"] = vcp_name
 
             vcp_tree = template_mgr.create_empty_vcp_tree(
-                radar_info=vcp_radar_info,
-                append_dim=append_dim,
-                remove_strings=remove_strings,  # Keep per-VCP string removal as you noted
-                append_dim_time=vcp_info[
-                    "timestamps"
-                ],  # Must use all timestamps for proper indexing
+                radar_info=radar_info_copy,
+                append_dim=append_dim_data,
+                remove_strings=remove_strings_data,
+                append_dim_time=vcp_info["timestamps"],
             )
             return vcp_name, vcp_tree[vcp_name]
 
@@ -114,8 +108,7 @@ def create_multi_vcp_template(
                 base_radar_info,
                 append_dim,
                 remove_strings,
-                scan_config_future,
-                vcp_config_future,
+                config_future,
             )
             for vcp_name, vcp_info in vcp_time_mapping.items()
         ]

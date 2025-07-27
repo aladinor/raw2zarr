@@ -169,7 +169,7 @@ class TestVcpTemplateManager:
         assert vcp_group.sizes["vcp_time"] == 1
 
     def test_vcp_configuration_compliance(self, template_manager, radar_info):
-        """Test that VCP-12 template matches VCP configuration from config/vcp.json."""
+        """Test that VCP-12 template matches VCP configuration from unified config."""
         append_dim_time = [pd.Timestamp("2023-01-01 12:00:00")]
 
         tree = template_manager.create_empty_vcp_tree(
@@ -178,13 +178,8 @@ class TestVcpTemplateManager:
             append_dim_time=append_dim_time,
         )
 
-        # Load VCP-12 configuration
-        config_path = (
-            Path(__file__).parent.parent.parent / "raw2zarr" / "config" / "vcp.json"
-        )
-        with open(config_path) as f:
-            vcp_config = json.load(f)
-
+        # Load VCP-12 configuration from unified config
+        vcp_config = template_manager.unified_config
         vcp12_config = vcp_config["VCP-12"]
         expected_elevations = vcp12_config["elevations"]
 
@@ -268,37 +263,31 @@ class TestVcpTemplateManager:
         print(f"  - Total {len(tree.groups)} groups as expected")
 
     def test_unified_config_system(self, template_manager):
-        """Test the new unified VCP configuration system."""
-        # Check if unified config is being used
-        if template_manager._use_unified_config:
-            # Test unified config functionality
-            assert template_manager.unified_config is not None
+        """Test the unified VCP configuration system."""
+        # Test unified config functionality
+        assert template_manager.unified_config is not None
 
-            # Test VCP-21 specifically (our main fix)
-            if "VCP-21" in template_manager.unified_config:
-                vcp_info = template_manager.get_vcp_info("VCP-21")
-                assert vcp_info is not None
-                assert len(vcp_info.elevations) > 0
+        # Test VCP-21 specifically (our main fix)
+        if "VCP-21" in template_manager.unified_config:
+            vcp_info = template_manager.get_vcp_info("VCP-21")
+            assert vcp_info is not None
+            assert len(vcp_info.elevations) > 0
 
-                # Test sweep configuration access
-                try:
-                    sweep_8_config = template_manager.get_sweep_config("VCP-21", 8)
-                    assert "variables" in sweep_8_config
-                    # VCP-21 sweep 8 should have PHIDP (our main fix)
-                    if "PHIDP" in sweep_8_config["variables"]:
-                        print("✅ VCP-21 sweep 8 correctly has PHIDP variable")
-                except (ValueError, KeyError):
-                    # If sweep 8 doesn't exist, that's ok for this test
-                    pass
+            # Test sweep configuration access
+            try:
+                sweep_8_config = template_manager.get_sweep_config("VCP-21", 8)
+                assert "variables" in sweep_8_config
+                # VCP-21 sweep 8 should have PHIDP (our main fix)
+                if "PHIDP" in sweep_8_config["variables"]:
+                    print("✅ VCP-21 sweep 8 correctly has PHIDP variable")
+            except (ValueError, KeyError):
+                # If sweep 8 doesn't exist, that's ok for this test
+                pass
 
-                print("✅ Unified config system working correctly")
-        else:
-            print("ℹ️  Using legacy two-file config system")
+            print("✅ Unified config system working correctly")
 
     def test_vcp21_phidp_fix(self, template_manager):
         """Test the specific VCP-21 PHIDP fix."""
-        if not template_manager._use_unified_config:
-            pytest.skip("Unified config not available, skipping VCP-21 PHIDP test")
 
         # Test that VCP-21 exists in unified config
         unified_config = template_manager.unified_config
@@ -318,32 +307,21 @@ class TestVcpTemplateManager:
         assert len(phidp_sweeps) > 0, "VCP-21 should have PHIDP in some sweeps"
         print(f"✅ VCP-21 has PHIDP in sweeps: {phidp_sweeps}")
 
-    def test_backward_compatibility(self, template_manager):
-        """Test that the template manager maintains backward compatibility."""
-        # Should work regardless of which config system is used
-        assert hasattr(template_manager, "_use_unified_config")
-
-        if template_manager._use_unified_config:
-            # Unified system should still provide VCP info
-            try:
-                vcp_info = template_manager.get_vcp_info("VCP-21")
-                assert vcp_info is not None
-                assert hasattr(vcp_info, "elevations")
-                assert hasattr(vcp_info, "dims")
-                print("✅ Unified config provides backward-compatible VCP info")
-            except ValueError:
-                # VCP-21 might not exist in test config
-                pass
-        else:
-            # Legacy system should still work
-            assert template_manager.config is not None
-            assert template_manager.vcp_config is not None
-            print("✅ Legacy config system working")
+    def test_vcp_info_access(self, template_manager):
+        """Test that the template manager provides VCP info correctly."""
+        # Unified system should provide VCP info
+        try:
+            vcp_info = template_manager.get_vcp_info("VCP-21")
+            assert vcp_info is not None
+            assert hasattr(vcp_info, "elevations")
+            assert hasattr(vcp_info, "dims")
+            print("✅ Unified config provides VCP info correctly")
+        except ValueError:
+            # VCP-21 might not exist in test config
+            pass
 
     def test_template_creation_with_unified_config(self, template_manager, radar_info):
         """Test template creation works with unified config."""
-        if not template_manager._use_unified_config:
-            pytest.skip("Unified config not available")
 
         # Try to create a template with VCP-21 if available
         vcp21_radar_info = radar_info.copy()

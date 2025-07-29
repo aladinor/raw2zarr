@@ -171,3 +171,4 @@ KVNX-ingestion.py
 create_dataset.py
 raw2zarr/main.py
 profiler.py
+profile.speedscope

@@ -28,6 +28,49 @@ def output_zarr(tmp_path_factory):
         shutil.rmtree(path)
 
 
+@pytest.fixture
+def test_cluster():
+    """Create a mock cluster that runs synchronously for fast tests."""
+    from unittest.mock import MagicMock
+    import dask
+
+    # Mock cluster that looks real but uses synchronous scheduler
+    mock_cluster = MagicMock()
+    mock_client = MagicMock()
+
+    # Mock scheduler_info to return fake workers
+    mock_client.scheduler_info.return_value = {
+        "workers": {"worker-1": {}, "worker-2": {}}
+    }
+
+    # Override map/gather to run synchronously for speed
+    def sync_map(func, iterable):
+        """Run map synchronously instead of distributed."""
+        with dask.config.set(scheduler="synchronous"):
+            return [func(item) for item in iterable]
+
+    def sync_gather(results):
+        """Return results immediately."""
+        return results
+
+    mock_client.map = sync_map
+    mock_client.gather = sync_gather
+
+    # Mock the cluster's scheduler_info
+    mock_cluster.scheduler_info = mock_client.scheduler_info
+
+    # Patch the Client constructor to return our mock
+    import dask.distributed
+
+    original_client = dask.distributed.Client
+    dask.distributed.Client = lambda cluster, **kwargs: mock_client
+
+    yield mock_cluster
+
+    # Restore original Client
+    dask.distributed.Client = original_client
+
+
 @requires_numpy2_and_zarr3
 def test_append_sequential_creates_zarr(sample_nexrad_files, output_zarr):
     append_dim = "vcp_time"
@@ -64,7 +107,7 @@ def test_append_sequential_creates_zarr(sample_nexrad_files, output_zarr):
 
 @requires_numpy2_and_zarr3
 @pytest.mark.serial
-def test_append_parallel_creates_zarr(sample_nexrad_files, output_zarr):
+def test_append_parallel_creates_zarr(sample_nexrad_files, output_zarr, test_cluster):
     append_dim = "vcp_time"
     repo = get_icechunk_repo(output_zarr)
     append_parallel(
@@ -72,6 +115,7 @@ def test_append_parallel_creates_zarr(sample_nexrad_files, output_zarr):
         repo=repo,
         append_dim=append_dim,
         engine="nexradlevel2",
+        cluster=test_cluster,
     )
 
     assert os.path.exists(output_zarr), "Expected Zarr store not found."
@@ -101,7 +145,7 @@ def test_append_parallel_creates_zarr(sample_nexrad_files, output_zarr):
 
 @requires_numpy2_and_zarr3
 @pytest.mark.serial
-def test_parallel_vs_sequential_equivalence(sample_nexrad_file, tmp_path):
+def test_parallel_vs_sequential_equivalence(sample_nexrad_file, tmp_path, test_cluster):
     zarr_seq = tmp_path / "zarr_seq.zarr"
     zarr_par = tmp_path / "zarr_par.zarr"
     repo_seq = get_icechunk_repo(zarr_seq)
@@ -119,6 +163,7 @@ def test_parallel_vs_sequential_equivalence(sample_nexrad_file, tmp_path):
         append_dim="vcp_time",
         engine="nexradlevel2",
         remove_strings=True,
+        cluster=test_cluster,
     )
     session_seq = repo_seq.readonly_session("main")
     tree_seq = xr.open_datatree(

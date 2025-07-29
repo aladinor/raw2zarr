@@ -5,6 +5,7 @@ import warnings
 from collections.abc import Iterable
 
 import icechunk
+from dask.distributed import LocalCluster
 
 from ..templates.template_utils import remove_string_vars
 from ..templates.vcp_utils import create_vcp_time_mapping
@@ -116,10 +117,9 @@ def append_parallel(
     zarr_format: int = 3,
     consolidated: bool = False,
     engine: str = "nexradlevel2",
-    dashboard_address: str = "127.0.0.1:8785",
     branch: str = "main",
     remove_strings: bool = True,
-    cluster=None,
+    cluster: LocalCluster | object | None = None,
     skip_vcps: list = None,
 ) -> None:
     """
@@ -142,14 +142,14 @@ def append_parallel(
             Whether to consolidate Zarr metadata. Defaults to False.
         engine (str, optional):
             Radar file reading engine (e.g., "iris", "nexradlevel2"). Defaults to "nexradlevel2".
-        dashboard_address (str, optional):
-            Dask dashboard address for monitoring. Defaults to "127.0.0.1:8785".
         branch (str, optional):
             Git-like branch name for icechunk versioning. Defaults to "main".
         remove_strings (bool, optional):
             Whether to remove variables of string dtype. Defaults to True.
-        cluster (optional):
-            Pre-configured Dask cluster (e.g., Coiled cluster). If None, uses LocalCluster.
+        cluster:
+            Pre-configured Dask cluster (e.g., LocalCluster, Coiled cluster). Required for parallel processing.
+        skip_vcps (list, optional):
+            List of VCP patterns to skip during processing (e.g., ["VCP-31", "VCP-32"]). Defaults to None.
 
     Returns:
         None
@@ -160,19 +160,19 @@ def append_parallel(
     """
     import logging
 
-    from dask.distributed import Client, LocalCluster
+    from dask.distributed import Client
 
     logging.getLogger("distributed.scheduler").setLevel(logging.ERROR)
 
     if not cluster:
-        print("Using local Dask cluster")
-        cluster = LocalCluster(dashboard_address=dashboard_address, memory_limit="10GB")
+        raise ValueError(
+            "Cluster is required for parallel processing. Please provide a Dask cluster."
+        )
 
     client = Client(cluster, timeout="60s", heartbeat_interval="10s")
 
     session = repo.writable_session(branch=branch)
 
-    # Step 1: Extract metadata (parallel) - using Client.map() for fastest graph construction
     def extract_single_metadata(file_info):
         """Extract metadata from a single file - optimized for Client.map()"""
         original_index, file = file_info
@@ -182,7 +182,6 @@ def append_parallel(
             from raw2zarr.builder.builder_utils import extract_timestamp
             from raw2zarr.io.preprocess import normalize_input_for_xradar
 
-            # Extract timestamp from filename (fast regex operation)
             timestamp = extract_timestamp(file)
 
             # Extract VCP from file header (requires file read)

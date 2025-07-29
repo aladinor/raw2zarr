@@ -5,6 +5,7 @@ from collections.abc import Iterable
 from typing import Literal
 
 import icechunk
+from dask.distributed import LocalCluster
 
 from .executor import append_parallel, append_sequential
 
@@ -13,6 +14,7 @@ def convert_files(
     radar_files: Iterable[str | os.PathLike],
     append_dim: str,
     repo: icechunk.Repository,
+    cluster: LocalCluster | object | None = None,
     process_mode: Literal["sequential", "parallel"] = "sequential",
     engine: str = "iris",
     remove_strings: bool = True,
@@ -32,6 +34,8 @@ def convert_files(
             The dimension name to append data along (e.g., "vcp_time").
         repo (icechunk.Repository):
             Icechunk repository object managing the Zarr store.
+        cluster (optional):
+            Dask cluster for distributed processing. Required for parallel mode, ignored for sequential mode.
         process_mode (Literal["sequential", "parallel"], optional):
             Whether to use sequential or parallel processing. Defaults to "sequential".
         engine (str, optional):
@@ -73,6 +77,7 @@ def convert_files(
             repo=repo,
             engine=engine,
             remove_strings=remove_strings,
+            cluster=cluster,
             **kwargs,
         )
     else:

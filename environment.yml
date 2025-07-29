@@ -27,7 +27,7 @@ dependencies:
   - nbmake
   - pydantic
   - icechunk>=1.0.3
-  - arraylake>=0.1.1
+  - arraylake>=0.21.1
   - pandas
   - numpy
   - icechunk

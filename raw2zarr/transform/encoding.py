@@ -34,11 +34,12 @@ def dtree_encoding(
     Returns:
         dict: Dictionary suitable for use in xarray's `to_zarr` or similar export methods.
     """
+    append_dim_chunzise = dim_chunksize.get(append_dim, 1_000_000)
     time_enc = {
         "units": "nanoseconds since 1950-01-01T00:00:00.00",
         "dtype": "int64",
         "_FillValue": -9999,
-        "chunks": (1,),
+        "chunks": (append_dim_chunzise,),
     }
     encoding = defaultdict(dict)
 

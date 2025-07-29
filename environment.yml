@@ -1,11 +1,10 @@
-name: raw2zarr-dev
+name: raw2zarr
 channels:
   - conda-forge
   - nodefaults
 dependencies:
   - python=3.12
   - mamba
-  - cartopy
   - fsspec
   - jupyterlab
   - notebook
@@ -13,14 +12,11 @@ dependencies:
   - dask
   - netcdf4
   - bottleneck
-  - zarr>=3.0.8
+  - zarr>=3.1.0
   - ca-certificates
   - certifi
   - openssl
   - s3fs>=2025.5.1
-  - wradlib
-  - hvplot
-  - datashader
   - xarray>=2025.07.1
   - xradar>=0.10.0
   - pytest
@@ -30,11 +26,12 @@ dependencies:
   - pytest-xdist
   - nbmake
   - pydantic
-  - icechunk>=1.0.0
+  - icechunk>=1.0.3
+  - arraylake>=0.21.1
   - pandas
   - numpy
   - icechunk
   - pandas
   - pip
   - pip:
-      - .
+      - git+https://github.com/aladinor/raw2zarr.git

@@ -34,6 +34,10 @@ def dtree_encoding(
     Returns:
         dict: Dictionary suitable for use in xarray's `to_zarr` or similar export methods.
     """
+    # Provide default chunk sizes to avoid None checks
+    if dim_chunksize is None:
+        dim_chunksize = {}
+
     append_dim_chunzise = dim_chunksize.get(append_dim, 1_000_000)
     time_enc = {
         "units": "nanoseconds since 1950-01-01T00:00:00.00",
@@ -64,14 +68,8 @@ def dtree_encoding(
             dtype_kind = var.dtype.kind
 
             def get_chunk_sizes():
-                if dim_chunksize is None:
-                    az_chunksize = int(len(var["azimuth"]))
-                    range_chunksize = int(len(var["range"]))
-                else:
-                    az_chunksize = dim_chunksize.get(
-                        "azimuth", int(len(var["azimuth"]))
-                    )
-                    range_chunksize = dim_chunksize.get("range", int(len(var["range"])))
+                az_chunksize = dim_chunksize.get("azimuth", int(len(var["azimuth"])))
+                range_chunksize = dim_chunksize.get("range", int(len(var["range"])))
                 return az_chunksize, range_chunksize
 
             if dtype_kind in {"O", "U"}:

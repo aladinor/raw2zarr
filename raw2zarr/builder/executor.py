@@ -281,7 +281,7 @@ def append_parallel(
         print(f"  🔹 {vcp_name}: {vcp_info['file_count']} files ({time_span})")
         for i, file_info in enumerate(sample_files, 1):
             print(f"     📄 Sample file {i}: {file_info['filepath']}")
-    exit()
+
     remaining_files = init_zarr_store(
         files=file_indices,
         session=session,

@@ -121,6 +121,7 @@ def append_parallel(
     remove_strings: bool = True,
     cluster: LocalCluster | object | None = None,
     skip_vcps: list = None,
+    log_file: str = None,
 ) -> None:
     """
     Append radar files to a Zarr store in parallel using Dask.
@@ -150,6 +151,8 @@ def append_parallel(
             Pre-configured Dask cluster (e.g., LocalCluster, Coiled cluster). Required for parallel processing.
         skip_vcps (list, optional):
             List of VCP patterns to skip during processing (e.g., ["VCP-31", "VCP-32"]). Defaults to None.
+        log_file (str, optional):
+            Path to log file for problematic files. If None, uses "output.txt" in current directory.
 
     Returns:
         None
@@ -192,7 +195,9 @@ def append_parallel(
             return (original_index, file, (timestamp, vcp_number))
 
         except Exception as e:
-            _log_problematic_file(file, f"Metadata extraction failed: {str(e)}")
+            _log_problematic_file(
+                file, f"Metadata extraction failed: {str(e)}", log_file
+            )
             return (original_index, file, ("ERROR", str(e)))
 
     print(f"🖥️  Detected {len(client.scheduler_info()['workers'])} workers")
@@ -219,7 +224,9 @@ def append_parallel(
             # Check if this VCP should be skipped
             if skip_vcps and vcp_name in skip_vcps:
                 skipped_vcps.append((file, vcp_name))
-                _log_problematic_file(file, f"Skipped {vcp_name} (configured to skip)")
+                _log_problematic_file(
+                    file, f"Skipped {vcp_name} (configured to skip)", log_file
+                )
                 continue
 
             # Valid result with (timestamp, vcp_number)
@@ -263,12 +270,18 @@ def append_parallel(
     print(f"  📊 VCPs found: {', '.join(vcp_names)}")
     print()
     print("🔍 Sample files for vcp.json validation:")
+    import random
+
     for vcp_name, vcp_info in vcp_time_mapping.items():
         time_span = vcp_info["timestamps"][-1] - vcp_info["timestamps"][0]
-        sample_file = vcp_info["files"][0]["filepath"]  # First file as sample
+        # Get up to 10 random sample files for better representation
+        all_files = vcp_info["files"]
+        num_samples = min(10, len(all_files))
+        sample_files = random.sample(all_files, num_samples)
         print(f"  🔹 {vcp_name}: {vcp_info['file_count']} files ({time_span})")
-        print(f"     📄 Sample file: {sample_file}")
-
+        for i, file_info in enumerate(sample_files, 1):
+            print(f"     📄 Sample file {i}: {file_info['filepath']}")
+    exit()
     remaining_files = init_zarr_store(
         files=file_indices,
         session=session,
@@ -306,7 +319,9 @@ def append_parallel(
                 remove_strings,
             )
         except Exception as e:
-            _log_problematic_file(input_file, f"Write operation failed: {str(e)}")
+            _log_problematic_file(
+                input_file, f"Write operation failed: {str(e)}", log_file
+            )
             # Return error info instead of session for problematic files
             return {"error": f"Write operation failed: {str(e)}", "file": input_file}
 

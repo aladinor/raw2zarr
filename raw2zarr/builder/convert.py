@@ -18,6 +18,7 @@ def convert_files(
     process_mode: Literal["sequential", "parallel"] = "sequential",
     engine: str = "iris",
     remove_strings: bool = True,
+    log_file: str = None,
     **kwargs,
 ) -> None:
     """
@@ -46,6 +47,8 @@ def convert_files(
             This is necessary because Zarr v3 currently lacks full support for string dtypes.
             See: https://github.com/zarr-developers/zarr-python/pull/2874
             This option will be removed once native string support is available in Zarr v3.
+        log_file (str, optional):
+            Path to log file for problematic files. If None, uses "output.txt" in current directory.
         **kwargs:
             Additional keyword arguments passed to the underlying writer functions.
             Common examples include:
@@ -78,6 +81,7 @@ def convert_files(
             engine=engine,
             remove_strings=remove_strings,
             cluster=cluster,
+            log_file=log_file,
             **kwargs,
         )
     else:

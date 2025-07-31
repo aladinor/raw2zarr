@@ -128,8 +128,11 @@ def _log_problematic_file(filepath: str, error_msg: str, log_file: str = None):
     if log_file is None:
         log_file = "output.txt"
 
-    log_entry = (
-        f"{datetime.now().isoformat()}, SKIPPED: {filepath} | Error: {error_msg}\n"
+    log_entry = f"{datetime.now().isoformat()}, {filepath}, SKIPPED:, {error_msg}\n"
+
+    # Ensure directory exists
+    os.makedirs(
+        os.path.dirname(log_file) if os.path.dirname(log_file) else ".", exist_ok=True
     )
 
     # Write to log file

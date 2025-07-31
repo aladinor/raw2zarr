@@ -15,7 +15,7 @@ from ..writer.writer_utils import (
     resolve_zarr_write_options,
 )
 from ..writer.zarr_writer import dtree_to_zarr, write_dtree_region
-from .builder_utils import _log_problematic_file
+from .builder_utils import _log_problematic_file, extract_single_metadata
 
 # _log_problematic_file not available on Coiled workers - using local logging
 from .dtree_radar import radar_datatree
@@ -176,30 +176,6 @@ def append_parallel(
 
     session = repo.writable_session(branch=branch)
 
-    def extract_single_metadata(file_info):
-        """Extract metadata from a single file - optimized for Client.map()"""
-        original_index, file = file_info
-        try:
-            from xradar.io.backends.nexrad_level2 import NEXRADLevel2File
-
-            from raw2zarr.builder.builder_utils import extract_timestamp
-            from raw2zarr.io.preprocess import normalize_input_for_xradar
-
-            timestamp = extract_timestamp(file)
-
-            # Extract VCP from file header (requires file read)
-            vcp_number = NEXRADLevel2File(
-                normalize_input_for_xradar(file)
-            ).get_msg_5_data()["pattern_number"]
-
-            return (original_index, file, (timestamp, vcp_number))
-
-        except Exception as e:
-            _log_problematic_file(
-                file, f"Metadata extraction failed: {str(e)}", log_file
-            )
-            return (original_index, file, ("ERROR", str(e)))
-
     print(f"🖥️  Detected {len(client.scheduler_info()['workers'])} workers")
     print(
         f"⚡ Using Client.map() for fastest graph construction with {len(radar_files)} files"
@@ -224,9 +200,6 @@ def append_parallel(
             # Check if this VCP should be skipped
             if skip_vcps and vcp_name in skip_vcps:
                 skipped_vcps.append((file, vcp_name))
-                _log_problematic_file(
-                    file, f"Skipped {vcp_name} (configured to skip)", log_file
-                )
                 continue
 
             # Valid result with (timestamp, vcp_number)
@@ -236,7 +209,15 @@ def append_parallel(
             # Problematic file with error info
             problematic_files.append((file, result[1]))
 
-    # Note: Metadata failures are already logged by _log_problematic_file in extract_single_metadata
+    # Log all problematic files locally (metadata extraction failures)
+    for file, error_msg in problematic_files:
+        _log_problematic_file(file, error_msg, log_file)
+
+    # Log skipped VCPs locally
+    for file, vcp_name in skipped_vcps:
+        _log_problematic_file(
+            file, f"Skipped {vcp_name} (configured to skip)", log_file
+        )
 
     if not valid_results:
         print("❌ No valid files found after filtering problematic files.")
@@ -281,6 +262,7 @@ def append_parallel(
         print(f"  🔹 {vcp_name}: {vcp_info['file_count']} files ({time_span})")
         for i, file_info in enumerate(sample_files, 1):
             print(f"     📄 Sample file {i}: {file_info['filepath']}")
+
     remaining_files = init_zarr_store(
         files=file_indices,
         session=session,
@@ -318,10 +300,7 @@ def append_parallel(
                 remove_strings,
             )
         except Exception as e:
-            _log_problematic_file(
-                input_file, f"Write operation failed: {str(e)}", log_file
-            )
-            # Return error info instead of session for problematic files
+            # Don't log from remote workers - return error info for local logging
             return {"error": f"Write operation failed: {str(e)}", "file": input_file}
 
     print(
@@ -344,7 +323,9 @@ def append_parallel(
             # Successful session
             successful_sessions.append(result)
 
-    # Note: Write failures are already logged by _log_problematic_file in write_single_file
+    # Log all write failures locally
+    for file, error_msg in write_failed_files:
+        _log_problematic_file(file, error_msg, log_file)
 
     # Only merge successful sessions
     if successful_sessions:

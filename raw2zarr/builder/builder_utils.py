@@ -112,6 +112,27 @@ def extract_file_metadata(
     return timestamp, vcp_number
 
 
+def extract_single_metadata(file_info):
+    """Extract metadata from a single file - optimized for Client.map()"""
+    original_index, file = file_info
+    try:
+        from xradar.io.backends.nexrad_level2 import NEXRADLevel2File
+
+        from raw2zarr.io.preprocess import normalize_input_for_xradar
+
+        timestamp = extract_timestamp(file)
+
+        # Extract VCP from file header (requires file read)
+        vcp_number = NEXRADLevel2File(
+            normalize_input_for_xradar(file)
+        ).get_msg_5_data()["pattern_number"]
+
+        return original_index, file, (timestamp, vcp_number)
+
+    except Exception as e:
+        return original_index, file, ("ERROR", f"Metadata extraction failed: {str(e)}")
+
+
 def _log_problematic_file(filepath: str, error_msg: str, log_file: str = None):
     """
     Log problematic files to output.txt with error details.
@@ -124,7 +145,6 @@ def _log_problematic_file(filepath: str, error_msg: str, log_file: str = None):
     import os
     from datetime import datetime
 
-    # Use provided log_file or default to output.txt in current directory
     if log_file is None:
         log_file = "output.txt"
 

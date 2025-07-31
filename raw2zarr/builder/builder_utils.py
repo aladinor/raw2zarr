@@ -128,7 +128,7 @@ def _log_problematic_file(filepath: str, error_msg: str, log_file: str = None):
     if log_file is None:
         log_file = "output.txt"
 
-    log_entry = f"{datetime.now().isoformat()}, {filepath},u     {error_msg}\n"
+    log_entry = f"{datetime.now().isoformat()}, {filepath}, SKIPPED:, {error_msg}\n"
 
     # Ensure directory exists
     os.makedirs(

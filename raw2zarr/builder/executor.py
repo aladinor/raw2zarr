@@ -257,7 +257,7 @@ def append_parallel(
         time_span = vcp_info["timestamps"][-1] - vcp_info["timestamps"][0]
         # Get up to 10 random sample files for better representation
         all_files = vcp_info["files"]
-        num_samples = min(20, len(all_files))
+        num_samples = min(100, len(all_files))
         sample_files = random.sample(all_files, num_samples)
         print(f"  🔹 {vcp_name}: {vcp_info['file_count']} files ({time_span})")
         for i, file_info in enumerate(sample_files, 1):

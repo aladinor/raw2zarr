@@ -25,8 +25,11 @@ class TestAlignment:
 
     def test_check_dynamic_scan(self, nexrad_aws_file_SAILS):
         dtree = load_radar_data(nexrad_aws_file_SAILS, engine="nexradlevel2")
-        is_dynamic = check_dynamic_scan(dtree)
-        assert is_dynamic is True
+        # Dynamic scans now raise ValueError instead of returning True
+        with pytest.raises(
+            ValueError, match="Extracted elevation is different to reference elevations"
+        ):
+            check_dynamic_scan(dtree)
 
     def test_check_dynamic_scan_detects_static(self, nexrad_local_uncompressed_file):
         dtree = load_radar_data(nexrad_local_uncompressed_file, engine="nexradlevel2")

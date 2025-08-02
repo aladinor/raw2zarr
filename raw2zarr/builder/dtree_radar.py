@@ -1,5 +1,6 @@
 import os
 from collections.abc import Iterable
+import warnings
 
 from xarray import DataTree
 from xarray.backends.common import _normalize_path
@@ -58,8 +59,14 @@ def radar_datatree(
         raise ValueError("Missing 'scan_name' in radar data attributes.")
 
     dtree = dtree.pipe(fix_angle).pipe(apply_georeferencing)
-    dtree = handle_dynamic_vcp(dtree, engine=engine, append_dim=append_dim)
-
+    try:
+        dtree = handle_dynamic_vcp(dtree, engine=engine, append_dim=append_dim)
+    except ValueError as e:
+        warnings.warn(
+            f"Dynamic scan detected but not supported: {str(e)}. File will continue processing and may fail at later stages.",
+            UserWarning,
+        )
+        dtree = ensure_dimension(dtree, append_dim=append_dim)
     new_dtree = DataTree.from_dict({task_name: dtree})
     new_dtree.encoding = dtree_encoding(new_dtree, append_dim=append_dim)
     return new_dtree

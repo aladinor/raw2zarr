@@ -1,13 +1,13 @@
-import glob
 from datetime import datetime
 
 import fsspec
 import numpy as np
 import xarray as xr
+from dask.distributed import LocalCluster
 
-from raw2zarr.builder.convert import convert_files
-from raw2zarr.utils import create_query, timer_func
 from raw2zarr.builder.builder_utils import get_icechunk_repo
+from raw2zarr.builder.convert import convert_files
+from raw2zarr.utils import create_query, load_vcp_samples, timer_func
 
 
 def get_radar_files(engine):
@@ -59,9 +59,9 @@ def get_dynamic_scans() -> list[str]:
     radar_files = [
         "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_154426_V06",
         "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_154815_V06",
-        # 's3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_155154_V06',
-        # 's3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_155533_V06',
-        # 's3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_155912_V06',
+        "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_155154_V06",
+        "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_155533_V06",
+        "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_155912_V06",
         "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_155912_V06_MDM",
         "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_160251_V06",
         "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_160643_V06",
@@ -71,37 +71,50 @@ def get_dynamic_scans() -> list[str]:
         "s3://noaa-nexrad-level2/2025/02/11/KFSX/KFSX20250211_164159_V06",  # AVSET + base tilt (-0.2)
     ]
     # radar_files = ["s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_124851_V06"],
-
     return radar_files
+
+
+def files_with_shape_mismatch(vcp: str = "VCP-21"):
+    files = load_vcp_samples(
+        "/media/alfonso/drive/Alfonso/python/raw2zarr/data/vcp_samples.json"
+    )[vcp]
+    return sorted(files), f"../zarr/{vcp}test", "nexradlevel2"
+
+
+def get_cluster():
+    dashboard_address = "127.0.0.1:8785"
+    cluster = LocalCluster(dashboard_address=dashboard_address, memory_limit="10GB")
+    return cluster
 
 
 @timer_func
 def main():
-    import shutil
 
     # IRIS Colombia
     # radar_files, zarr_store, engine = get_radar_files("iris")
 
     # NEXRAD
-    radar_files, zarr_store, engine = get_radar_files("nexradlevel2")
+    # radar_files, zarr_store, engine = get_radar_files("nexradlevel2")
     # t = load_radar_data(radar_files[0], engine=engine)
     # if dynamic scans
     # radar_files = get_dynamic_scans()
-
+    radar_files, zarr_store, engine = files_with_shape_mismatch("VCP-11")
     repo = get_icechunk_repo(zarr_store=zarr_store)
-
+    cluster = get_cluster()
     # radar_files = glob.glob("../data/*")
 
     zarr_version = 3
     append_dim = "vcp_time"
     convert_files(
-        radar_files[215:225],  # Just 2 files for quick test
+        radar_files,  # Just 2 files for quick test
         append_dim=append_dim,
         repo=repo,
         zarr_format=zarr_version,
         engine=engine,
-        process_mode="parallel-region",
+        process_mode="parallel",
         remove_strings=True,
+        cluster=cluster,
+        log_file=f"/media/alfonso/drive/Alfonso/python/raw2zarr/{zarr_store.split('/')[-1]}.txt",
     )
 
 

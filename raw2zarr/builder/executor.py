@@ -272,7 +272,6 @@ def append_parallel(
         consolidated=consolidated,
         vcp_time_mapping=vcp_time_mapping,
     )
-    print("start writing files in parallel")
     session = repo.writable_session(branch=branch)
     fork = session.fork()
 

@@ -259,10 +259,10 @@ def append_parallel(
         all_files = vcp_info["files"]
         num_samples = min(100, len(all_files))
         sample_files = random.sample(all_files, num_samples)
-        print(f"  🔹 {vcp_name}: {vcp_info['file_count']} files ({time_span})")
+        print(f"{vcp_name}: {vcp_info['file_count']} files ({time_span})")
         for i, file_info in enumerate(sample_files, 1):
-            print(f"     📄 Sample file {i}: {file_info['filepath']}")
-
+            print(f"'{file_info['filepath']}'")
+    exit()
     remaining_files = init_zarr_store(
         files=file_indices,
         session=session,

@@ -11216,11 +11216,11 @@
       "range": [
         1832,
         1192,
-        1652,
+        1832,
         1192,
-        1316,
-        1076,
-        908
+        1336,
+        1336,
+        1336
       ]
     },
     "sweep_0": {
@@ -11278,16 +11278,6 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
-        },
-        "follow_mode": {
-          "dims": [],
-          "dtype": "int32",
-          "attributes": {}
-        },
-        "prt_mode": {
-          "dims": [],
-          "dtype": "int32",
-          "attributes": {}
         },
         "sweep_fixed_angle": {
           "dims": [],
@@ -11348,16 +11338,6 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per second"
           }
-        },
-        "follow_mode": {
-          "dims": [],
-          "dtype": "int32",
-          "attributes": {}
-        },
-        "prt_mode": {
-          "dims": [],
-          "dtype": "int32",
-          "attributes": {}
         },
         "sweep_fixed_angle": {
           "dims": [],
@@ -11432,16 +11412,6 @@
             "units": "unitless"
           }
         },
-        "follow_mode": {
-          "dims": [],
-          "dtype": "int32",
-          "attributes": {}
-        },
-        "prt_mode": {
-          "dims": [],
-          "dtype": "int32",
-          "attributes": {}
-        },
         "sweep_fixed_angle": {
           "dims": [],
           "dtype": "float32",
@@ -11501,16 +11471,6 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per second"
           }
-        },
-        "follow_mode": {
-          "dims": [],
-          "dtype": "int32",
-          "attributes": {}
-        },
-        "prt_mode": {
-          "dims": [],
-          "dtype": "int32",
-          "attributes": {}
         },
         "sweep_fixed_angle": {
           "dims": [],
@@ -11611,16 +11571,6 @@
             "units": "unitless"
           }
         },
-        "follow_mode": {
-          "dims": [],
-          "dtype": "int32",
-          "attributes": {}
-        },
-        "prt_mode": {
-          "dims": [],
-          "dtype": "int32",
-          "attributes": {}
-        },
         "sweep_fixed_angle": {
           "dims": [],
           "dtype": "float32",
@@ -11720,16 +11670,6 @@
             "units": "unitless"
           }
         },
-        "follow_mode": {
-          "dims": [],
-          "dtype": "int32",
-          "attributes": {}
-        },
-        "prt_mode": {
-          "dims": [],
-          "dtype": "int32",
-          "attributes": {}
-        },
         "sweep_fixed_angle": {
           "dims": [],
           "dtype": "float32",
@@ -11828,16 +11768,6 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
-        },
-        "follow_mode": {
-          "dims": [],
-          "dtype": "int32",
-          "attributes": {}
-        },
-        "prt_mode": {
-          "dims": [],
-          "dtype": "int32",
-          "attributes": {}
         },
         "sweep_fixed_angle": {
           "dims": [],

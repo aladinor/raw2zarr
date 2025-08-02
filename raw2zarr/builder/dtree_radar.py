@@ -66,7 +66,7 @@ def radar_datatree(
             f"Dynamic scan detected but not supported: {str(e)}. File will continue processing and may fail at later stages.",
             UserWarning,
         )
-        dtree = ensure_dimension(dtree, append_dim=append_dim)
+    dtree = ensure_dimension(dtree, append_dim=append_dim)
     new_dtree = DataTree.from_dict({task_name: dtree})
     new_dtree.encoding = dtree_encoding(new_dtree, append_dim=append_dim)
     return new_dtree
@@ -75,4 +75,4 @@ def radar_datatree(
 def handle_dynamic_vcp(dtree: DataTree, engine: str, append_dim: str) -> DataTree:
     if engine == "nexradlevel2" and check_dynamic_scan(dtree):
         return align_dynamic_scan(dtree, append_dim=append_dim)
-    return ensure_dimension(dtree, append_dim=append_dim)
+    return dtree

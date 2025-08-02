@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+import json
 from collections.abc import Iterator
 from datetime import datetime, timezone
 from time import time
@@ -206,3 +207,18 @@ def create_empty_dtree(vcp: str = "VCP-212") -> DataTree:
     else:
         dtree = dtree.pipe(ensure_dimension, append_dim)
     return dtree
+
+
+def load_vcp_samples(json_file_path: str) -> dict:
+    """Load VCP samples from JSON file."""
+    # Get the directory where this script is located
+    try:
+        with open(json_file_path, "r") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print(f"VCP samples file not found at: {json_file_path}")
+        print("Please ensure data/vcp_samples.json exists in the project directory.")
+        return {}
+    except json.JSONDecodeError as e:
+        print(f"Error parsing VCP samples JSON: {e}")
+        return {}

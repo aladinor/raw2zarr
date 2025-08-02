@@ -155,11 +155,17 @@ def check_dynamic_scan(dtree: xr.DataTree, tolerance: float = 0.05) -> bool:
             continue
 
     if len(extracted_elevs) != len(reference_elevs):
-        return True
+        raise ValueError(
+            f"Extracted elevation is different to reference elevations: {len(extracted_elevs)} != {len(reference_elevs)}"
+        )
+        # return True
 
     for a, b in zip_longest(extracted_elevs, reference_elevs, fillvalue=None):
         if a is None or b is None or not isclose(a, b, abs_tol=tolerance):
-            return True
+            raise ValueError(
+                f"Dynamic scan not supported. Check elevations: extracted={a}, reference={b} "
+            )
+            # return True
 
     return False
 

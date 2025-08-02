@@ -154,6 +154,7 @@ cython_debug/
 
 # folders
 results/
+data/
 zarr/
 zarrtest.zarr/
 .idea/
@@ -172,3 +173,8 @@ create_dataset.py
 raw2zarr/main.py
 profiler.py
 profile.speedscope
+analyze_vcp_files.py
+raw2zarr/builder/rechunk.py
+
+CLAUDE.md
+*.txt

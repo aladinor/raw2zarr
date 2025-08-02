@@ -98,6 +98,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -143,6 +168,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per seconds"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -201,6 +251,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -246,6 +321,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per second"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -330,6 +430,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -414,6 +539,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -498,6 +648,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -582,6 +757,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -666,6 +866,31 @@
             "long_name": "Log differential reflectivity H/V",
             "units": "dB"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -750,6 +975,31 @@
             "long_name": "Log differential reflectivity H/V",
             "units": "dB"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -834,6 +1084,31 @@
             "long_name": "Log differential reflectivity H/V",
             "units": "dB"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     }
@@ -952,6 +1227,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -997,6 +1297,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per second"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -1055,6 +1380,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -1100,6 +1450,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per second"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -1184,6 +1559,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -1268,6 +1668,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -1352,6 +1777,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -1436,6 +1886,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -1520,6 +1995,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -1604,6 +2104,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -1688,6 +2213,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -1772,6 +2322,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -1856,6 +2431,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -1940,6 +2540,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -2024,6 +2649,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -2108,6 +2758,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     }
@@ -2229,6 +2904,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -2274,6 +2974,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per second"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -2332,6 +3057,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -2377,6 +3127,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per second"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -2435,6 +3210,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -2480,6 +3280,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per second"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -2564,6 +3389,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -2648,6 +3498,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -2732,6 +3607,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -2816,6 +3716,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -2900,6 +3825,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -2984,6 +3934,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -3068,6 +4043,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -3152,6 +4152,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -3236,6 +4261,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -3320,6 +4370,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -3404,6 +4479,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     }
@@ -3547,6 +4647,31 @@
             "long_name": "Clutter Correction H",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -3592,6 +4717,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per seconds"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -3650,6 +4800,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -3695,6 +4870,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per second"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -3766,6 +4966,31 @@
             "long_name": "Clutter Correction H",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -3811,6 +5036,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per seconds"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -3869,6 +5119,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -3914,6 +5189,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per second"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -3998,6 +5298,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -4043,6 +5368,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -4088,6 +5438,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -4172,6 +5547,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -4217,6 +5617,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -4262,6 +5687,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -4346,6 +5796,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -4391,6 +5866,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -4475,6 +5975,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -4520,6 +6045,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -4565,6 +6115,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -4610,6 +6185,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     }
@@ -4741,6 +6341,31 @@
             "long_name": "Clutter Correction H",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -4786,6 +6411,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per seconds"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -4857,6 +6507,31 @@
             "long_name": "Clutter Correction H",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -4902,6 +6577,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per seconds"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -4986,6 +6686,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -5070,6 +6795,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -5154,6 +6904,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -5238,6 +7013,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -5322,6 +7122,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -5367,6 +7192,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -5412,6 +7262,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -5457,6 +7332,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -5502,6 +7402,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -5547,6 +7472,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -5592,6 +7542,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -5637,6 +7612,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     }
@@ -5784,6 +7784,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -5868,6 +7893,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -5952,6 +8002,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -6036,6 +8111,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -6120,6 +8220,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -6204,6 +8329,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -6288,6 +8438,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -6372,6 +8547,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -6456,6 +8656,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -6540,6 +8765,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -6624,6 +8874,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -6708,6 +8983,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -6792,6 +9092,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -6876,6 +9201,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -6960,6 +9310,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -7044,6 +9419,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -7128,6 +9528,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     }
@@ -7220,6 +9645,31 @@
             "long_name": "Clutter Correction H",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -7265,6 +9715,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per seconds"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -7336,6 +9811,31 @@
             "long_name": "Clutter Correction H",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -7381,6 +9881,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per seconds"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -7465,6 +9990,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -7549,6 +10099,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -7633,6 +10208,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -7717,6 +10317,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -7762,6 +10387,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -7807,6 +10457,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -7852,6 +10527,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     }
@@ -7946,6 +10646,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -7991,6 +10716,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per second"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -8049,6 +10799,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -8094,6 +10869,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per second"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -8152,6 +10952,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -8197,6 +11022,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per second"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -8242,6 +11092,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -8287,6 +11162,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     }
@@ -8316,11 +11216,11 @@
       "range": [
         1832,
         1192,
-        1832,
+        1652,
         1192,
-        1336,
-        1336,
-        1336
+        1316,
+        1076,
+        908
       ]
     },
     "sweep_0": {
@@ -8378,6 +11278,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -8423,6 +11348,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per second"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -8481,6 +11431,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -8526,6 +11501,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per second"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -8610,6 +11610,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -8694,6 +11719,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -8778,6 +11828,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     }
@@ -8871,6 +11946,31 @@
             "long_name": "Clutter Correction H",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -8916,6 +12016,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per seconds"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -8987,6 +12112,31 @@
             "long_name": "Clutter Correction H",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -9032,6 +12182,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per seconds"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -9103,6 +12278,31 @@
             "long_name": "Clutter Correction H",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -9148,6 +12348,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per seconds"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -9232,6 +12457,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -9316,6 +12566,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -9400,6 +12675,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -9484,6 +12784,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -9568,6 +12893,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -9652,6 +13002,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     }
@@ -9789,6 +13164,31 @@
             "long_name": "Clutter Correction H",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -9834,6 +13234,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per seconds"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -9905,6 +13330,31 @@
             "long_name": "Clutter Correction H",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -9950,6 +13400,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per seconds"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -10021,6 +13496,31 @@
             "long_name": "Clutter Correction H",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -10066,6 +13566,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "meters per seconds"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -10150,6 +13675,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -10234,6 +13784,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -10318,6 +13893,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -10402,6 +14002,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -10486,6 +14111,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -10570,6 +14220,31 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -10615,6 +14290,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -10660,6 +14360,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -10705,6 +14430,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -10750,6 +14500,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -10795,6 +14570,31 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         }
       }
     },
@@ -10840,6 +14640,2042 @@
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32",
+          "attributes": {}
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        }
+      }
+    }
+  },
+  "VCP-0": {
+    "elevations": [
+      0.5,
+      0.5,
+      1.5,
+      1.5,
+      2.5,
+      3.5,
+      4.5
+    ],
+    "dims": {
+      "azimuth": [
+        367,
+        367,
+        367,
+        367,
+        367,
+        367,
+        367
+      ],
+      "range": [
+        460,
+        920,
+        356,
+        920,
+        920,
+        920,
+        860
+      ]
+    },
+    "sweep_0": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_1": {
+      "variables": {
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_2": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_3": {
+      "variables": {
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_4": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_5": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_6": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    }
+  },
+  "VCP-112": {
+    "elevations": [
+      0.66,
+      0.66,
+      0.66,
+      0.92,
+      0.92,
+      0.92,
+      1.31,
+      1.32,
+      1.36,
+      0.66,
+      0.66,
+      0.66,
+      1.85,
+      2.46,
+      3.16,
+      4.04,
+      5.14,
+      6.46
+    ],
+    "dims": {
+      "azimuth": [
+        720,
+        720,
+        720,
+        720,
+        720,
+        720,
+        718,
+        720,
+        720,
+        720,
+        720,
+        720,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360
+      ],
+      "range": [
+        1832,
+        1192,
+        1192,
+        1832,
+        1192,
+        1192,
+        1712,
+        1192,
+        1192,
+        1832,
+        1192,
+        1192,
+        1536,
+        1336,
+        1160,
+        984,
+        820,
+        680
+      ]
+    },
+    "sweep_0": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_1": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_2": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_3": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_4": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_5": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_6": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_7": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_8": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_9": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_10": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_11": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_12": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_13": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_14": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_15": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_16": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_17": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    }
+  },
+  "VCP-34": {
+    "elevations": [
+      0.48,
+      0.48,
+      0.84,
+      0.83,
+      1.32,
+      1.32,
+      1.8,
+      2.37,
+      3.12,
+      4.44
+    ],
+    "dims": {
+      "azimuth": [
+        720,
+        720,
+        720,
+        720,
+        720,
+        720,
+        360,
+        360,
+        360,
+        360
+      ],
+      "range": [
+        1832,
+        1192,
+        1832,
+        1192,
+        1712,
+        1192,
+        1536,
+        1336,
+        1160,
+        908
+      ]
+    },
+    "sweep_0": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_1": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_2": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_3": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_4": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_5": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_6": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_7": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_8": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
+        }
+      }
+    },
+    "sweep_9": {
+      "variables": {
+        "DBZH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "VRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "WRADH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float32"
+        },
+        "sweep_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_number": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32"
+        },
+        "sweep_fixed_angle": {
+          "dims": [],
+          "dtype": "float32"
         }
       }
     }

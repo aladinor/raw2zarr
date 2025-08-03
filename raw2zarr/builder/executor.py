@@ -15,7 +15,11 @@ from ..writer.writer_utils import (
     resolve_zarr_write_options,
 )
 from ..writer.zarr_writer import dtree_to_zarr, write_dtree_region
-from .builder_utils import _log_problematic_file, extract_single_metadata
+from .builder_utils import (
+    _log_problematic_file,
+    extract_single_metadata,
+    generate_vcp_samples,
+)
 
 # _log_problematic_file not available on Coiled workers - using local logging
 from .dtree_radar import radar_datatree
@@ -122,6 +126,9 @@ def append_parallel(
     cluster: LocalCluster | object | None = None,
     skip_vcps: list = None,
     log_file: str = None,
+    generate_samples: bool = False,
+    sample_percentage: float = 15.0,
+    samples_output_path: str = None,
 ) -> None:
     """
     Append radar files to a Zarr store in parallel using Dask.
@@ -153,6 +160,12 @@ def append_parallel(
             List of VCP patterns to skip during processing (e.g., ["VCP-31", "VCP-32"]). Defaults to None.
         log_file (str, optional):
             Path to log file for problematic files. If None, uses "output.txt" in current directory.
+        generate_samples (bool, optional):
+            Whether to generate VCP validation samples. Defaults to False.
+        sample_percentage (float, optional):
+            Percentage of files to sample for validation when generate_samples=True. Defaults to 15.0.
+        samples_output_path (str, optional):
+            Path to save VCP samples JSON file. If None, doesn't save to file.
 
     Returns:
         None
@@ -176,9 +189,9 @@ def append_parallel(
 
     session = repo.writable_session(branch=branch)
 
-    print(f"🖥️  Detected {len(client.scheduler_info()['workers'])} workers")
+    print(f"Detected {len(client.scheduler_info()['workers'])} workers")
     print(
-        f"⚡ Using Client.map() for fastest graph construction with {len(radar_files)} files"
+        f"Using Client.map() for fastest graph construction with {len(radar_files)} files"
     )
 
     # Ultra-fast graph construction with Client.map()
@@ -227,15 +240,13 @@ def append_parallel(
     total_skipped = len(radar_files) - len(valid_results)
     if total_skipped > 0:
         if skipped_vcps:
-            print(
-                f"⚠️  Skipped {len(skipped_vcps)} files from filtered VCPs: {skip_vcps}"
-            )
+            print(f"Skipped {len(skipped_vcps)} files from filtered VCPs: {skip_vcps}")
         problematic_count = len(problematic_files)
         if problematic_count > 0:
             print(
-                f"⚠️  Filtered out {problematic_count} problematic files (see output.txt for details)"
+                f"Filtered out {problematic_count} problematic files (see output.txt for details)"
             )
-        print(f"✅ Processing {len(valid_results)} valid files")
+        print(f"Processing {len(valid_results)} valid files")
 
     append_dim_time, vcps = zip(*valid_results)
     file_indices = valid_files
@@ -244,25 +255,19 @@ def append_parallel(
 
     vcp_time_mapping = create_vcp_time_mapping(append_dim_time, vcps, file_indices)
 
-    # Report discovered VCPs for monitoring and vcp.json validation
     vcp_names = list(vcp_time_mapping.keys())
     total_files = sum(info["file_count"] for info in vcp_time_mapping.values())
-    print(f"📡 Discovered {len(vcp_names)} VCP patterns in {total_files} files:")
-    print(f"  📊 VCPs found: {', '.join(vcp_names)}")
-    print()
-    print("🔍 Sample files for vcp.json validation:")
-    import random
+    print(f"Discovered {len(vcp_names)} VCP patterns in {total_files} files:")
+    print(f"VCPs found: {', '.join(vcp_names)}")
 
-    for vcp_name, vcp_info in vcp_time_mapping.items():
-        time_span = vcp_info["timestamps"][-1] - vcp_info["timestamps"][0]
-        # Get up to 10 random sample files for better representation
-        all_files = vcp_info["files"]
-        num_samples = min(100, len(all_files))
-        sample_files = random.sample(all_files, num_samples)
-        print(f"{vcp_name}: {vcp_info['file_count']} files ({time_span})")
-        for i, file_info in enumerate(sample_files, 1):
-            print(f"'{file_info['filepath']}'")
-    # exit()
+    # Generate VCP validation samples if requested
+    if generate_samples:
+        generate_vcp_samples(
+            vcp_time_mapping=vcp_time_mapping,
+            sample_percentage=sample_percentage,
+            output_path=samples_output_path,
+        )
+
     remaining_files = init_zarr_store(
         files=file_indices,
         session=session,

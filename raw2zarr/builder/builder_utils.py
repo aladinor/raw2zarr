@@ -158,6 +158,3 @@ def _log_problematic_file(filepath: str, error_msg: str, log_file: str = None):
     # Write to log file
     with open(log_file, "a", encoding="utf-8") as f:
         f.write(log_entry)
-
-    # Also print to console for immediate feedback
-    print(f"Skipping problematic file: {os.path.basename(filepath)} | {error_msg}")

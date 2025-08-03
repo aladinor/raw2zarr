@@ -112,6 +112,65 @@ def extract_file_metadata(
     return timestamp, vcp_number
 
 
+def generate_vcp_samples(
+    vcp_time_mapping: dict,
+    sample_percentage: float = 15.0,
+    output_path: str = None,
+    max_samples_per_vcp: int = 300,
+) -> dict:
+    """
+    Generate VCP validation samples from discovered files.
+
+    Args:
+        vcp_time_mapping: VCP time mapping dictionary from create_vcp_time_mapping
+        sample_percentage: Percentage of files to sample for validation (default 15%)
+        output_path: Path to save JSON file. If None, doesn't save to file
+        max_samples_per_vcp: Maximum number of samples per VCP pattern
+
+    Returns:
+        Dictionary of VCP samples
+    """
+    import random
+    import json
+    import os
+
+    print("🔍 Generating VCP validation samples:")
+
+    # Build VCP samples dictionary
+    vcp_samples = {}
+    for vcp_name, vcp_info in vcp_time_mapping.items():
+        time_span = vcp_info["timestamps"][-1] - vcp_info["timestamps"][0]
+        all_files = vcp_info["files"]
+
+        # Calculate number of samples based on percentage
+        percentage_samples = int(len(all_files) * (sample_percentage / 100))
+        num_samples = min(max_samples_per_vcp, percentage_samples)
+        num_samples = max(1, num_samples)  # At least 1 sample
+
+        sample_files = random.sample(all_files, num_samples)
+
+        # Extract just the file paths for JSON
+        vcp_samples[vcp_name] = [file_info["filepath"] for file_info in sample_files]
+
+        print(f"  🔹 {vcp_name}: {vcp_info['file_count']} files ({time_span})")
+        print(f"     📄 Sampled {len(sample_files)} files ({sample_percentage:.1f}%)")
+
+    if output_path:
+        # Ensure directory exists
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+        with open(output_path, "w") as f:
+            json.dump(vcp_samples, f, indent=2)
+
+        print(f"✅ Written VCP samples to {output_path}")
+
+    print(f"📊 Total VCP patterns: {len(vcp_samples)}")
+    total_samples = sum(len(samples) for samples in vcp_samples.values())
+    print(f"📁 Total validation samples: {total_samples}")
+
+    return vcp_samples
+
+
 def extract_single_metadata(file_info):
     """Extract metadata from a single file - optimized for Client.map()"""
     original_index, file = file_info

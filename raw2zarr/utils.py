@@ -1,224 +1,290 @@
 #!/usr/bin/env python
 import os
 import json
-from collections.abc import Iterator
-from datetime import datetime, timezone
+import re
+from datetime import datetime, timedelta
+from functools import wraps
 from time import time
 from typing import Any
 
 import fsspec
-import numpy as np
-import pandas as pd
-import tomllib
-from xarray import DataTree
 
-
-def batch(iterable: list[Any], n: int = 1) -> Iterator[list[Any]]:
-    """
-    Splits a list into consecutive chunks of size `n`.
-
-    This function takes a list and yields successive batches of size `n` from it.
-    If the length of the list is not evenly divisible by `n`, the last batch will
-    contain the remaining elements.
-
-    Parameters
-    ----------
-    iterable : list[Any]
-        The list to be split into batches.
-    n : int, optional
-        The number of items in each batch (default is 1).
-
-    Yields
-    ------
-    Iterator[list[Any]]
-        An iterator that yields slices of the original list of size `n`, except
-        for the last batch which may contain fewer elements if the total number
-        of elements in the list is not evenly divisible by `n`.
-
-    Examples
-    --------
-    >>> list(batch([1, 2, 3, 4, 5], n=2))
-    [[1, 2], [3, 4], [5]]
-
-    >>> list(batch(['a', 'b', 'c', 'd'], n=3))
-    [['a', 'b', 'c'], ['d']]
-    """
-    length = len(iterable)
-    for ndx in range(0, length, n):
-        yield iterable[ndx : min(ndx + n, length)]
+# Constants
+NEXRAD_S3_BUCKET = "noaa-nexrad-level2"
+NEXRAD_FILENAME_PATTERN = r"{radar}(\d{{8}})_(\d{{6}})_V\d{{2}}(?:\.gz)?$"
 
 
 def timer_func(func):
-    """Decorator that prints the execution time in h:m:s."""
+    """
+    Decorator that times the execution of a function.
 
+    This decorator wraps a function and prints the execution time when the function completes.
+
+    Parameters
+    ----------
+    func : callable
+        The function to be timed.
+
+    Returns
+    -------
+    callable
+        The wrapped function that includes timing functionality.
+
+    Examples
+    --------
+    >>> @timer_func
+    ... def slow_function():
+    ...     time.sleep(1)
+    ...     return "done"
+    >>> slow_function()  # doctest: +SKIP
+    Elapsed time: 1.00 seconds
+    'done'
+    """
+
+    @wraps(func)
     def wrap_func(*args, **kwargs):
         t1 = time()
         result = func(*args, **kwargs)
         t2 = time()
-        elapsed = t2 - t1
-
-        hours = int(elapsed // 3600)
-        minutes = int((elapsed % 3600) // 60)
-        seconds = elapsed % 60
-
-        print(
-            f"Function {func.__name__!r} executed in {hours}h {minutes}m {seconds:.2f}s"
-        )
+        print(f"Function {func.__name__!r} executed in {(t2-t1):.4f}s")
         return result
 
     return wrap_func
 
 
-def make_dir(path) -> None:
+def make_dir(path: str) -> None:
     """
-    Makes directory based on path.
-    :param path: directory path that will be created
-    :return:
+    Create a directory if it doesn't exist.
+
+    Parameters
+    ----------
+    path : str
+        The directory path to create.
+
+    Notes
+    -----
+    This function uses os.makedirs with exist_ok=True for safe directory creation.
+    """
+    os.makedirs(path, exist_ok=True)
+
+
+def create_query(site: str, date: datetime, prod: str = "sigmet") -> str:
+    """
+    Build query string for IDEAM radar data access.
+
+    Parameters
+    ----------
+    site : str
+        Radar site identifier.
+    date : datetime
+        Date for the radar data.
+    prod : str, default "sigmet"
+        Product type identifier (currently not used in path generation).
+
+    Returns
+    -------
+    str
+        Query string for data access.
+
+    Raises
+    ------
+    ValueError
+        If site is empty or not a string.
+    TypeError
+        If date is not a datetime object.
+    """
+    if not site or not isinstance(site, str):
+        raise ValueError("site must be a non-empty string")
+    if not isinstance(date, datetime):
+        raise TypeError("date must be a datetime object")
+
+    radar_site = site.upper()
+    return f"l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d}"
+
+
+def load_vcp_samples(samples_file: str = "data/vcp_samples.json") -> dict:
+    """
+    Load VCP sample data from JSON file.
+
+    Parameters
+    ----------
+    samples_file : str, default "data/vcp_samples.json"
+        Path to the VCP samples JSON file.
+
+    Returns
+    -------
+    dict
+        Dictionary containing VCP sample data with VCP names as keys and
+        lists of S3 file paths as values.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the samples file doesn't exist.
+    json.JSONDecodeError
+        If the file contains invalid JSON.
+
+    Examples
+    --------
+    >>> samples = load_vcp_samples("data/vcp_samples.json")  # doctest: +SKIP
+    >>> list(samples.keys())[:3]  # doctest: +SKIP
+    ['VCP-11', 'VCP-12', 'VCP-21']
     """
     try:
-        os.makedirs(path)
-    except FileExistsError:
-        pass
-
-
-def load_toml(filepath: str) -> dict:
-    """
-    Load a TOML data from file
-    @param filepath: path to TOML file
-    @return: dict
-    """
-    with open(filepath, "rb") as f:
-        toml_data: dict = tomllib.load(f)
-        return toml_data
-
-
-def time_3d(time_array, numbers) -> np.ndarray:
-    """
-    Functions that creates a 3d time array from timestamps
-    :param time_array: 2d timestamp array
-    :param numbers: number of times in the new axis
-    :return: 3d time array
-    """
-    v_func = np.vectorize(lambda x: datetime.fromtimestamp(x, tz=timezone.utc))
-    _time = v_func(time_array)
-    times = np.repeat(_time[np.newaxis, :], numbers, axis=0)
-    return times
-
-
-def get_time(time_array) -> np.ndarray:
-    """
-    Functions that creates a 3d time array from timestamps
-    :param time_array: 2d timestamp array
-    :return: 3d time array
-    """
-    v_func = np.vectorize(lambda x: datetime.fromtimestamp(x, tz=timezone.utc))
-    _time = v_func(time_array)
-    return _time
-
-
-def create_query(date, radar_site) -> str:
-    """
-    Creates a string for quering the IDEAM radar files stored in AWS bucket
-    :param date: date to be queried. e.g datetime(2021, 10, 3, 12). Datetime python object
-    :param radar_site: radar site e.g. Guaviare
-    :return: string with a IDEAM radar bucket format
-    """
-    if (date.hour != 0) and (date.hour != 0):
-        return f"l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d%H}"
-    elif (date.hour != 0) and (date.hour == 0):
-        return f"l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d}"
-    else:
-        return f"l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d}"
-
-
-def data_accessor(file: str):
-    """
-    Open remotely a AWS S3 file using fsspec
-    """
-    with fsspec.open(file, mode="rb", anon=True) as f:
-        return f.read()
-
-
-def convert_time(ds) -> pd.to_datetime:
-    """
-    Functions that create a timestamps for appending sweep data along a given dimension
-    @param ds: Xarray dataset
-    @return: pandas datetime
-    """
-    for i in ds.time.values:
-        time = pd.to_datetime(i)
-        if pd.isnull(time):
-            continue
-        return time
-    return None
-
-
-def check_if_exist(file: str, path: str = "../results") -> bool:
-    """
-    Function that check if a sigmet file was already processed based on a txt file that written during the conversion
-    @param file: file name
-    @param path: path where txt file was written with the list of sigmet files processed
-    @return:
-    """
-    file_path = f"{path}"
-    file_name = f"{file_path}/{file.split('/')[-2]}_files.txt"
-    try:
-        with open(file_name, newline="\n") as txt_file:
-            lines = txt_file.readlines()
-            txt_file.close()
-        _file = [i for i in lines if i.replace("\n", "") == file]
-        if len(_file) > 0:
-            print("File already processed")
-            return True
-        else:
-            return False
-    except FileNotFoundError:
-        return False
-
-
-def write_file_radar(file: str, path: str = "../results") -> None:
-    """
-    Write a new line with the radar filename converted. This is intended to create a checklist to avoid file
-    reprocessing
-    @param path: path where the txt file will be saved
-    @param file: radar filename
-    @return:
-    """
-    make_dir(path)
-    file_name = f"{path}/{file.split('/')[-2]}_files.txt"
-    with open(file_name, "a") as txt_file:
-        txt_file.write(f"{file}\n")
-        txt_file.close()
-
-
-def create_empty_dtree(vcp: str = "VCP-212") -> DataTree:
-    from .io.load import load_radar_data
-    from .transform.alignment import align_dynamic_scan, check_dynamic_scan, fix_angle
-    from .transform.dimension import ensure_dimension
-
-    if vcp == "VCP-212":
-        file = "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_161526_V06"
-    engine = "nexradlevel2"
-    append_dim = "vcp_time"
-    dtree = load_radar_data(file, engine=engine)
-    dtree = (dtree.pipe(fix_angle)).xradar.georeference()
-    if (engine == "nexradlevel2") & check_dynamic_scan(dtree):
-        dtree = align_dynamic_scan(dtree, append_dim=append_dim)
-    else:
-        dtree = dtree.pipe(ensure_dimension, append_dim)
-    return dtree
-
-
-def load_vcp_samples(json_file_path: str) -> dict:
-    """Load VCP samples from JSON file."""
-    # Get the directory where this script is located
-    try:
-        with open(json_file_path, "r") as f:
+        with open(samples_file, "r") as f:
             return json.load(f)
     except FileNotFoundError:
-        print(f"VCP samples file not found at: {json_file_path}")
-        print("Please ensure data/vcp_samples.json exists in the project directory.")
-        return {}
+        raise FileNotFoundError(f"VCP samples file not found: {samples_file}")
     except json.JSONDecodeError as e:
-        print(f"Error parsing VCP samples JSON: {e}")
-        return {}
+        raise json.JSONDecodeError(
+            f"Error parsing VCP samples JSON: {e}", e.doc, e.pos
+        ) from e
+
+
+def _parse_nexrad_filename(filename: str, radar: str) -> datetime | None:
+    """
+    Extract datetime from NEXRAD filename.
+
+    Parameters
+    ----------
+    filename : str
+        NEXRAD filename to parse.
+    radar : str
+        4-character radar site identifier.
+
+    Returns
+    -------
+    datetime | None
+        Parsed datetime from filename, or None if parsing fails.
+    """
+    pattern = re.compile(NEXRAD_FILENAME_PATTERN.format(radar=radar))
+    match = pattern.match(filename)
+    if not match:
+        return None
+
+    try:
+        date_part, time_part = match.groups()
+        return datetime.strptime(f"{date_part}_{time_part}", "%Y%m%d_%H%M%S")
+    except ValueError:
+        return None
+
+
+def _get_files_for_date(
+    fs: fsspec.AbstractFileSystem,
+    radar: str,
+    date: datetime,
+    start_dt: datetime,
+    end_dt: datetime,
+) -> list[str]:
+    """
+    Get NEXRAD files for a specific date within time range.
+
+    Parameters
+    ----------
+    fs : fsspec.AbstractFileSystem
+        Filesystem interface for S3 access.
+    radar : str
+        4-character radar site identifier.
+    date : datetime
+        Date to search for files.
+    start_dt : datetime
+        Start time filter.
+    end_dt : datetime
+        End time filter.
+
+    Returns
+    -------
+    list[str]
+        List of S3 file paths for the date within time range.
+    """
+    date_str = date.strftime("%Y/%m/%d")
+    prefix = f"{NEXRAD_S3_BUCKET}/{date_str}/{radar}/"
+    file_list = []
+
+    try:
+        paths = fs.glob(f"{prefix}{radar}*")
+        for path in paths:
+            filename = path.split("/")[-1]
+            file_datetime = _parse_nexrad_filename(filename, radar)
+
+            if file_datetime and start_dt <= file_datetime <= end_dt:
+                file_list.append(f"s3://{path}")
+
+    except (FileNotFoundError, PermissionError, Exception):
+        # Skip errors and continue processing other dates
+        pass
+
+    return file_list
+
+
+def list_nexrad_files(
+    radar: str = "KVNX",
+    start_time: str = "2011-05-20 00:00",
+    end_time: str = "2011-05-20 23:59",
+) -> list[str]:
+    """
+    List NEXRAD Level II files from AWS S3 bucket for a given radar and time range.
+
+    Parameters
+    ----------
+    radar : str, default "KVNX"
+        4-character radar site identifier (e.g., "KVNX", "KTLX", "KILX").
+    start_time : str, default "2011-05-20 00:00"
+        Start time in format "YYYY-MM-DD HH:MM".
+    end_time : str, default "2011-05-20 23:59"
+        End time in format "YYYY-MM-DD HH:MM".
+
+    Returns
+    -------
+    list[str]
+        List of S3 paths to NEXRAD Level II files within the specified time range,
+        sorted chronologically.
+
+    Raises
+    ------
+    ValueError
+        If time format is invalid, start_time is after end_time, or radar is invalid.
+
+    Examples
+    --------
+    >>> # Get files for Moore tornado outbreak
+    >>> files = list_nexrad_files("KTLX", "2013-05-20 19:00", "2013-05-20 23:00")  # doctest: +SKIP
+    >>> len(files)  # doctest: +SKIP
+    48
+
+    >>> # Get single day of data
+    >>> files = list_nexrad_files("KVNX", "2011-05-20 00:00", "2011-05-20 23:59")  # doctest: +SKIP
+
+    Notes
+    -----
+    This function accesses the NOAA NEXRAD Level II S3 bucket at:
+    s3://noaa-nexrad-level2/YYYY/MM/DD/RADAR/RADAR...
+
+    NEXRAD filenames follow the pattern: RADARYYYYMMDD_HHMMSS_V06
+    where RADAR is the 4-character site identifier.
+    """
+    # Input validation
+    try:
+        start_dt = datetime.strptime(start_time, "%Y-%m-%d %H:%M")
+        end_dt = datetime.strptime(end_time, "%Y-%m-%d %H:%M")
+    except ValueError as e:
+        raise ValueError(f"Invalid time format. Use 'YYYY-MM-DD HH:MM'. Error: {e}")
+
+    if start_dt > end_dt:
+        raise ValueError("start_time must be before or equal to end_time")
+
+    if not radar or len(radar) != 4:
+        raise ValueError("radar must be a 4-character string (e.g., 'KVNX')")
+
+    # Initialize filesystem
+    fs = fsspec.filesystem("s3", anon=True)
+    file_list = []
+
+    # Process each day in the range
+    current_dt = start_dt.replace(hour=0, minute=0, second=0)
+    while current_dt.date() <= end_dt.date():
+        daily_files = _get_files_for_date(fs, radar, current_dt, start_dt, end_dt)
+        file_list.extend(daily_files)
+        current_dt += timedelta(days=1)
+
+    return sorted(file_list)

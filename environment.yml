@@ -12,12 +12,15 @@ dependencies:
   - dask
   - netcdf4
   - bottleneck
+  - coiled
+  - hvplot
+  - datashader
   - zarr>=3.1.0
   - ca-certificates
   - certifi
   - openssl
   - s3fs>=2025.5.1
-  - xarray>=2025.07.1
+  - xarray>=2025.08.0
   - xradar>=0.10.0
   - pytest
   - pytest-cov
@@ -29,8 +32,8 @@ dependencies:
   - icechunk>=1.0.3
   - arraylake>=0.21.1
   - pandas
-  - numpy
-  - icechunk
+  - numpy<2.3
+  - icechunk>=1.1
   - pandas
   - pip
   - pip:

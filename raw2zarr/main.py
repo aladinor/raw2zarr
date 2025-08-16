@@ -91,14 +91,14 @@ def get_cluster():
 def main():
 
     # IRIS Colombia
-    # radar_files, zarr_store, engine = get_radar_files("iris")
+    radar_files, zarr_store, engine = get_radar_files("iris")
 
     # NEXRAD
     # radar_files, zarr_store, engine = get_radar_files("nexradlevel2")
     # t = load_radar_data(radar_files[0], engine=engine)
     # if dynamic scans
     # radar_files = get_dynamic_scans()
-    radar_files, zarr_store, engine = files_with_shape_mismatch("VCP-11")
+    # radar_files, zarr_store, engine = files_with_shape_mismatch("VCP-32")
     repo = get_icechunk_repo(zarr_store=zarr_store)
     cluster = get_cluster()
     # radar_files = glob.glob("../data/*")

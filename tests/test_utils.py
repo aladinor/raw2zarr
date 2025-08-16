@@ -7,22 +7,20 @@ including edge cases, error conditions, and mocking external dependencies.
 """
 import json
 import os
-import tempfile
 import time
 from datetime import datetime
-from pathlib import Path
-from unittest.mock import Mock, patch, mock_open
+from unittest.mock import Mock, mock_open, patch
 
 import pytest
 
 from raw2zarr.utils import (
-    timer_func,
-    make_dir,
-    create_query,
-    load_vcp_samples,
-    list_nexrad_files,
-    _parse_nexrad_filename,
     _get_files_for_date,
+    _parse_nexrad_filename,
+    create_query,
+    list_nexrad_files,
+    load_vcp_samples,
+    make_dir,
+    timer_func,
 )
 
 
@@ -524,9 +522,10 @@ class TestListNexradFiles:
 
     def test_list_nexrad_files_default_parameters(self):
         """Test list_nexrad_files with default parameters."""
-        with patch("raw2zarr.utils.fsspec.filesystem") as mock_filesystem, patch(
-            "raw2zarr.utils._get_files_for_date"
-        ) as mock_get_files:
+        with (
+            patch("raw2zarr.utils.fsspec.filesystem") as mock_filesystem,
+            patch("raw2zarr.utils._get_files_for_date") as mock_get_files,
+        ):
 
             mock_fs = Mock()
             mock_filesystem.return_value = mock_fs

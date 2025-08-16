@@ -1,11 +1,10 @@
 #!/usr/bin/env python
-import os
 import json
+import os
 import re
 from datetime import datetime, timedelta
 from functools import wraps
 from time import time
-from typing import Any
 
 import fsspec
 
@@ -131,7 +130,7 @@ def load_vcp_samples(samples_file: str = "data/vcp_samples.json") -> dict:
     ['VCP-11', 'VCP-12', 'VCP-21']
     """
     try:
-        with open(samples_file, "r") as f:
+        with open(samples_file) as f:
             return json.load(f)
     except FileNotFoundError:
         raise FileNotFoundError(f"VCP samples file not found: {samples_file}")

@@ -29,6 +29,8 @@ builtins = ["ellipsis"]
 exclude = [
     ".eggs",
     "doc",
+    "*.ipynb",
+    "notebooks/",
 ]
 
 

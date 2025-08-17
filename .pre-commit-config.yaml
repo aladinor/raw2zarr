@@ -1,12 +1,25 @@
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
+    rev: v4.4.0
     hooks:
     -   id: check-yaml
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
 -   repo: https://github.com/psf/black
-    rev: 22.10.0
+    rev: 23.12.1
     hooks:
     -   id: black
         exclude: ^zarr/
+    -   id: black-jupyter
+        exclude: ^zarr/
+-   repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.1.8
+    hooks:
+    -   id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+        exclude: ".*\\.ipynb$"
+-   repo: https://github.com/nbQA-dev/nbQA
+    rev: 1.7.1
+    hooks:
+    -   id: nbqa-ruff
+        args: [--fix, --exit-non-zero-on-fix]

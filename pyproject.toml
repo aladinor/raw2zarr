@@ -25,12 +25,10 @@ line-length = 88
 
 [tool.ruff]
 target-version = "py39"
-builtins = ["ellipsis"]
+builtins = ["ellipsis", "display", "get_ipython"]
 exclude = [
     ".eggs",
     "doc",
-    "*.ipynb",
-    "notebooks/",
 ]
 
 
@@ -53,4 +51,11 @@ select = [
     "I",
     # Pyupgrade
     "UP",
+]
+
+# Notebook-specific configuration
+[tool.ruff.lint.per-file-ignores]
+"*.ipynb" = [
+    "E402",  # Module level import not at top of file (common in notebooks)
+    "F821",  # Undefined name (for notebook globals like display)
 ]

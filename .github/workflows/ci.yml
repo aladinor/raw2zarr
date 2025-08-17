@@ -26,9 +26,9 @@ jobs:
       - name: Black style check (notebooks)
         run: nbqa black notebooks/
       - name: Lint with ruff (excluding notebooks)
-        run: ruff check . --fix
+        run: ruff check . --fix --exclude="*.ipynb"
       - name: Lint notebooks with ruff (code cells only)
-        run: nbqa ruff notebooks/ --fix
+        run: nbqa ruff notebooks/ --fix --exit-non-zero-on-fix
 
   build_0:
     name: raw2zarr unit tests - linux (py${{ matrix.python-version }}, numpy ${{ matrix.numpy-version }})

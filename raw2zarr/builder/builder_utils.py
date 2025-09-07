@@ -130,9 +130,9 @@ def generate_vcp_samples(
     Returns:
         Dictionary of VCP samples
     """
-    import random
     import json
     import os
+    import random
 
     print("🔍 Generating VCP validation samples:")
 
@@ -171,7 +171,7 @@ def generate_vcp_samples(
     return vcp_samples
 
 
-def extract_single_metadata(file_info):
+def extract_single_metadata(file_info, engine="iris"):
     """Extract metadata from a single file - optimized for Client.map()"""
     original_index, file = file_info
     try:

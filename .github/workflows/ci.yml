@@ -25,8 +25,10 @@ jobs:
         run: black --check . --exclude '\.ipynb$'
       - name: Black style check (notebooks)
         run: nbqa black notebooks/
-      - name: Lint with ruff
-        run: ruff check . --fix
+      - name: Lint with ruff (excluding notebooks)
+        run: ruff check . --fix --exclude="*.ipynb"
+      - name: Lint notebooks with ruff (code cells only)
+        run: nbqa ruff notebooks/ --fix
 
   build_0:
     name: raw2zarr unit tests - linux (py${{ matrix.python-version }}, numpy ${{ matrix.numpy-version }})
@@ -133,7 +135,7 @@ jobs:
 
       - name: Execute Selected Notebooks
         run: |
-          pytest --nbmake --nbmake-timeout=300 notebooks/1.Sigmet2Zarr.ipynb notebooks/2.NexRad2Zarr.ipynb
+          pytest --nbmake --nbmake-timeout=300 notebooks/1.Sigmet2Zarr.ipynb notebooks/2.NexRad2Zarr.ipynb notebooks/3.RYZHKOV-QVP.ipynb
 
       - name: Cleanup
         if: always()

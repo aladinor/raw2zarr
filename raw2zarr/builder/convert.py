@@ -35,8 +35,9 @@ def convert_files(
             The dimension name to append data along (e.g., "vcp_time").
         repo (icechunk.Repository):
             Icechunk repository object managing the Zarr store.
-        cluster (optional):
-            Dask cluster for distributed processing. Required for parallel mode, ignored for sequential mode.
+        cluster (LocalCluster | object | None, optional):
+            Dask cluster for distributed processing. REQUIRED when process_mode="parallel".
+            Not used and can be None when process_mode="sequential". Defaults to None.
         process_mode (Literal["sequential", "parallel"], optional):
             Whether to use sequential or parallel processing. Defaults to "sequential".
         engine (str, optional):
@@ -59,9 +60,14 @@ def convert_files(
         ValueError:
             If an unsupported process_mode is provided.
 
-    Example:
-        >>> convert_files(["file1.RAW", "file2.RAW"], append_dim="vcp_time", repo=icechunk.repository)
-        >>> convert_files(files, append_dim="vcp_time", repo=icechunk.Repository, process_mode="parallel")
+    Examples:
+        # Sequential processing (no cluster needed)
+        >>> convert_files(["file1.RAW", "file2.RAW"], append_dim="vcp_time", repo=repo)
+        >>> convert_files(files, append_dim="vcp_time", repo=repo, process_mode="sequential")
+
+        # Parallel processing (cluster required)
+        >>> cluster = LocalCluster(n_workers=4)
+        >>> convert_files(files, append_dim="vcp_time", repo=repo, process_mode="parallel", cluster=cluster)
     """
     if process_mode == "sequential":
         kwargs.pop("batch_size", None)

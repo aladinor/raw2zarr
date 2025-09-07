@@ -1,4 +1,4 @@
-<img src="radar_FAIR.png" alt="thumbnail" width="800"/>
+<img src="images/radar_datatree.png" alt="thumbnail" width="550"/>
 
 # FAIR open radar data
 [![DOI](https://zenodo.org/badge/658848435.svg)](https://zenodo.org/doi/10.5281/zenodo.10069535)
@@ -44,6 +44,19 @@ with the new open data paradigm, emphasizing the FAIR principles (Findable, Acce
 > **This project is currently in high development mode.**
 > Features may change frequently, and some parts of the library may be incomplete or subject to change. Please proceed with caution.
 
+> [!CAUTION]
+> **Critical Storage Requirements Warning**
+> Processing radar data creates massive storage requirements. Based on real-world experience:
+> - **1 month of data ≈ 800GB** of Zarr output storage
+> - **1 year of data ≈ 10TB+** of storage required
+> - Processing periods longer than hours can quickly exhaust available storage
+>
+> **Recommendations:**
+> - Limit initial testing to **hourly datasets** to understand storage impact
+> - Plan storage capacity carefully before production deployments
+> - Consider cloud storage costs for large-scale processing
+> - Monitor disk usage closely during processing
+
 
 ### Running on Your Own Machine
 If you are interested in running this material locally on your computer, you will need to follow this workflow:
@@ -70,30 +83,55 @@ If you are interested in running this material locally on your computer, you wil
     jupyter lab
     ```
 
-## Large-Scale Processing with Coiled
+## Processing Modes
 
-For processing large radar datasets (months/years), the library supports distributed computing with Coiled clusters:
+The library supports two processing modes for converting radar data to Zarr format:
+
+### Sequential Processing (No Cluster Required)
+
+For small datasets, testing, and development:
 
 ```python
-import coiled
 from raw2zarr.builder.convert import convert_files
+from raw2zarr.builder.builder_utils import get_icechunk_repo
 
-# Create Coiled cluster
-cluster = coiled.Cluster(
-    name="radar-processing",
-    software="nexrad-env",
-    n_workers=200,
-    worker_memory="16GiB"
-)
+# Create repository
+repo = get_icechunk_repo("output.zarr")
 
-# Process with distributed cluster
+# Sequential processing
 convert_files(
     radar_files=files,
     append_dim="vcp_time",
-    repo=icechunk_repo,
-    process_mode="parallel",
-    cluster=cluster  # Pass Coiled cluster
+    repo=repo,
+    process_mode="sequential",  # No cluster needed
+    engine="nexradlevel2"
 )
+```
+
+### Parallel Processing (Cluster Required)
+
+For large datasets and production use:
+
+```python
+from dask.distributed import LocalCluster
+from raw2zarr.builder.convert import convert_files
+from raw2zarr.builder.builder_utils import get_icechunk_repo
+
+# Create repository and cluster
+repo = get_icechunk_repo("output.zarr")
+cluster = LocalCluster(n_workers=4, memory_limit="10GB")
+
+try:
+    convert_files(
+        radar_files=files,
+        append_dim="vcp_time",
+        repo=repo,
+        process_mode="parallel",
+        cluster=cluster,  # Required for parallel mode
+        engine="nexradlevel2"
+    )
+finally:
+    cluster.close()
 ```
 ## References
 * R. P. Abernathey et al., "Cloud-Native Repositories for Big Scientific Data," in Computing in Science & Engineering, vol. 23, no. 2, pp. 26-35, 1 March-April 2021, doi: 10.1109/MCSE.2021.3059437.

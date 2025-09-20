@@ -129,6 +129,7 @@ def append_parallel(
     generate_samples: bool = False,
     sample_percentage: float = 15.0,
     samples_output_path: str = None,
+    vcp_config_file: str = "vcp_nexrad.json",
 ) -> None:
     """
     Append radar files to a Zarr store in parallel using Dask.
@@ -189,14 +190,11 @@ def append_parallel(
 
     session = repo.writable_session(branch=branch)
 
-    print(f"Detected {len(client.scheduler_info()['workers'])} workers")
-    print(
-        f"Using Client.map() for fastest graph construction with {len(radar_files)} files"
-    )
-
     # Ultra-fast graph construction with Client.map()
     radar_files_with_indices = list(enumerate(radar_files))
-    futures = client.map(extract_single_metadata, radar_files_with_indices)
+    futures = client.map(
+        extract_single_metadata, radar_files_with_indices, engine=engine
+    )
     metadata_results = client.gather(futures)
 
     # Filter out problematic files and unwanted VCPs
@@ -276,6 +274,7 @@ def append_parallel(
         zarr_format=zarr_format,
         consolidated=consolidated,
         vcp_time_mapping=vcp_time_mapping,
+        vcp_config_file=vcp_config_file,
     )
     session = repo.writable_session(branch=branch)
     fork = session.fork()
@@ -335,12 +334,6 @@ def append_parallel(
     if successful_sessions:
         session.merge(*successful_sessions)
         session.commit(
-            f"writing {len(successful_sessions)}/{len(radar_files)} Nexrad files to zarr store"
+            f"writing {len(successful_sessions)}/{len(radar_files)} radar files to zarr store"
         )
-
-        if write_failed_files:
-            print(
-                f"✅ Successfully wrote {len(successful_sessions)} files, {len(write_failed_files)} failures logged"
-            )
-    else:
-        print("❌ No files were successfully written")
+        print(f"Wrote {len(radar_files)} radar files to zarr store")

@@ -44,9 +44,9 @@ class VcpConfig(BaseModel):
 
 
 class VcpTemplateManager:
-    def __init__(self, vcp_nexrad_config: str = "vcp_nexrad.json"):
+    def __init__(self, vcp_config_file: str = "vcp_nexrad.json"):
         config_dir = Path(__file__).resolve().parent.parent / "config"
-        self.vcp_nexrad_path = config_dir / vcp_nexrad_config
+        self.vcp_nexrad_path = config_dir / vcp_config_file
 
         if not self.vcp_nexrad_path.exists():
             raise FileNotFoundError(
@@ -247,13 +247,12 @@ class VcpTemplateManager:
 
         with xr.set_options(keep_attrs=True):
             ds = ds.xradar.georeference()
-            ds["x"] = ds["x"].compute()
-            ds["y"] = ds["y"].compute()
-            ds["z"] = ds["z"].compute()
-            ds["longitude"] = ds["longitude"].compute()
-            ds["latitude"] = ds["latitude"].compute()
-            ds["altitude"] = ds["altitude"].compute()
-            ds["crs_wkt"] = ds["crs_wkt"].compute()
+            for name in ("x", "y", "z", "longitude", "latitude", "altitude", "crs_wkt"):
+                if name in ds.coords:
+                    ds.coords[name] = ds.coords[name].compute()
+                elif name in ds:
+                    ds = ds.set_coords(name)
+                    ds.coords[name] = ds.coords[name].compute()
         return ds
 
     def create_empty_vcp_tree(
@@ -263,7 +262,6 @@ class VcpTemplateManager:
         remove_strings: bool = True,
         append_dim_time: pd.Timestamp | None = None,
     ) -> xr.DataTree:
-
         vcp = radar_info["vcp"]
         vcp_info = self.get_vcp_info(vcp)
         size_append_dim = len(append_dim_time)
@@ -346,6 +344,7 @@ class VcpTemplateManager:
             # Use the original create_root approach for each VCP
             from .template_utils import create_additional_groups, create_root
 
+            vcp_config = self.get_vcp_info(vcp_name)
             vcp_root_dict = create_root(
                 vcp_radar_info,
                 append_dim=append_dim,

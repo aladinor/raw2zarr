@@ -85,6 +85,7 @@ def init_zarr_store(
     consolidated: bool,
     remove_strings: bool = True,
     vcp_time_mapping: dict | None = None,
+    vcp_config_file: str = "vcp_nexrad.json",
 ) -> list[tuple[int, str]]:
     """
     Initialize Zarr store with VCP-specific templates if it doesn't exist.
@@ -98,6 +99,7 @@ def init_zarr_store(
         consolidated: Whether to consolidate metadata
         remove_strings: Whether to remove string variables
         vcp_time_mapping: VCP time mapping for multi-VCP support
+        vcp_config_file: VCP configuration file name in the config directory
 
     Returns:
         List of remaining files to process
@@ -109,7 +111,10 @@ def init_zarr_store(
     if not exis_zarr_store:
         idx, first_file = files.pop(0)
         dtree = radar_datatree(first_file, engine=engine)
-        vcp = dtree[dtree.groups[1]].attrs["scan_name"]
+        try:
+            vcp = dtree[dtree.groups[1]].attrs["scan_name"].strip()
+        except KeyError:
+            vcp = "DEFAULT"
         radar_info = {
             "lon": dtree[vcp].longitude.item(),
             "lat": dtree[vcp].latitude.item(),
@@ -131,6 +136,7 @@ def init_zarr_store(
             base_radar_info=radar_info,
             append_dim=append_dim,
             remove_strings=remove_strings,
+            vcp_config_file=vcp_config_file,
         )
         if remove_strings:
             final_tree = remove_string_vars(final_tree)
@@ -149,7 +155,7 @@ def init_zarr_store(
         dtree_to_zarr(final_tree, **writer_args)
 
         session.commit("Initial commit: VCP-specific xarray template created")
-
+        print(f"Template created with {len(final_tree.children)} nodes")
         # Return all files including the first one for region writing
         files.insert(0, (idx, first_file))
         return files

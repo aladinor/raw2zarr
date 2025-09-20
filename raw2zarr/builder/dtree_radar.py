@@ -1,6 +1,6 @@
 import os
-from collections.abc import Iterable
 import warnings
+from collections.abc import Iterable
 
 from xarray import DataTree
 from xarray.backends.common import _normalize_path
@@ -56,7 +56,7 @@ def radar_datatree(
         dtree = remove_dims(dtree, "sweep")
     task_name = dtree.attrs.get("scan_name", "").strip()
     if not task_name:
-        raise ValueError("Missing 'scan_name' in radar data attributes.")
+        warnings.warn("Missing 'scan_name' in radar data attributes", UserWarning)
 
     dtree = dtree.pipe(fix_angle).pipe(apply_georeferencing)
     try:
@@ -67,7 +67,10 @@ def radar_datatree(
             UserWarning,
         )
     dtree = ensure_dimension(dtree, append_dim=append_dim)
-    new_dtree = DataTree.from_dict({task_name: dtree})
+    if task_name:
+        new_dtree = DataTree.from_dict({task_name: dtree})
+    else:
+        new_dtree = DataTree.from_dict({"DEFAULT": dtree})
     new_dtree.encoding = dtree_encoding(new_dtree, append_dim=append_dim)
     return new_dtree
 

@@ -45,7 +45,6 @@ def dtree_to_zarr(
             f"unexpected encoding group name(s) provided: {set(encoding) - set(dtree.groups)}"
         )
     for node in dtree.subtree:
-
         at_root = node is dtree
         if node.is_empty | node.is_root:
             continue
@@ -118,6 +117,18 @@ def write_dtree_region(
     if remove_strings:
         dtree = remove_string_vars(dtree)
         dtree.encoding = dtree_encoding(dtree, append_dim=append_dim)
+
+    # TODO: all backends should return sweep_group_name and sweep_fixed_angle at the root. (Missing in NExrad and Iris)
+    remove_root_vars = True
+    if remove_root_vars:
+        root_path = list(dtree.children)[0]
+        dtree_dict = dtree.to_dict()
+        try:
+            dtree_dict[f"/{root_path}"] = dtree_dict[f"/{root_path}"].drop_vars(
+                ["sweep_group_name", "sweep_fixed_angle"]
+            )
+        except ValueError:
+            dtree = DataTree.from_dict(dtree_dict)
 
     region = {append_dim: slice(idx, idx + 1)}
 

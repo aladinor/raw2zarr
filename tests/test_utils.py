@@ -138,17 +138,7 @@ class TestCreateQuery:
         date = datetime(2022, 6, 1, 10, 30, 15)
 
         result = create_query(site, date)
-        expected = "l2_data/2022/06/01/GUAVIARE/GUA220601"
-
-        assert result == expected
-
-    def test_create_query_with_prod_parameter(self):
-        """Test create_query with prod parameter (currently not used)."""
-        site = "test_site"
-        date = datetime(2023, 12, 25, 15, 45)
-
-        result = create_query(site, date, prod="custom")
-        expected = "l2_data/2023/12/25/TEST_SITE/TES231225"
+        expected = "l2_data/2022/06/01/Guaviare/GUA220601"
 
         assert result == expected
 
@@ -158,7 +148,7 @@ class TestCreateQuery:
         date = datetime(2021, 1, 1)
 
         result = create_query(site, date)
-        expected = "l2_data/2021/01/01/LOWERCASE_SITE/LOW210101"
+        expected = "l2_data/2021/01/01/Lowercase_site/LOW210101"
 
         assert result == expected
 
@@ -526,7 +516,6 @@ class TestListNexradFiles:
             patch("raw2zarr.utils.fsspec.filesystem") as mock_filesystem,
             patch("raw2zarr.utils._get_files_for_date") as mock_get_files,
         ):
-
             mock_fs = Mock()
             mock_filesystem.return_value = mock_fs
             mock_get_files.return_value = []

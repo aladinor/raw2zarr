@@ -132,7 +132,7 @@ def create_multi_vcp_template(
                 append_dim_time=vcp_info["timestamps"],  # VCP-specific timestamps
             )
             vcp_trees[vcp_name] = vcp_tree[vcp_name]
-            print(f"  ✅ Created template for {vcp_name}")
+            print(f"Created template for {vcp_name}")
 
     final_tree = xr.DataTree.from_dict(vcp_trees)
 

@@ -93,7 +93,7 @@ class TestConvertFiles:
                 append_dim="vcp_time",
                 repo=mock_repo,
                 process_mode="sequential",
-                engine="nexradlevel2"
+                engine="nexradlevel2",
                 # No vcp_config_file specified - should use default
             )
 
@@ -311,7 +311,6 @@ class TestConfigurationErrorHandling:
                                 mock_remove.return_value = MagicMock()
                                 mock_encoding.return_value = {}
                                 mock_resolve.return_value = {}
-
                                 try:
                                     init_zarr_store(
                                         files=[(0, "test_file.h5")],

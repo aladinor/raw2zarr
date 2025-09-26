@@ -34,13 +34,13 @@ def get_radar_files(engine):
         str_bucket = "s3://s3-radaresideam/"
         query = create_query(date=date_query, site=radar_name)
         radar_files = [f"s3://{i}" for i in sorted(fs.glob(f"{str_bucket}{query}*"))]
-        zs = f"../zarr/{radar_name}.zarr"
+        zs = f"../zarr/{radar_name}"
         vcp_config_file = "ideam.json"
         return radar_files, zs, "iris", vcp_config_file
     elif engine == "nexradlevel2":
         # NEXRAD
         radar = "KVNX"
-        zs = f"../zarr/{radar}.zarr"
+        zs = f"../zarr/{radar}"
         query = f"2011/05/20/{radar}/{radar}"
         str_bucket = "s3://unidata-nexrad-level2/"
         radar_files = [f"s3://{i}" for i in sorted(fs.glob(f"{str_bucket}{query}*"))]
@@ -49,7 +49,7 @@ def get_radar_files(engine):
         return radar_files, zs, "nexradlevel2", vcp_config_file
     elif engine == "odim":
         radar = "CASET"
-        zs = f"../zarr/{radar}2.zarr"
+        zs = f"../zarr/{radar}"
         radar_files = sorted(
             glob.glob(
                 f"//media/alfonso/drive/Alfonso/python/raw2zarr/data/ECCC/*_{radar}.h5"
@@ -122,7 +122,7 @@ def get_cluster():
 @timer_func
 def main():
     # IRIS Colombia
-    radar_files, zarr_store, engine, vcp_config_file = get_radar_files("iris")
+    # radar_files, zarr_store, engine, vcp_config_file = get_radar_files("iris")
     # NEXRAD
     # radar_files, zarr_store, engine, vcp_config_file= get_radar_files("nexradlevel2")
     # ECCC
@@ -143,7 +143,7 @@ def main():
     append_dim = "vcp_time"
 
     convert_files(
-        radar_files[:4],  # Just 2 files for quick test
+        radar_files,  # Just 2 files for quick test
         append_dim=append_dim,
         repo=repo,
         zarr_format=zarr_version,

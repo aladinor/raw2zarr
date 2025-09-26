@@ -127,6 +127,7 @@ def write_dtree_region(
             dtree_dict[f"/{root_path}"] = dtree_dict[f"/{root_path}"].drop_vars(
                 ["sweep_group_name", "sweep_fixed_angle"]
             )
+            dtree = DataTree.from_dict(dtree_dict)
         except ValueError:
             dtree = DataTree.from_dict(dtree_dict)
 

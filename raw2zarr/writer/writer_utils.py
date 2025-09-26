@@ -1,8 +1,9 @@
 from typing import Any
 
 import xarray as xr
-from icechunk import Session
+from icechunk import Repository, Session
 from icechunk.session import Session as IcechunkSession
+from xarray import DataTree, open_datatree
 
 from ..builder.dtree_radar import radar_datatree
 from ..templates.template_utils import remove_string_vars
@@ -160,3 +161,66 @@ def init_zarr_store(
         files.insert(0, (idx, first_file))
         return files
     return files
+
+
+def check_cords(repo: Repository) -> None:
+    required_cords = ["x", "y", "z", "time"]
+
+    session = repo.readonly_session("main")
+    dtree = open_datatree(
+        session.store,
+        zarr_format=3,
+        consolidated=False,
+        chunks=None,
+        engine="zarr",
+    )
+
+    def cords_in_sweeps(dt: DataTree):
+        """Check if all sweeps have required coordinates"""
+        for path in dt.match("*/sweep_*").groups[2:]:
+            ds = dt[path].ds
+            has_coords = all(coord in ds.coords for coord in required_cords)
+            if not has_coords:
+                missing = [c for c in required_cords if c not in ds.coords]
+                print(f"Missing coordinates in {path}: {missing}")
+                return False
+        return True
+
+    cords_exist = cords_in_sweeps(dtree)
+
+    if not cords_exist:
+        print("Fixing coordinate variables...")
+        # Try coordinate-only write first (efficient)
+        try:
+            session = repo.writable_session("main")
+            print("Attempting coordinate-only fix (fast)...")
+            for path in dtree.match("*/sweep_*").groups[2:]:
+                ds = dtree[path].ds
+                coords_to_set = [
+                    coord
+                    for coord in required_cords
+                    if coord in ds.data_vars and coord not in ds.coords
+                ]
+
+                if coords_to_set:
+                    # Create minimal dataset with just the coordinates to fix
+                    coord_data = {coord: ds[coord] for coord in coords_to_set}
+                    coord_ds = xr.Dataset(coord_data).set_coords(coords_to_set)
+
+                    # Write only the coordinate metadata updates
+                    coord_ds.to_zarr(
+                        session.store,
+                        group=path,
+                        mode="a",
+                        consolidated=False,
+                        zarr_format=3,
+                    )
+
+            snapshot_id = session.commit("Fixed coordinate variables")
+            print(f"Coordinate fix committed as snapshot {snapshot_id}")
+
+        except Exception as e:
+            print(f"Coordinate-only fix failed: {e}")
+
+    else:
+        print("All coordinates are properly set.")

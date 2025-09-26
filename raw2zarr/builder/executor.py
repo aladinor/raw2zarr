@@ -11,6 +11,7 @@ from ..templates.template_utils import remove_string_vars
 from ..templates.vcp_utils import create_vcp_time_mapping
 from ..transform.encoding import dtree_encoding
 from ..writer.writer_utils import (
+    check_cords,
     init_zarr_store,
     resolve_zarr_write_options,
 )
@@ -306,11 +307,6 @@ def append_parallel(
             # Don't log from remote workers - return error info for local logging
             return {"error": f"Write operation failed: {str(e)}", "file": input_file}
 
-    print(
-        f"⚡ Using Client.map() for fastest graph construction with {len(remaining_files)} files"
-    )
-
-    # Ultra-fast graph construction with Client.map()
     write_futures = client.map(write_single_file, remaining_files)
     write_results = client.gather(write_futures)
 
@@ -337,3 +333,5 @@ def append_parallel(
             f"writing {len(successful_sessions)}/{len(radar_files)} radar files to zarr store"
         )
         print(f"Wrote {len(radar_files)} radar files to zarr store")
+
+    check_cords(repo)

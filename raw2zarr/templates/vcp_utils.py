@@ -14,6 +14,7 @@ def create_multi_vcp_template(
     append_dim: str,
     remove_strings: bool = True,
     use_parallel: bool = None,
+    vcp_config_file: str = "vcp_nexrad.json",
 ):
     """
     Create individual xarray templates for each VCP and combine them into a single DataTree.
@@ -29,6 +30,7 @@ def create_multi_vcp_template(
         remove_strings: Whether to remove string variables
         use_parallel: Whether to create VCP templates in parallel. If None, auto-detects
                       based on whether Dask client is available (default: None)
+        vcp_config_file: VCP configuration file name in the config directory (default: "vcp_nexrad.json")
 
     Returns:
         xarray.DataTree: Combined multi-VCP template with proper metadata
@@ -48,25 +50,18 @@ def create_multi_vcp_template(
 
             client = get_client()
             use_parallel = True
-            print(
-                f"🔍 Detected active Dask client with {len(client.scheduler_info()['workers'])} workers"
-            )
+
         except (ImportError, ValueError):
             # No active Dask client found
             use_parallel = False
-            print("🔍 No active Dask client found, using sequential template creation")
 
     if use_parallel and len(vcp_time_mapping) > 1:
         # Parallel VCP template creation with shared template manager
         from dask.distributed import get_client
 
-        print(
-            f"🚀 Creating {len(vcp_time_mapping)} VCP templates in parallel using Client.map()..."
-        )
-
         # Load config data locally and scatter to workers (avoids file path issues on remote workers)
         client = get_client()
-        local_template_manager = VcpTemplateManager()
+        local_template_manager = VcpTemplateManager(vcp_config_file=vcp_config_file)
 
         # Pre-load config data locally
         config_data = local_template_manager.config
@@ -83,10 +78,11 @@ def create_multi_vcp_template(
                 append_dim_data,
                 remove_strings_data,
                 config_data,
+                vcp_config_file,
             ) = vcp_data
 
             # Create template manager with pre-loaded config (no file I/O on remote workers)
-            template_mgr = VcpTemplateManager()
+            template_mgr = VcpTemplateManager(vcp_config_file=vcp_config_file)
             template_mgr._unified_config = config_data  # Inject pre-loaded config
 
             radar_info_copy = radar_info_data.copy()
@@ -109,6 +105,7 @@ def create_multi_vcp_template(
                 append_dim,
                 remove_strings,
                 config_future,
+                vcp_config_file,
             )
             for vcp_name, vcp_info in vcp_time_mapping.items()
         ]
@@ -119,12 +116,9 @@ def create_multi_vcp_template(
 
         # Convert results to dictionary
         vcp_trees = {vcp_name: vcp_tree for vcp_name, vcp_tree in results}
-        print(f"✅ Completed {len(vcp_trees)} VCP templates in parallel")
 
     else:
-        # Sequential VCP template creation (fallback or single VCP)
-        print(f"🔄 Creating {len(vcp_time_mapping)} VCP templates sequentially...")
-        template_manager = VcpTemplateManager()
+        template_manager = VcpTemplateManager(vcp_config_file=vcp_config_file)
         vcp_trees = {}
 
         for vcp_name, vcp_info in vcp_time_mapping.items():
@@ -138,7 +132,7 @@ def create_multi_vcp_template(
                 append_dim_time=vcp_info["timestamps"],  # VCP-specific timestamps
             )
             vcp_trees[vcp_name] = vcp_tree[vcp_name]
-            print(f"  ✅ Created template for {vcp_name}")
+            print(f"Created template for {vcp_name}")
 
     final_tree = xr.DataTree.from_dict(vcp_trees)
 
@@ -169,7 +163,7 @@ def create_vcp_time_mapping(
     vcp_groups = defaultdict(list)
 
     for i, (file_idx, filepath) in enumerate(file_indices):
-        vcp = f"VCP-{vcps[i]}"
+        vcp = vcps[i]
         vcp_groups[vcp].append(
             {
                 "file_index": file_idx,

@@ -65,6 +65,11 @@ def extract_timestamp(filename: str) -> pd.Timestamp:
         date_part, time_part = match.groups()
         return pd.to_datetime(f"{date_part}{time_part}", format="%y%m%d%H%M%S")
 
+    match = re.search(r"(\d{10})_(\d{2})", filename)
+    if match:
+        date_part, hour_part = match.groups()
+        return pd.to_datetime(f"{date_part}{hour_part}", format="%Y%m%d%H%M")
+
     raise ValueError(f"Could not parse timestamp from filename: {filename}")
 
 
@@ -174,19 +179,42 @@ def generate_vcp_samples(
 def extract_single_metadata(file_info, engine="iris"):
     """Extract metadata from a single file - optimized for Client.map()"""
     original_index, file = file_info
+    timestamp = extract_timestamp(file)
     try:
-        from xradar.io.backends.nexrad_level2 import NEXRADLevel2File
+        if engine == "nexradlevel2":
+            from xradar.io.backends.nexrad_level2 import NEXRADLevel2File
 
-        from raw2zarr.io.preprocess import normalize_input_for_xradar
+            vcp_number = NEXRADLevel2File(
+                normalize_input_for_xradar(file)
+            ).get_msg_5_data()["pattern_number"]
+            vcp = f"VCP-{vcp_number}"
+            return original_index, file, (timestamp, vcp)
+        elif engine == "iris":
+            from xradar.io.backends.iris import _check_iris_file
 
-        timestamp = extract_timestamp(file)
+            _file = normalize_input_for_xradar(file)
+            sid, opener = _check_iris_file(_file)
+            with opener(_file, loaddata=False) as ds:
+                vcp_number = ds.product_hdr["product_configuration"]["task_name"]
+                return original_index, file, (timestamp, vcp_number.strip())
+        elif engine == "odim":
+            import h5netcdf
 
-        # Extract VCP from file header (requires file read)
-        vcp_number = NEXRADLevel2File(
-            normalize_input_for_xradar(file)
-        ).get_msg_5_data()["pattern_number"]
-
-        return original_index, file, (timestamp, vcp_number)
+            with h5netcdf.File(file, "r", decode_vlen_strings=True) as fh:
+                if "scan_name" in fh.attrs:
+                    vcp_number = fh.attrs["scan_name"]
+                    if isinstance(vcp_number, bytes):
+                        vcp_number = vcp_number.decode("utf-8")
+                    return original_index, file, (timestamp, vcp_number)
+                else:
+                    possible_attrs = ["what/object", "what/source", "how/task"]
+                    for attr_path in possible_attrs:
+                        if attr_path in fh.attrs:
+                            vcp_number = fh.attrs[attr_path]
+                            if isinstance(vcp_number, bytes):
+                                vcp_number = vcp_number.decode("utf-8")
+                            return original_index, file, (timestamp, vcp_number)
+                    return original_index, file, (timestamp, "DEFAULT")
 
     except Exception as e:
         return original_index, file, ("ERROR", f"Metadata extraction failed: {str(e)}")

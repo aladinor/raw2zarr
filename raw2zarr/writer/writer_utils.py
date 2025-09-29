@@ -1,8 +1,9 @@
 from typing import Any
 
 import xarray as xr
-from icechunk import Session
+from icechunk import Repository, Session
 from icechunk.session import Session as IcechunkSession
+from xarray import DataTree, open_datatree
 
 from ..builder.dtree_radar import radar_datatree
 from ..templates.template_utils import remove_string_vars
@@ -85,6 +86,7 @@ def init_zarr_store(
     consolidated: bool,
     remove_strings: bool = True,
     vcp_time_mapping: dict | None = None,
+    vcp_config_file: str = "vcp_nexrad.json",
 ) -> list[tuple[int, str]]:
     """
     Initialize Zarr store with VCP-specific templates if it doesn't exist.
@@ -98,6 +100,7 @@ def init_zarr_store(
         consolidated: Whether to consolidate metadata
         remove_strings: Whether to remove string variables
         vcp_time_mapping: VCP time mapping for multi-VCP support
+        vcp_config_file: VCP configuration file name in the config directory
 
     Returns:
         List of remaining files to process
@@ -109,7 +112,10 @@ def init_zarr_store(
     if not exis_zarr_store:
         idx, first_file = files.pop(0)
         dtree = radar_datatree(first_file, engine=engine)
-        vcp = dtree[dtree.groups[1]].attrs["scan_name"]
+        try:
+            vcp = dtree[dtree.groups[1]].attrs["scan_name"].strip()
+        except KeyError:
+            vcp = "DEFAULT"
         radar_info = {
             "lon": dtree[vcp].longitude.item(),
             "lat": dtree[vcp].latitude.item(),
@@ -131,6 +137,7 @@ def init_zarr_store(
             base_radar_info=radar_info,
             append_dim=append_dim,
             remove_strings=remove_strings,
+            vcp_config_file=vcp_config_file,
         )
         if remove_strings:
             final_tree = remove_string_vars(final_tree)
@@ -149,8 +156,71 @@ def init_zarr_store(
         dtree_to_zarr(final_tree, **writer_args)
 
         session.commit("Initial commit: VCP-specific xarray template created")
-
+        print(f"Template created with {len(final_tree.children)} nodes")
         # Return all files including the first one for region writing
         files.insert(0, (idx, first_file))
         return files
     return files
+
+
+def check_cords(repo: Repository) -> None:
+    required_cords = ["x", "y", "z", "time"]
+
+    session = repo.readonly_session("main")
+    dtree = open_datatree(
+        session.store,
+        zarr_format=3,
+        consolidated=False,
+        chunks=None,
+        engine="zarr",
+    )
+
+    def cords_in_sweeps(dt: DataTree):
+        """Check if all sweeps have required coordinates"""
+        for path in dt.match("*/sweep_*").groups[2:]:
+            ds = dt[path].ds
+            has_coords = all(coord in ds.coords for coord in required_cords)
+            if not has_coords:
+                missing = [c for c in required_cords if c not in ds.coords]
+                print(f"Missing coordinates in {path}: {missing}")
+                return False
+        return True
+
+    cords_exist = cords_in_sweeps(dtree)
+
+    if not cords_exist:
+        print("Fixing coordinate variables...")
+        # Try coordinate-only write first (efficient)
+        try:
+            session = repo.writable_session("main")
+            print("Attempting coordinate-only fix (fast)...")
+            for path in dtree.match("*/sweep_*").groups[2:]:
+                ds = dtree[path].ds
+                coords_to_set = [
+                    coord
+                    for coord in required_cords
+                    if coord in ds.data_vars and coord not in ds.coords
+                ]
+
+                if coords_to_set:
+                    # Create minimal dataset with just the coordinates to fix
+                    coord_data = {coord: ds[coord] for coord in coords_to_set}
+                    coord_ds = xr.Dataset(coord_data).set_coords(coords_to_set)
+
+                    # Write only the coordinate metadata updates
+                    coord_ds.to_zarr(
+                        session.store,
+                        group=path,
+                        mode="a",
+                        consolidated=False,
+                        zarr_format=3,
+                    )
+
+            snapshot_id = session.commit("Fixed coordinate variables")
+            print(f"Coordinate fix committed as snapshot {snapshot_id}")
+
+        except Exception as e:
+            print(f"Coordinate-only fix failed: {e}")
+
+    else:
+        print("All coordinates are properly set.")

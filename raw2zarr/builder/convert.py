@@ -19,6 +19,7 @@ def convert_files(
     engine: str = "iris",
     remove_strings: bool = True,
     log_file: str = None,
+    vcp_config_file: str = "vcp_nexrad.json",
     **kwargs,
 ) -> None:
     """
@@ -77,6 +78,7 @@ def convert_files(
             repo=repo,
             engine=engine,
             remove_strings=remove_strings,
+            vcp_config_file=vcp_config_file,
             **kwargs,
         )
     elif process_mode == "parallel":
@@ -88,6 +90,7 @@ def convert_files(
             remove_strings=remove_strings,
             cluster=cluster,
             log_file=log_file,
+            vcp_config_file=vcp_config_file,
             **kwargs,
         )
     else:

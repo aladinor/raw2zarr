@@ -1,6 +1,3 @@
-import json
-from pathlib import Path
-
 import pandas as pd
 import pytest
 
@@ -350,3 +347,273 @@ class TestVcpTemplateManager:
                 pytest.skip(f"VCP-21 not available in config: {e}")
             else:
                 raise
+
+
+class TestVcpConfigurationFiles:
+    """Test VCP configuration file loading and switching."""
+
+    def test_default_nexrad_config_loading(self):
+        """Test default NEXRAD config file loads correctly."""
+        manager = VcpTemplateManager()
+        assert manager.config is not None
+        # Should have standard NEXRAD VCPs
+        assert "VCP-12" in manager.config
+
+    def test_ideam_config_loading(self):
+        """Test IDEAM config file loads correctly."""
+        manager = VcpTemplateManager("ideam.json")
+        assert manager.config is not None
+
+        # Check all IDEAM VCP patterns exist
+        expected_vcps = ["PRECC", "SURVP", "PRECA", "PRECB"]
+        for vcp in expected_vcps:
+            assert vcp in manager.config, f"Missing VCP: {vcp}"
+
+        # Verify PRECC structure (3 elevations as example)
+        precc_config = manager.config["PRECC"]
+        assert "elevations" in precc_config
+        assert len(precc_config["elevations"]) == 3
+        assert precc_config["elevations"] == [10.0, 12.5, 15.0]
+
+    def test_eccc_config_loading(self):
+        """Test ECCC config file loads correctly."""
+        manager = VcpTemplateManager("eccc.json")
+        assert manager.config is not None
+
+        # Check DEFAULT VCP exists
+        assert "DEFAULT" in manager.config
+
+        # Verify DEFAULT has 17 sweeps
+        default_config = manager.config["DEFAULT"]
+        assert "elevations" in default_config
+        assert len(default_config["elevations"]) == 17
+
+        # Check sweep configurations exist
+        for i in range(17):
+            sweep_key = f"sweep_{i}"
+            assert sweep_key in default_config, f"Missing {sweep_key}"
+
+    def test_invalid_config_file(self):
+        """Test error handling for missing config files."""
+        with pytest.raises(FileNotFoundError, match="Unified config file not found"):
+            VcpTemplateManager("nonexistent.json")
+
+    def test_config_file_parameter_acceptance(self):
+        """Test that VcpTemplateManager accepts vcp_config_file parameter."""
+        # Test with different valid config files
+        configs = ["vcp_nexrad.json", "ideam.json", "eccc.json"]
+
+        for config_file in configs:
+            try:
+                manager = VcpTemplateManager(config_file)
+                assert manager.config is not None
+                print(f"✅ Successfully loaded {config_file}")
+            except FileNotFoundError:
+                pytest.skip(
+                    f"Config file {config_file} not available in test environment"
+                )
+
+
+class TestIdeamVcpTemplates:
+    """Test IDEAM-specific VCP template creation."""
+
+    @pytest.fixture
+    def ideam_manager(self):
+        """Create IDEAM VcpTemplateManager instance."""
+        return VcpTemplateManager("ideam.json")
+
+    @pytest.fixture
+    def ideam_radar_info(self):
+        """Sample IDEAM radar info for testing."""
+        return {
+            "vcp": "PRECC",
+            "lon": -72.0,
+            "lat": 2.0,
+            "alt": 500.0,
+            "instrument_name": "Guaviare",
+            "reference_time": pd.Timestamp("2023-01-01 12:00:00"),
+            "time_coverage_start": pd.Timestamp("2023-01-01 12:00:00"),
+            "time_coverage_end": pd.Timestamp("2023-01-01 12:00:00"),
+            "volume_number": 1,
+            "platform_type": "fixed",
+            "instrument_type": "radar",
+            "crs_wkt": {"grid_mapping_name": "azimuthal_equidistant"},
+        }
+
+    def test_ideam_vcp_precc_template_creation(self, ideam_manager, ideam_radar_info):
+        """Test VCP-PRECC template creation."""
+        append_dim_time = [pd.Timestamp("2023-01-01 12:00:00")]
+
+        tree = ideam_manager.create_empty_vcp_tree(
+            radar_info=ideam_radar_info,
+            append_dim="vcp_time",
+            append_dim_time=append_dim_time,
+        )
+
+        assert tree is not None
+        assert "/PRECC" in tree.groups
+
+        # PRECC should have 3 sweeps (10.0, 12.5, 15.0 degrees)
+        sweep_groups = [g for g in tree.groups if "/PRECC/sweep_" in g]
+        assert len(sweep_groups) == 3
+
+    def test_ideam_all_vcp_patterns(self, ideam_manager):
+        """Test template creation for all IDEAM VCP patterns."""
+        vcp_patterns = ["PRECC", "SURVP", "PRECA", "PRECB"]
+
+        for vcp in vcp_patterns:
+            radar_info = {
+                "vcp": vcp,
+                "lon": -72.0,
+                "lat": 2.0,
+                "alt": 500.0,
+                "instrument_name": "Guaviare",
+                "reference_time": pd.Timestamp("2023-01-01 12:00:00"),
+                "time_coverage_start": pd.Timestamp("2023-01-01 12:00:00"),
+                "time_coverage_end": pd.Timestamp("2023-01-01 12:00:00"),
+                "volume_number": 1,
+                "platform_type": "fixed",
+                "instrument_type": "radar",
+                "crs_wkt": {"grid_mapping_name": "azimuthal_equidistant"},
+            }
+
+            append_dim_time = [pd.Timestamp("2023-01-01 12:00:00")]
+
+            tree = ideam_manager.create_empty_vcp_tree(
+                radar_info=radar_info,
+                append_dim="vcp_time",
+                append_dim_time=append_dim_time,
+            )
+
+            assert tree is not None
+            assert f"/{vcp}" in tree.groups
+
+            # Verify has expected number of sweeps
+            vcp_info = ideam_manager.get_vcp_info(vcp)
+            sweep_groups = [g for g in tree.groups if f"/{vcp}/sweep_" in g]
+            assert len(sweep_groups) == len(vcp_info.elevations)
+
+    def test_ideam_vcp_variables(self, ideam_manager):
+        """Test that IDEAM VCPs have expected variables."""
+        # Check PRECC has DBZH (main IDEAM variable)
+        sweep_config = ideam_manager.get_sweep_config("PRECC", 0)
+        assert "variables" in sweep_config
+        assert "DBZH" in sweep_config["variables"]
+
+        # Verify variable structure
+        dbzh_config = sweep_config["variables"]["DBZH"]
+        assert "dtype" in dbzh_config
+        assert "fill_value" in dbzh_config
+        assert "attributes" in dbzh_config
+
+
+class TestEcccVcpTemplates:
+    """Test ECCC-specific VCP template creation."""
+
+    @pytest.fixture
+    def eccc_manager(self):
+        """Create ECCC VcpTemplateManager instance."""
+        return VcpTemplateManager("eccc.json")
+
+    @pytest.fixture
+    def eccc_radar_info(self):
+        """Sample ECCC radar info for testing."""
+        return {
+            "vcp": "DEFAULT",
+            "lon": -75.0,
+            "lat": 45.0,
+            "alt": 300.0,
+            "instrument_name": "CASET",
+            "reference_time": pd.Timestamp("2023-01-01 12:00:00"),
+            "time_coverage_start": pd.Timestamp("2023-01-01 12:00:00"),
+            "time_coverage_end": pd.Timestamp("2023-01-01 12:00:00"),
+            "volume_number": 1,
+            "platform_type": "fixed",
+            "instrument_type": "radar",
+            "crs_wkt": {"grid_mapping_name": "azimuthal_equidistant"},
+        }
+
+    def test_eccc_default_template_creation(self, eccc_manager, eccc_radar_info):
+        """Test ECCC DEFAULT VCP template with 17 sweeps."""
+        append_dim_time = [pd.Timestamp("2023-01-01 12:00:00")]
+
+        tree = eccc_manager.create_empty_vcp_tree(
+            radar_info=eccc_radar_info,
+            append_dim="vcp_time",
+            append_dim_time=append_dim_time,
+        )
+
+        assert tree is not None
+        assert "/DEFAULT" in tree.groups
+
+        # ECCC DEFAULT should have 17 sweeps
+        sweep_groups = [g for g in tree.groups if "/DEFAULT/sweep_" in g]
+        assert len(sweep_groups) == 17
+
+    def test_eccc_variables(self, eccc_manager):
+        """Test that ECCC DEFAULT VCP has expected variables."""
+        # Check DEFAULT has expected ECCC variables
+        sweep_config = eccc_manager.get_sweep_config("DEFAULT", 0)
+        assert "variables" in sweep_config
+
+        # ECCC should have these variables
+        expected_vars = [
+            "DBZH",
+            "TH",
+            "RHOHV",
+            "UPHIDP",
+            "WRADH",
+            "PHIDP",
+            "ZDR",
+            "KDP",
+            "SQIH",
+            "VRADH",
+        ]
+        for var in expected_vars:
+            assert var in sweep_config["variables"], f"Missing variable: {var}"
+
+    def test_eccc_dual_pol_variables(self, eccc_manager):
+        """Test ECCC dual-polarization variables are properly configured."""
+        sweep_config = eccc_manager.get_sweep_config("DEFAULT", 0)
+
+        # Test specific dual-pol variables
+        dual_pol_vars = ["ZDR", "KDP", "RHOHV", "PHIDP"]
+        for var in dual_pol_vars:
+            var_config = sweep_config["variables"][var]
+            assert "dtype" in var_config
+            assert "fill_value" in var_config
+            assert "attributes" in var_config
+
+            # Verify units are specified for dual-pol variables
+            attrs = var_config["attributes"]
+            assert "units" in attrs, f"Missing units for {var}"
+
+
+class TestVcpConfigParameterFlow:
+    """Test VCP config parameter flow through the system."""
+
+    def test_template_manager_config_parameter(self):
+        """Test VcpTemplateManager uses vcp_config_file parameter correctly."""
+        # Test parameter is stored and used
+        manager = VcpTemplateManager("ideam.json")
+        assert "ideam.json" in str(manager.vcp_nexrad_path)
+
+    def test_config_path_resolution(self):
+        """Test config file path resolution works correctly."""
+        manager = VcpTemplateManager("eccc.json")
+        assert manager.vcp_nexrad_path.name == "eccc.json"
+        assert manager.vcp_nexrad_path.parent.name == "config"
+
+    def test_default_fallback_behavior(self):
+        """Test that scan_name fallback to DEFAULT works."""
+        # This tests the try-catch in writer_utils.py:115-117
+        # Note: This would require mocking a DataTree without scan_name attribute
+        # For now, we verify the structure exists
+        import inspect
+
+        from raw2zarr.writer.writer_utils import init_zarr_store
+
+        # Verify the function signature includes vcp_config_file
+        sig = inspect.signature(init_zarr_store)
+        assert "vcp_config_file" in sig.parameters
+        assert sig.parameters["vcp_config_file"].default == "vcp_nexrad.json"

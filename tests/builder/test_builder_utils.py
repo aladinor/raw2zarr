@@ -1,15 +1,14 @@
 import os
-import shutil
 import tempfile
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
-import pytest
 import pandas as pd
+import pytest
 
 from raw2zarr.builder.builder_utils import (
-    get_icechunk_repo,
-    extract_timestamp,
     extract_file_metadata,
+    extract_timestamp,
+    get_icechunk_repo,
 )
 
 
@@ -204,7 +203,7 @@ class TestLogProblematicFile:
             assert output_file.exists(), "output.txt should be created"
 
             # Verify content
-            with open(output_file, "r") as f:
+            with open(output_file) as f:
                 content = f.read()
 
             assert test_filepath in content
@@ -234,7 +233,7 @@ class TestLogProblematicFile:
             _log_problematic_file(test_filepath, test_error)
 
             # Verify content was appended
-            with open(output_file, "r") as f:
+            with open(output_file) as f:
                 content = f.read()
 
             assert "Initial content" in content
@@ -264,7 +263,7 @@ class TestLogProblematicFile:
 
             # Verify file can be read back correctly
             output_file = tmp_path / "output.txt"
-            with open(output_file, "r", encoding="utf-8") as f:
+            with open(output_file, encoding="utf-8") as f:
                 content = f.read()
 
             assert test_filepath in content

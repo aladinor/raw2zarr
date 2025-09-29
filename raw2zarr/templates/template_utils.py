@@ -61,7 +61,11 @@ def create_common_coords(
         },
     ).chunk({append_dim: 1})
 
-    ds["crs_wkt"] = xr.DataArray(da.array(0, dtype=int), attrs=radar_info["crs_wkt"])
+    # Only add crs_wkt if it exists in radar_info
+    if "crs_wkt" in radar_info:
+        ds["crs_wkt"] = xr.DataArray(
+            da.array(0, dtype=int), attrs=radar_info["crs_wkt"]
+        )
 
     ds["longitude"] = xr.DataArray(
         da.array(radar_info["lon"], dtype=float),
@@ -219,7 +223,6 @@ def create_additional_groups(
     group_names = ["georeferencing_correction", "radar_parameters"]
     additional_groups = {}
     for group_name in group_names:
-
         additional_groups[f"{vcp}/{group_name}"] = xr.Dataset(
             coords={
                 "altitude": (da.array(radar_info["alt"], dtype=int)),

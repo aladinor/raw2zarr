@@ -9,7 +9,7 @@ from time import time
 import fsspec
 
 # Constants
-NEXRAD_S3_BUCKET = "noaa-nexrad-level2"
+NEXRAD_S3_BUCKET = "unidata-nexrad-level2"
 NEXRAD_FILENAME_PATTERN = r"{radar}(\d{{8}})_(\d{{6}})_V\d{{2}}(?:\.gz)?$"
 
 
@@ -67,7 +67,7 @@ def make_dir(path: str) -> None:
     os.makedirs(path, exist_ok=True)
 
 
-def create_query(site: str, date: datetime, prod: str = "sigmet") -> str:
+def create_query(site: str, date: datetime) -> str:
     """
     Build query string for IDEAM radar data access.
 
@@ -77,8 +77,6 @@ def create_query(site: str, date: datetime, prod: str = "sigmet") -> str:
         Radar site identifier.
     date : datetime
         Date for the radar data.
-    prod : str, default "sigmet"
-        Product type identifier (currently not used in path generation).
 
     Returns
     -------
@@ -97,8 +95,7 @@ def create_query(site: str, date: datetime, prod: str = "sigmet") -> str:
     if not isinstance(date, datetime):
         raise TypeError("date must be a datetime object")
 
-    radar_site = site.upper()
-    return f"l2_data/{date:%Y}/{date:%m}/{date:%d}/{radar_site}/{radar_site[:3].upper()}{date:%y%m%d}"
+    return f"l2_data/{date:%Y}/{date:%m}/{date:%d}/{site.capitalize()}/{site[:3].upper()}{date:%y%m%d}"
 
 
 def load_vcp_samples(samples_file: str = "data/vcp_samples.json") -> dict:

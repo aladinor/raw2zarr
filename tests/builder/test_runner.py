@@ -32,6 +32,7 @@ def output_zarr(tmp_path_factory):
 def test_cluster():
     """Create a mock cluster that runs synchronously for fast tests."""
     from unittest.mock import MagicMock
+
     import dask
 
     # Mock cluster that looks real but uses synchronous scheduler
@@ -44,10 +45,10 @@ def test_cluster():
     }
 
     # Override map/gather to run synchronously for speed
-    def sync_map(func, iterable):
+    def sync_map(func, iterable, *args, **kwargs):
         """Run map synchronously instead of distributed."""
         with dask.config.set(scheduler="synchronous"):
-            return [func(item) for item in iterable]
+            return [func(item, *args, **kwargs) for item in iterable]
 
     def sync_gather(results):
         """Return results immediately."""
@@ -116,6 +117,7 @@ def test_append_parallel_creates_zarr(sample_nexrad_files, output_zarr, test_clu
         append_dim=append_dim,
         engine="nexradlevel2",
         cluster=test_cluster,
+        remove_strings=True,
     )
 
     assert os.path.exists(output_zarr), "Expected Zarr store not found."

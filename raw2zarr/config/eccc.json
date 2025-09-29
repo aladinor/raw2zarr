@@ -1,0 +1,2037 @@
+{
+  "DEFAULT": {
+    "name": "ECCC Standard Radar Mode",
+    "description": "Environment and Climate Change Canada standard radar pattern / 17 elevation sweeps",
+    "elevations": [
+      24.4,
+      21.2,
+      18.0,
+      14.8,
+      11.6,
+      10.0,
+      8.4,
+      6.8,
+      5.2,
+      4.4,
+      3.6,
+      2.8,
+      2.0,
+      1.6,
+      1.2,
+      0.8,
+      0.4
+    ],
+    "dims": {
+      "azimuth": [
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        720,
+        720,
+        720,
+        720,
+        720,
+        720
+      ],
+      "range": [
+        245,
+        245,
+        245,
+        245,
+        245,
+        245,
+        320,
+        320,
+        480,
+        480,
+        480,
+        480,
+        480,
+        480,
+        480,
+        480,
+        480
+      ]
+    },
+    "sweep_0": {
+      "elevation": 24.4,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "TH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio HV",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "UPHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Unfolded differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity HV",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase HV",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_1": {
+      "elevation": 21.2,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "TH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio HV",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "UPHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Unfolded differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity HV",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase HV",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_2": {
+      "elevation": 18.0,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "TH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio HV",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "UPHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Unfolded differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity HV",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase HV",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_3": {
+      "elevation": 14.8,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "TH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio HV",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "UPHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Unfolded differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity HV",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase HV",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_4": {
+      "elevation": 11.6,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "TH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio HV",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "UPHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Unfolded differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity HV",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase HV",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_5": {
+      "elevation": 10.0,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "TH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio HV",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "UPHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Unfolded differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity HV",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase HV",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_6": {
+      "elevation": 8.4,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "TH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio HV",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "UPHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Unfolded differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity HV",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase HV",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_7": {
+      "elevation": 6.8,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "TH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio HV",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "UPHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Unfolded differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity HV",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase HV",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_8": {
+      "elevation": 5.2,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "TH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio HV",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "UPHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Unfolded differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity HV",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase HV",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_9": {
+      "elevation": 4.4,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "TH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio HV",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "UPHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Unfolded differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity HV",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase HV",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_10": {
+      "elevation": 3.6,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "TH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio HV",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "UPHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Unfolded differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity HV",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase HV",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_11": {
+      "elevation": 2.8,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "TH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio HV",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "UPHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Unfolded differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity HV",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase HV",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_12": {
+      "elevation": 2.0,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "TH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio HV",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "UPHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Unfolded differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity HV",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase HV",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_13": {
+      "elevation": 1.6,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "TH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio HV",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "UPHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Unfolded differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity HV",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase HV",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_14": {
+      "elevation": 1.2,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "TH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio HV",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "UPHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Unfolded differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity HV",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase HV",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_15": {
+      "elevation": 0.8,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "TH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio HV",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "UPHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Unfolded differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity HV",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase HV",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_16": {
+      "elevation": 0.4,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "TH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power H",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio HV",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "UPHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Unfolded differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity HV",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase HV",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity H",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    }
+  }
+}

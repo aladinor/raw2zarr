@@ -1,0 +1,1460 @@
+{
+  "PRECC": {
+    "name": "IDEAM Precipitation Mode C",
+    "description": "Cuarta tarea del modo precipitacion / 10 - 12.5 - 15 degrees",
+    "elevations": [
+      10.0,
+      12.5,
+      15.0
+    ],
+    "dims": {
+      "azimuth": [
+        360,
+        360,
+        360
+      ],
+      "range": [
+        654,
+        654,
+        654
+      ]
+    },
+    "sweep_0": {
+      "elevation": 10.0,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBTH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_HCLASS": {
+          "dims": ["azimuth", "range"],
+          "dtype": "int16",
+          "fill_value": -999,
+          "attributes": {
+            "standard_name": "radar_echo_classification",
+            "long_name": "Hydrometeor classification H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBTE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBZE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_1": {
+      "elevation": 12.5,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBTH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_HCLASS": {
+          "dims": ["azimuth", "range"],
+          "dtype": "int16",
+          "fill_value": -999,
+          "attributes": {
+            "standard_name": "radar_echo_classification",
+            "long_name": "Hydrometeor classification H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBTE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBZE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_2": {
+      "elevation": 15.0,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBTH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_HCLASS": {
+          "dims": ["azimuth", "range"],
+          "dtype": "int16",
+          "fill_value": -999,
+          "attributes": {
+            "standard_name": "radar_echo_classification",
+            "long_name": "Hydrometeor classification H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBTE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBZE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    }
+  },
+  "SURVP": {
+    "name": "IDEAM Surveillance Mode P",
+    "description": "Primera tarea del modo precipitacion / 0.5 degrees",
+    "elevations": [
+      0.5
+    ],
+    "dims": {
+      "azimuth": [
+        720
+      ],
+      "range": [
+        994
+      ]
+    },
+    "sweep_0": {
+      "elevation": 0.5,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBTH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_HCLASS": {
+          "dims": ["azimuth", "range"],
+          "dtype": "int16",
+          "fill_value": -999,
+          "attributes": {
+            "standard_name": "radar_echo_classification",
+            "long_name": "Hydrometeor classification H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBTE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBZE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    }
+  },
+  "PRECA": {
+    "name": "IDEAM Precipitation Mode A",
+    "description": "Segunda tarea del modo precipitacion / 1.5 - 2.4 - 3.1 - 5.1 degrees",
+    "elevations": [
+      1.5,
+      2.4,
+      3.1,
+      5.1
+    ],
+    "dims": {
+      "azimuth": [
+        360,
+        360,
+        360,
+        360
+      ],
+      "range": [
+        747,
+        747,
+        747,
+        747
+      ]
+    },
+    "sweep_0": {
+      "elevation": 1.5,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBTH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_HCLASS": {
+          "dims": ["azimuth", "range"],
+          "dtype": "int16",
+          "fill_value": -999,
+          "attributes": {
+            "standard_name": "radar_echo_classification",
+            "long_name": "Hydrometeor classification H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBTE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBZE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_1": {
+      "elevation": 2.4,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBTH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_HCLASS": {
+          "dims": ["azimuth", "range"],
+          "dtype": "int16",
+          "fill_value": -999,
+          "attributes": {
+            "standard_name": "radar_echo_classification",
+            "long_name": "Hydrometeor classification H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBTE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBZE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_2": {
+      "elevation": 3.1,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBTH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_HCLASS": {
+          "dims": ["azimuth", "range"],
+          "dtype": "int16",
+          "fill_value": -999,
+          "attributes": {
+            "standard_name": "radar_echo_classification",
+            "long_name": "Hydrometeor classification H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBTE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBZE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_3": {
+      "elevation": 5.1,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBTH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_HCLASS": {
+          "dims": ["azimuth", "range"],
+          "dtype": "int16",
+          "fill_value": -999,
+          "attributes": {
+            "standard_name": "radar_echo_classification",
+            "long_name": "Hydrometeor classification H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBTE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBZE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    }
+  },
+  "PRECB": {
+    "name": "IDEAM Precipitation Mode B",
+    "description": "Tercer tarea del modo precipitacion / 6.4 - 8.0 degrees",
+    "elevations": [
+      6.4,
+      8.0
+    ],
+    "dims": {
+      "azimuth": [
+        360,
+        360
+      ],
+      "range": [
+        581,
+        581
+      ]
+    },
+    "sweep_0": {
+      "elevation": 6.4,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBTH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_HCLASS": {
+          "dims": ["azimuth", "range"],
+          "dtype": "int16",
+          "fill_value": -999,
+          "attributes": {
+            "standard_name": "radar_echo_classification",
+            "long_name": "Hydrometeor classification H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBTE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBZE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    },
+    "sweep_1": {
+      "elevation": 8.0,
+      "scan_mode": "azimuth_surveillance",
+      "variables": {
+        "DBTH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DBZH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "VRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
+            "long_name": "Radial velocity",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "WRADH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "doppler_spectrum_width",
+            "long_name": "Spectrum width",
+            "units": "m/s",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "ZDR": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "log_differential_reflectivity_hv",
+            "long_name": "Differential reflectivity",
+            "units": "dB",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "KDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "specific_differential_phase_hv",
+            "long_name": "Specific differential phase",
+            "units": "deg/km",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "PHIDP": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "differential_phase_hv",
+            "long_name": "Differential phase",
+            "units": "deg",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "RHOHV": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "cross_correlation_ratio_hv",
+            "long_name": "Cross correlation ratio",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "SQIH": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "signal_quality_index",
+            "long_name": "Signal Quality Index H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_HCLASS": {
+          "dims": ["azimuth", "range"],
+          "dtype": "int16",
+          "fill_value": -999,
+          "attributes": {
+            "standard_name": "radar_echo_classification",
+            "long_name": "Hydrometeor classification H",
+            "units": "1",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBTE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Total power corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        },
+        "DB_DBZE8": {
+          "dims": ["azimuth", "range"],
+          "dtype": "float32",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "equivalent_reflectivity_factor",
+            "long_name": "Reflectivity corrected",
+            "units": "dBZ",
+            "coordinates": "elevation azimuth range"
+          }
+        }
+      }
+    }
+  }
+}

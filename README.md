@@ -40,22 +40,35 @@ with the new open data paradigm, emphasizing the FAIR principles (Findable, Acce
 </a>
 
 
-> [!WARNING]
-> **This project is currently in high development mode.**
-> Features may change frequently, and some parts of the library may be incomplete or subject to change. Please proceed with caution.
+```{warning}
+This project is currently in high development mode.
 
-> [!CAUTION]
-> **Critical Storage Requirements Warning**
-> Processing radar data creates massive storage requirements. Based on real-world experience:
-> - **1 month of data ≈ 800GB** of Zarr output storage
-> - **1 year of data ≈ 10TB+** of storage required
-> - Processing periods longer than hours can quickly exhaust available storage
->
-> **Recommendations:**
-> - Limit initial testing to **hourly datasets** to understand storage impact
-> - Plan storage capacity carefully before production deployments
-> - Consider cloud storage costs for large-scale processing
-> - Monitor disk usage closely during processing
+Features may change frequently, and some parts of the library may be incomplete or subject to change.
+Proceed with caution.
+```
+
+```{caution}
+Critical storage requirements
+
+Processing radar data can create massive storage requirements. Based on real-world experience:
+- 1 month of data ≈ 800 GB of Zarr output
+- 1 year of data ≈ 10+ TB of storage
+- Processing for long periods can exhaust storage quickly
+
+Recommendations:
+- Start with hourly datasets to understand the storage footprint
+- Plan storage capacity before production deployments
+- Consider cloud storage costs for large-scale processing
+- Monitor disk usage during runs
+```
+
+```{warning}
+NEXRAD dynamic scans not supported
+
+RAW2zarr does not yet handle dynamic scan strategies in NEXRAD (e.g., SAILS, MRLE, AVSET).
+Datasets acquired circa 2014 and later that use these modes will likely fail during conversion.
+Until support is added, use pre‑2014 datasets or volumes known to use static VCPs.
+```
 
 
 ### Running on Your Own Machine

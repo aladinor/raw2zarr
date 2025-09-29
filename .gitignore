@@ -175,6 +175,7 @@ profiler.py
 profile.speedscope
 analyze_vcp_files.py
 raw2zarr/builder/rechunk.py
-
+iris_metadata_processor.py
 CLAUDE.md
 *.txt
+local_scripts/

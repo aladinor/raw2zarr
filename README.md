@@ -2,7 +2,7 @@
 
 # FAIR open radar data
 [![DOI](https://zenodo.org/badge/658848435.svg)](https://zenodo.org/doi/10.5281/zenodo.10069535)
-
+[![GitHub Release](https://img.shields.io/github/v/release/aladinor/raw2zarr?display_name=tag&sort=semver)](https://github.com/aladinor/raw2zarr/releases/latest)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/aladinor/raw2zarr/main)
 
 ## Motivation

@@ -3,7 +3,7 @@ channels:
   - conda-forge
   - nodefaults
 dependencies:
-  - python=3.12
+  - python>=3.11
   - mamba
   - fsspec
   - jupyterlab
@@ -37,5 +37,3 @@ dependencies:
   - cmweather
   - pandas
   - pip
-  - pip:
-      - git+https://github.com/aladinor/raw2zarr.git

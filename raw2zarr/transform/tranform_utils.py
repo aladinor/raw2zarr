@@ -1,6 +1,5 @@
 from xarray import DataTree
 
-from ..config.utils import load_json_config
 from ..templates.template_manager import VcpTemplateManager
 
 

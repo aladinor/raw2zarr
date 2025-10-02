@@ -1,0 +1,42 @@
+name: raw2zarr-ncsa
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.11.13
+  - htcondor
+  - mamba
+  - fsspec
+  - jupyterlab
+  - notebook
+  - ipykernel
+  - dask==2025.2.0
+  - distributed==2025.2.0
+  - tornado==6.4.2
+  - netcdf4
+  - bottleneck
+  - hvplot
+  - datashader
+  - zarr>=3.1.0
+  - ca-certificates
+  - certifi
+  - openssl
+  - s3fs>=2025.5.1
+  - xarray>=2025.08.0
+  - xradar>=0.10.0
+  - pytest
+  - pytest-cov
+  - pytest-doctestplus
+  - pytest-sugar
+  - pytest-xdist
+  - nbmake
+  - pydantic
+  - icechunk>=1.0.3
+  - pandas
+  - numpy<2.3
+  - cmweather
+  - pip
+  - pip:
+      - ncsa-htcdaskgateway>=1.0.4
+      - python-dotenv
+      - git+https://github.com/aladinor/raw2zarr.git

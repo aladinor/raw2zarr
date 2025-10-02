@@ -154,7 +154,9 @@ cython_debug/
 
 # folders
 results/
-data/
+data/ECCC
+data/KVNX20110520_093548_V06.gz
+data/KVNX20110520_100147_V06.gz
 zarr/
 zarrtest.zarr/
 .idea/

@@ -114,7 +114,7 @@ jobs:
           cache-environment: true
           cache-environment-key: "notebook-${{runner.os}}-${{hashFiles('environment.yml')}}"
           create-args: >-
-            python=3.12
+            python=3.11
             numpy=2
           post-cleanup: none
 

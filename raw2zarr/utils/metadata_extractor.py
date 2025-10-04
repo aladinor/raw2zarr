@@ -358,7 +358,7 @@ def classify_dynamic_type(
                 dynamic_type = "AVSET"
                 pattern = f"Early termination ({act_sweeps}/{exp_sweeps} sweeps)"
             else:
-                dynamic_type = "valid"
+                dynamic_type = "STANDARD"
                 pattern = "Standard VCP"
 
         elif sails_inserts == 1:
@@ -535,6 +535,12 @@ def extract_vcp_and_shapes(file_path: str) -> dict[str, Any]:
             exp_sweeps=exp_sweeps,
         )
 
+        # Calculate missing sweeps
+        if exp_sweeps is not None and act_sweeps is not None:
+            missing_sweeps = max(0, exp_sweeps - act_sweeps)
+        else:
+            missing_sweeps = 0
+
         # Build result dictionary with required fields
         result = {
             "filename": file_path,
@@ -550,8 +556,9 @@ def extract_vcp_and_shapes(file_path: str) -> dict[str, Any]:
             "elevation_angles": json.dumps(elevation_angles),
             "sweep_start_times": json.dumps(sweep_start_times),
             "sweep_end_times": json.dumps(sweep_end_times),
-            "dynamic_type": classification["dynamic_type"],
-            "sails_inserts": classification["sails_inserts"],
+            "scan_type": classification["dynamic_type"],
+            "additional_sweeps": classification["sails_inserts"],
+            "missing_sweeps": missing_sweeps,
             "mrle_level": classification["mrle_level"],
             "elevation_pattern": classification["elevation_pattern"],
             "azimuth_per_sweep": json.dumps(azimuth_per_sweep),
@@ -594,8 +601,9 @@ def extract_vcp_and_shapes(file_path: str) -> dict[str, Any]:
             "elevation_angles": json.dumps([]),
             "sweep_start_times": json.dumps([]),
             "sweep_end_times": json.dumps([]),
-            "dynamic_type": None,
-            "sails_inserts": 0,
+            "scan_type": None,
+            "additional_sweeps": 0,
+            "missing_sweeps": 0,
             "mrle_level": 0,
             "elevation_pattern": "error",
             "azimuth_per_sweep": json.dumps([]),
@@ -656,29 +664,30 @@ def process(
             with open(output_csv, "a", newline="") as f:
                 # Build fieldnames list dynamically based on config
                 fieldnames = [
-                    "filename",
-                    "site",
+                    "filename",  # Primary identifier
+                    "site",  # Small output fields
                     "timestamp",
                     "date",
                     "vcp",
                     "vcp_number",
+                    "scan_type",  # RENAMED from dynamic_type
+                    "file_status",
                     "exp_sweeps",
                     "act_sweeps",
                     "dynamic",
-                    "file_status",
-                    "elevation_angles",
-                    "sweep_start_times",
-                    "sweep_end_times",
-                    "dynamic_type",
-                    "sails_inserts",
+                    "additional_sweeps",  # RENAMED from sails_inserts
+                    "missing_sweeps",  # NEW FIELD
                     "mrle_level",
-                    "elevation_pattern",
-                    "azimuth_per_sweep",
-                    "range_ref_per_sweep",
                     "azimuth_match",
                     "range_match",
+                    "elevation_pattern",  # Longer fields moving right
+                    "elevation_angles",
+                    "azimuth_per_sweep",
+                    "range_ref_per_sweep",
                     "azimuth_mismatches",
                     "range_mismatches",
+                    "sweep_start_times",  # Timing arrays at far right
+                    "sweep_end_times",
                 ]
 
                 # Add optional fields if enabled
@@ -753,29 +762,30 @@ def write_parquet(rows: list[dict[str, Any]], root: str) -> str | None:
         df["month"] = None
     # ensure column order - build dynamically based on config
     preferred = [
-        "filename",
-        "site",
+        "filename",  # Primary identifier
+        "site",  # Small output fields
         "timestamp",
         "date",
         "vcp",
         "vcp_number",
+        "scan_type",  # RENAMED from dynamic_type
+        "file_status",
         "exp_sweeps",
         "act_sweeps",
         "dynamic",
-        "file_status",
-        "elevation_angles",
-        "sweep_start_times",
-        "sweep_end_times",
-        "dynamic_type",
-        "sails_inserts",
+        "additional_sweeps",  # RENAMED from sails_inserts
+        "missing_sweeps",  # NEW FIELD
         "mrle_level",
-        "elevation_pattern",
-        "azimuth_per_sweep",
-        "range_ref_per_sweep",
         "azimuth_match",
         "range_match",
+        "elevation_pattern",  # Longer fields moving right
+        "elevation_angles",
+        "azimuth_per_sweep",
+        "range_ref_per_sweep",
         "azimuth_mismatches",
         "range_mismatches",
+        "sweep_start_times",  # Timing arrays at far right
+        "sweep_end_times",
     ]
 
     # Add optional fields if enabled

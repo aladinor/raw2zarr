@@ -9,6 +9,8 @@ All original functions are re-exported for backward compatibility.
 from .core import (
     NEXRAD_FILENAME_PATTERN,
     NEXRAD_S3_BUCKET,
+    _get_files_for_date,
+    _parse_nexrad_filename,
     create_query,
     get_radar_files_async,
     list_day_files_async,
@@ -22,6 +24,8 @@ from .core import (
 __all__ = [
     "NEXRAD_FILENAME_PATTERN",
     "NEXRAD_S3_BUCKET",
+    "_get_files_for_date",
+    "_parse_nexrad_filename",
     "create_query",
     "get_radar_files_async",
     "list_day_files_async",

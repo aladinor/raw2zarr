@@ -391,8 +391,8 @@ class TestGetFilesForDate:
 class TestListNexradFiles:
     """Test suite for list_nexrad_files function."""
 
-    @patch("raw2zarr.utils.fsspec.filesystem")
-    @patch("raw2zarr.utils._get_files_for_date")
+    @patch("raw2zarr.utils.core.fsspec.filesystem")
+    @patch("raw2zarr.utils.core._get_files_for_date")
     def test_list_nexrad_files_success(self, mock_get_files, mock_filesystem):
         """Test successful NEXRAD file listing."""
         mock_fs = Mock()
@@ -413,8 +413,8 @@ class TestListNexradFiles:
         assert result == expected
         mock_filesystem.assert_called_once_with("s3", anon=True)
 
-    @patch("raw2zarr.utils.fsspec.filesystem")
-    @patch("raw2zarr.utils._get_files_for_date")
+    @patch("raw2zarr.utils.core.fsspec.filesystem")
+    @patch("raw2zarr.utils.core._get_files_for_date")
     def test_list_nexrad_files_multiple_days(self, mock_get_files, mock_filesystem):
         """Test NEXRAD file listing across multiple days."""
         mock_fs = Mock()
@@ -482,8 +482,8 @@ class TestListNexradFiles:
                 radar=None, start_time="2011-05-20 09:00", end_time="2011-05-20 11:00"
             )
 
-    @patch("raw2zarr.utils.fsspec.filesystem")
-    @patch("raw2zarr.utils._get_files_for_date")
+    @patch("raw2zarr.utils.core.fsspec.filesystem")
+    @patch("raw2zarr.utils.core._get_files_for_date")
     def test_list_nexrad_files_returns_sorted_results(
         self, mock_get_files, mock_filesystem
     ):
@@ -513,8 +513,8 @@ class TestListNexradFiles:
     def test_list_nexrad_files_default_parameters(self):
         """Test list_nexrad_files with default parameters."""
         with (
-            patch("raw2zarr.utils.fsspec.filesystem") as mock_filesystem,
-            patch("raw2zarr.utils._get_files_for_date") as mock_get_files,
+            patch("raw2zarr.utils.core.fsspec.filesystem") as mock_filesystem,
+            patch("raw2zarr.utils.core._get_files_for_date") as mock_get_files,
         ):
             mock_fs = Mock()
             mock_filesystem.return_value = mock_fs

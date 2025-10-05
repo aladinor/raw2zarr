@@ -418,9 +418,11 @@ async def get_radar_files_async(
         raise ValueError(
             "Provide either (start_date + num_days) or (start_time + end_time)"
         )
-
-    # Generate list of days to query
-    days = [start_dt + timedelta(days=i) for i in range((end_dt - start_dt).days + 1)]
+    start_day = start_dt.replace(hour=0, minute=0, second=0, microsecond=0)
+    end_day = end_dt.replace(hour=0, minute=0, second=0, microsecond=0)
+    days = [
+        start_day + timedelta(days=i) for i in range((end_day - start_day).days + 1)
+    ]
 
     # Parallel file listing
     tasks = [list_day_files_async(fs, d, radar_site, bucket) for d in days]

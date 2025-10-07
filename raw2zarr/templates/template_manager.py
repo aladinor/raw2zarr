@@ -10,6 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from ..transform.encoding import dtree_encoding
 from .template_utils import (
+    _convert_timestamps_to_datetime64,
     create_additional_groups,
     create_common_coords,
     create_root,
@@ -109,11 +110,7 @@ class VcpTemplateManager:
         sweep_config = self.get_sweep_config(vcp_name, sweep_idx)
         vcp_info = self.get_vcp_info(vcp_name)
 
-        time_array = (
-            np.array(append_dim_time, dtype="datetime64[ns]")
-            if append_dim_time
-            else np.array(range(size_append_dim), dtype="datetime64[ns]")
-        )
+        time_array = _convert_timestamps_to_datetime64(append_dim_time, size_append_dim)
 
         total_azimuth = vcp_info.dims["azimuth"][sweep_idx]
         total_bins = vcp_info.dims["range"][sweep_idx]

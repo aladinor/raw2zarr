@@ -96,6 +96,33 @@ def nexrad_aws_file_SAILS(tmp_path_factory):
 
 
 @pytest.fixture(scope="session")
+def nexrad_corrupted_file():
+    """
+    S3 URL for corrupted NEXRAD file (missing sweep azimuth data).
+    Used for testing corrupted file detection.
+    """
+    return "s3://unidata-nexrad-level2/2025/03/15/KLOT/KLOT20250315_112427_V06"
+
+
+@pytest.fixture(scope="session")
+def nexrad_standard_vcp_file():
+    """
+    S3 URL for standard VCP NEXRAD file (no dynamic scans).
+    Used for testing normal VCP processing.
+    """
+    return "s3://unidata-nexrad-level2/2025/03/14/KLOT/KLOT20250314_233157_V06"
+
+
+@pytest.fixture(scope="session")
+def nexrad_dynamic_vcp_file():
+    """
+    S3 URL for dynamic VCP NEXRAD file (MESO-SAILS with temporal slicing).
+    Used for testing dynamic scan sweep mapping.
+    """
+    return "s3://unidata-nexrad-level2/2025/03/15/KLOT/KLOT20250315_042510_V06"
+
+
+@pytest.fixture(scope="session")
 def iris_aws_file():
     """
     Download an IRIS radar file from AWS S3 to a temporary directory for testing.

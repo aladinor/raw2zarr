@@ -196,3 +196,216 @@ def create_vcp_time_mapping(
         global_time_index = end_time_idx
 
     return vcp_time_mapping
+
+
+def create_vcp_time_mapping_with_slices(
+    metadata_results: list[tuple],
+    valid_files: list[tuple],
+) -> dict:
+    """
+    Create VCP-time mapping from flattened metadata results with temporal slices.
+
+    This function handles both standard scans and dynamic scans with temporal slicing.
+    For dynamic scans (SAILS, MRLE), multiple entries per file represent different
+    temporal slices, which are treated as separate "virtual files" for template creation.
+
+    Parameters
+    ----------
+    metadata_results : list of tuple
+        Flattened metadata results where each entry is:
+        (timestamp, vcp, slice_id, sweep_indices, scan_type, elevation_angles)
+    valid_files : list of tuple
+        List of (slice_index, filepath) tuples corresponding to metadata_results
+
+    Returns
+    -------
+    dict
+        VCP mapping structure with time blocks and file locations:
+        {
+            "VCP-212": {
+                "files": [
+                    {
+                        "file_index": int,
+                        "filepath": str,
+                        "timestamp": pd.Timestamp,
+                        "original_position": int,
+                        "slice_id": int,
+                        "sweep_indices": list,
+                        "scan_type": str,
+                        "elevation_angles": list | None,
+                    },
+                    ...
+                ],
+                "time_range": (start_idx, end_idx),
+                "timestamps": [pd.Timestamp, ...],
+                "file_count": int,
+            },
+            ...
+        }
+    """
+    # Create filepath lookup from valid_files
+    file_index_to_path = {idx: filepath for idx, filepath in valid_files}
+
+    # Group by VCP
+    vcp_groups = defaultdict(list)
+
+    for i, (
+        timestamp,
+        vcp,
+        slice_id,
+        sweep_indices,
+        scan_type,
+        elevation_angles,
+    ) in enumerate(metadata_results):
+        vcp_groups[vcp].append(
+            {
+                "file_index": i,
+                "filepath": file_index_to_path.get(i, ""),
+                "timestamp": timestamp,
+                "slice_id": slice_id,
+                "sweep_indices": sweep_indices,
+                "scan_type": scan_type,
+                "elevation_angles": elevation_angles,
+                "original_position": i,
+            }
+        )
+
+    # Sort each VCP group by timestamp to ensure monotonic time
+    for vcp in vcp_groups:
+        vcp_groups[vcp].sort(key=lambda x: x["timestamp"])
+
+    # Create time blocks for each VCP
+    vcp_time_mapping = {}
+    global_time_index = 0
+
+    for vcp, entries in vcp_groups.items():
+        # Create continuous time block for this VCP
+        start_time_idx = global_time_index
+        end_time_idx = global_time_index + len(entries)
+
+        vcp_time_mapping[vcp] = {
+            "files": entries,
+            "time_range": (start_time_idx, end_time_idx),
+            "timestamps": [entry["timestamp"] for entry in entries],
+            "file_count": len(entries),
+        }
+
+        global_time_index = end_time_idx
+
+    return vcp_time_mapping
+
+
+def map_sweeps_to_vcp_indices(
+    data_tree,
+    vcp: str,
+    sweep_indices: list[int] | None,
+    elevation_angles: list[float] | None,
+    vcp_config_file: str = "vcp_nexrad.json",
+):
+    """
+    Map DataTree sweeps to VCP template indices using elevation angles and dimensions.
+
+    For dynamic scans, this function maps file sweeps to their corresponding VCP
+    template indices by matching elevation angles and range dimensions (to
+    distinguish split-cut pairs).
+
+    Parameters
+    ----------
+    data_tree : DataTree
+        Loaded radar data with file sweep indices
+    vcp : str
+        VCP name (e.g., "VCP-212")
+    sweep_indices : list[int] | None
+        For SAILS/MRLE temporal slices: raw file sweep indices (e.g., [4,5,6,7,8,9])
+        For AVSET/STANDARD: None (use sequential indices)
+    elevation_angles : list[float] | None
+        Elevation angles for this temporal slice (e.g., [0.48, 0.48, 1.32, 1.32])
+    vcp_config_file : str
+        VCP configuration file name
+
+    Returns
+    -------
+    DataTree
+        Tree with sweeps renumbered to match VCP template indices
+
+    Example
+    -------
+    MESO-SAILS slice with file sweeps [4,5,6,7,8,9]:
+
+    - Elevations: [0.48, 0.48, 1.32, 1.32, 1.8, 2.42]
+    - VCP-212 config: [0.5, 0.5, 0.9, 0.9, 1.3, 1.3, 1.8, 2.4, ...]
+    - Mapping: file sweep_4 → VCP sweep_0, file sweep_5 → VCP sweep_1, etc.
+    - Returns tree with: sweep_0, sweep_1, sweep_4, sweep_5, sweep_6, sweep_7
+    """
+    from .template_manager import VcpTemplateManager
+
+    # If no elevation angles provided, return as-is
+    if elevation_angles is None:
+        return data_tree
+
+    # Load VCP config using template manager
+    template_mgr = VcpTemplateManager(vcp_config_file=vcp_config_file)
+
+    # Get VCP configuration
+    try:
+        vcp_info = template_mgr.config[vcp]
+    except KeyError:
+        # VCP not in config, return as-is
+        return data_tree
+
+    vcp_elevations = vcp_info["elevations"]
+    vcp_range_dims = vcp_info["dims"]["range"]
+
+    # Map file sweep indices to VCP template indices
+    sweep_mapping = {}  # {file_sweep_idx: vcp_sweep_idx}
+
+    # Use provided sweep_indices (SAILS/MRLE) or sequential indices (AVSET/STANDARD)
+    indices_to_process = (
+        sweep_indices
+        if sweep_indices is not None
+        else list(range(len(elevation_angles)))
+    )
+
+    for idx, file_sweep_idx in enumerate(indices_to_process):
+        # Get elevation for this sweep
+        elev = elevation_angles[idx]
+        rounded_elev = round(elev, 1)
+
+        # Get actual dimensions from the file sweep
+        file_sweep_name = f"sweep_{file_sweep_idx}"
+        if file_sweep_name not in data_tree.children:
+            continue
+
+        sweep_ds = data_tree[file_sweep_name].ds
+        actual_range = len(sweep_ds.range) if "range" in sweep_ds.dims else 0
+
+        # Find matching elevation + range in VCP config (for split-cut disambiguation)
+        for vcp_idx, (vcp_elev, vcp_range) in enumerate(
+            zip(vcp_elevations, vcp_range_dims)
+        ):
+            rounded_vcp_elev = round(vcp_elev, 1)
+            elev_match = abs(rounded_elev - rounded_vcp_elev) < 0.15
+            range_match = actual_range == vcp_range
+
+            if elev_match and range_match:
+                # Check if this VCP index hasn't been mapped yet
+                if vcp_idx not in sweep_mapping.values():
+                    sweep_mapping[file_sweep_idx] = vcp_idx
+                    break
+
+    # Build new tree with VCP sweep indices
+    remapped_dict = {}
+
+    # Copy root if it exists
+    if hasattr(data_tree, "ds") and data_tree.ds is not None:
+        remapped_dict["/"] = data_tree.ds
+
+    # Copy sweeps with VCP indices
+    for file_sweep_idx, vcp_idx in sweep_mapping.items():
+        file_sweep_name = f"sweep_{file_sweep_idx}"
+        vcp_sweep_name = f"sweep_{vcp_idx}"
+
+        if file_sweep_name in data_tree.children:
+            remapped_dict[vcp_sweep_name] = data_tree[file_sweep_name].ds
+
+    return xr.DataTree.from_dict(remapped_dict)

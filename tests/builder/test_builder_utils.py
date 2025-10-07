@@ -271,3 +271,78 @@ class TestLogProblematicFile:
 
         finally:
             os.chdir(original_cwd)
+
+
+class TestExtractSingleMetadataCorruption:
+    """Test corrupted file detection in extract_single_metadata()."""
+
+    @pytest.mark.integration
+    def test_corrupted_file_detection(self, nexrad_corrupted_file):
+        """Test real corrupted file returns ERROR tuple."""
+        from raw2zarr.builder.builder_utils import extract_single_metadata
+
+        result = extract_single_metadata(
+            (0, nexrad_corrupted_file), engine="nexradlevel2"
+        )
+
+        # Should return ERROR tuple for corrupted file
+        assert len(result) >= 1
+        assert result[0][2] == "ERROR"  # timestamp field contains ERROR
+        assert "Corrupted" in result[0][3]  # error message in vcp field
+        # Should indicate missing or extra sweep indices
+        assert "missing sweeps" in result[0][3] or "extra sweeps" in result[0][3]
+
+    @pytest.mark.integration
+    def test_standard_file_processes_correctly(self, nexrad_standard_vcp_file):
+        """Test standard VCP file processes without errors."""
+        from raw2zarr.builder.builder_utils import extract_single_metadata
+
+        result = extract_single_metadata(
+            (0, nexrad_standard_vcp_file), engine="nexradlevel2"
+        )
+
+        # Should NOT return ERROR for valid file
+        assert len(result) >= 1
+        assert result[0][2] != "ERROR"
+        # Should return valid timestamp
+        assert isinstance(result[0][2], pd.Timestamp)
+
+    @pytest.mark.integration
+    def test_dynamic_file_multiple_temporal_slices(self, nexrad_dynamic_vcp_file):
+        """Test dynamic VCP file returns multiple temporal slices."""
+        from raw2zarr.builder.builder_utils import extract_single_metadata
+
+        result = extract_single_metadata(
+            (0, nexrad_dynamic_vcp_file), engine="nexradlevel2"
+        )
+
+        # MESO-SAILS should have multiple temporal slices
+        assert len(result) > 1, "Dynamic scan should return multiple slices"
+
+        # All slices should have valid timestamps (not ERROR)
+        for entry in result:
+            assert entry[2] != "ERROR"
+            assert isinstance(entry[2], pd.Timestamp)
+
+        # Each slice should have different slice_id
+        slice_ids = [entry[4] for entry in result]
+        assert len(set(slice_ids)) == len(slice_ids), "Slice IDs should be unique"
+
+    @pytest.mark.integration
+    def test_dynamic_file_sweep_indices_differ_per_slice(self, nexrad_dynamic_vcp_file):
+        """Test that each temporal slice has different sweep indices."""
+        from raw2zarr.builder.builder_utils import extract_single_metadata
+
+        result = extract_single_metadata(
+            (0, nexrad_dynamic_vcp_file), engine="nexradlevel2"
+        )
+
+        # Get sweep_indices from each slice
+        sweep_indices_per_slice = [entry[5] for entry in result]
+
+        # Each slice should have different sweep indices
+        # (MESO-SAILS splits sweeps across temporal slices)
+        for i in range(len(sweep_indices_per_slice) - 1):
+            assert (
+                sweep_indices_per_slice[i] != sweep_indices_per_slice[i + 1]
+            ), "Consecutive slices should have different sweep indices"

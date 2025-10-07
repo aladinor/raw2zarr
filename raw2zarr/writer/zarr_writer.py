@@ -92,7 +92,12 @@ def write_dtree_region(
     engine: str,
     zarr_format: int = 3,
     consolidated: bool = False,
-    remove_strings=True,
+    remove_strings: bool = True,
+    is_dynamic: bool = False,
+    sweep_indices: list[int] | None = None,
+    scan_type: str | None = None,
+    elevation_angles: list[float] | None = None,
+    vcp_config_file: str = "vcp_nexrad.json",
     **kwargs,
 ) -> icechunk.Session:
     """
@@ -107,12 +112,25 @@ def write_dtree_region(
         zarr_format: Zarr format version
         consolidated: Whether to consolidate metadata
         remove_strings: Whether to remove string variables
+        is_dynamic: Whether to use template-based processing for dynamic scans
+        sweep_indices: Sweep indices to include (for temporal slicing)
+        scan_type: Scan type classification (for logging/metadata)
+        elevation_angles: Elevation angles for this temporal slice (for VCP sweep mapping)
+        vcp_config_file: VCP configuration file name
         **kwargs: Additional arguments passed to dtree_to_zarr
 
     Returns:
         Updated icechunk session
     """
-    dtree = radar_datatree(file, engine=engine)
+    dtree = radar_datatree(
+        file,
+        engine=engine,
+        append_dim=append_dim,
+        is_dynamic=is_dynamic,
+        sweep_indices=sweep_indices,
+        elevation_angles=elevation_angles,
+        vcp_config_file=vcp_config_file,
+    )
     # TODO: remove this after strings are supported by zarr v3
     if remove_strings:
         dtree = remove_string_vars(dtree)

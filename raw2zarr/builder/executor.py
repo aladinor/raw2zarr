@@ -8,7 +8,6 @@ import icechunk
 from dask.distributed import LocalCluster
 
 from ..templates.template_utils import remove_string_vars
-from ..templates.vcp_utils import create_vcp_time_mapping
 from ..transform.encoding import dtree_encoding
 from ..writer.writer_utils import (
     check_cords,
@@ -16,14 +15,11 @@ from ..writer.writer_utils import (
     resolve_zarr_write_options,
 )
 from ..writer.zarr_writer import dtree_to_zarr, write_dtree_region
-from .builder_utils import (
-    _log_problematic_file,
-    extract_single_metadata,
-    generate_vcp_samples,
-)
+from .builder_utils import _log_problematic_file
 
 # _log_problematic_file not available on Coiled workers - using local logging
 from .dtree_radar import radar_datatree
+from .metadata_processor import process_metadata_and_create_vcp_mapping
 
 warnings.filterwarnings(
     "ignore",
@@ -191,84 +187,26 @@ def append_parallel(
 
     session = repo.writable_session(branch=branch)
 
-    # Ultra-fast graph construction with Client.map()
-    radar_files_with_indices = list(enumerate(radar_files))
-    futures = client.map(
-        extract_single_metadata, radar_files_with_indices, engine=engine
+    # Process metadata and create VCP time mapping
+    result = process_metadata_and_create_vcp_mapping(
+        client=client,
+        radar_files=radar_files,
+        engine=engine,
+        skip_vcps=skip_vcps,
+        log_file=log_file,
+        generate_samples=generate_samples,
+        sample_percentage=sample_percentage,
+        samples_output_path=samples_output_path,
     )
-    metadata_results = client.gather(futures)
 
-    # Filter out problematic files and unwanted VCPs
-    valid_results = []
-    valid_files = []
-    problematic_files = []
-    skipped_vcps = []
+    if result is None:
+        return  # No valid files found
 
-    for original_index, file, result in metadata_results:
-        if result[0] != "ERROR":
-            timestamp, vcp_number = result
-            vcp_name = f"VCP-{vcp_number}"
-
-            # Check if this VCP should be skipped
-            if skip_vcps and vcp_name in skip_vcps:
-                skipped_vcps.append((file, vcp_name))
-                continue
-
-            # Valid result with (timestamp, vcp_number)
-            valid_results.append(result)
-            valid_files.append((original_index, file))
-        else:
-            # Problematic file with error info
-            problematic_files.append((file, result[1]))
-
-    # Log all problematic files locally (metadata extraction failures)
-    for file, error_msg in problematic_files:
-        _log_problematic_file(file, error_msg, log_file)
-
-    # Log skipped VCPs locally
-    for file, vcp_name in skipped_vcps:
-        _log_problematic_file(
-            file, f"Skipped {vcp_name} (configured to skip)", log_file
-        )
-
-    if not valid_results:
-        print("❌ No valid files found after filtering problematic files.")
-        return
-
-    # Report file filtering statistics
-    total_skipped = len(radar_files) - len(valid_results)
-    if total_skipped > 0:
-        if skipped_vcps:
-            print(f"Skipped {len(skipped_vcps)} files from filtered VCPs: {skip_vcps}")
-        problematic_count = len(problematic_files)
-        if problematic_count > 0:
-            print(
-                f"Filtered out {problematic_count} problematic files (see output.txt for details)"
-            )
-        print(f"Processing {len(valid_results)} valid files")
-
-    append_dim_time, vcps = zip(*valid_results)
-    file_indices = valid_files
-    append_dim_time = list(append_dim_time)
-    vcps = list(vcps)
-
-    vcp_time_mapping = create_vcp_time_mapping(append_dim_time, vcps, file_indices)
-
-    vcp_names = list(vcp_time_mapping.keys())
-    total_files = sum(info["file_count"] for info in vcp_time_mapping.values())
-    print(f"Discovered {len(vcp_names)} VCP patterns in {total_files} files:")
-    print(f"VCPs found: {', '.join(vcp_names)}")
-
-    # Generate VCP validation samples if requested
-    if generate_samples:
-        generate_vcp_samples(
-            vcp_time_mapping=vcp_time_mapping,
-            sample_percentage=sample_percentage,
-            output_path=samples_output_path,
-        )
+    vcp_time_mapping = result.vcp_time_mapping
+    valid_files = result.valid_files
 
     remaining_files = init_zarr_store(
-        files=file_indices,
+        files=valid_files,
         session=session,
         append_dim=append_dim,
         engine=engine,
@@ -283,16 +221,36 @@ def append_parallel(
     file_vcp_mapping = {}
     for vcp_name, vcp_info in vcp_time_mapping.items():
         for local_idx, file_info in enumerate(vcp_info["files"]):
-            file_vcp_mapping[file_info["filepath"]] = {
+            file_index = file_info["file_index"]
+            scan_type = file_info.get("scan_type", "STANDARD")
+
+            is_dynamic = scan_type not in ["STANDARD"]
+
+            file_vcp_mapping[file_index] = {
                 "time_index": local_idx,
                 "vcp": vcp_name,
+                "filepath": file_info["filepath"],
+                "is_dynamic": is_dynamic,
+                "sweep_indices": file_info.get("sweep_indices"),
+                "scan_type": scan_type,
+                "elevation_angles": file_info.get("elevation_angles"),
             }
 
     def write_single_file(file_info):
         """Write a single file using region writing - optimized for Client.map()"""
-        i, input_file = file_info
+        file_idx, input_file = file_info
         try:
-            meta = file_vcp_mapping.get(input_file, {"time_index": i, "vcp": None})
+            meta = file_vcp_mapping.get(
+                file_idx,
+                {
+                    "time_index": file_idx,
+                    "vcp": None,
+                    "is_dynamic": False,
+                    "sweep_indices": None,
+                    "scan_type": None,
+                    "elevation_angles": None,
+                },
+            )
             return write_dtree_region(
                 input_file,
                 meta["time_index"],
@@ -302,10 +260,18 @@ def append_parallel(
                 zarr_format,
                 consolidated,
                 remove_strings,
+                is_dynamic=meta.get("is_dynamic", False),
+                sweep_indices=meta.get("sweep_indices"),
+                scan_type=meta.get("scan_type"),
+                elevation_angles=meta.get("elevation_angles"),
+                vcp_config_file=vcp_config_file,
             )
         except Exception as e:
-            # Don't log from remote workers - return error info for local logging
-            return {"error": f"Write operation failed: {str(e)}", "file": input_file}
+            return {
+                "error": f"Write operation failed: {str(e)}",
+                "file": input_file,
+                "index": file_idx,
+            }
 
     write_futures = client.map(write_single_file, remaining_files)
     write_results = client.gather(write_futures)
@@ -332,6 +298,8 @@ def append_parallel(
         session.commit(
             f"writing {len(successful_sessions)}/{len(radar_files)} radar files to zarr store"
         )
-        print(f"Wrote {len(radar_files)} radar files to zarr store")
+        print(
+            f"Wrote {len(radar_files)} radar files to zarr store, with {len(successful_sessions)} time steps"
+        )
 
     check_cords(repo)

@@ -114,7 +114,6 @@ def write_dtree_region(
         remove_strings: Whether to remove string variables
         is_dynamic: Whether to use template-based processing for dynamic scans
         sweep_indices: Sweep indices to include (for temporal slicing)
-        scan_type: Scan type classification (for logging/metadata)
         elevation_angles: Elevation angles for this temporal slice (for VCP sweep mapping)
         vcp_config_file: VCP configuration file name
         **kwargs: Additional arguments passed to dtree_to_zarr

@@ -95,7 +95,6 @@ class VcpTemplateManager:
 
     def create_scan_dataset(
         self,
-        scan_type: str,
         sweep_idx: int,
         radar_info: dict,
         append_dim: str = "vcp_time",

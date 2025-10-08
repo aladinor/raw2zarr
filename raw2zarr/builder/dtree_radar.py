@@ -8,7 +8,7 @@ from xarray.backends.common import _normalize_path
 from ..io.load import load_radar_data
 from ..templates.vcp_utils import map_sweeps_to_vcp_indices
 from ..transform.alignment import fix_angle
-from ..transform.dimension import ensure_dimension
+from ..transform.dimension import ensure_dimension, slice_to_vcp_dimensions
 from ..transform.encoding import dtree_encoding
 from ..transform.georeferencing import apply_georeferencing
 from .builder_utils import remove_dims
@@ -88,6 +88,9 @@ def radar_datatree(
     task_name = dtree.attrs.get("scan_name", "").strip()
     if not task_name:
         warnings.warn("Missing 'scan_name' in radar data attributes", UserWarning)
+
+    if engine == "nexradlevel2":
+        dtree = slice_to_vcp_dimensions(dtree, task_name, vcp_config_file)
 
     dtree = dtree.pipe(fix_angle).pipe(apply_georeferencing)
 

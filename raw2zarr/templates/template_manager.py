@@ -276,9 +276,7 @@ class VcpTemplateManager:
         )
         sweep_dict: dict = {}
         for sweep_idx in range(len(vcp_info.elevations)):
-            scan_type = f"unified_sweep_{sweep_idx}"
             ds = self.create_scan_dataset(
-                scan_type,
                 sweep_idx,
                 radar_info,
                 append_dim=append_dim,
@@ -382,8 +380,6 @@ class VcpTemplateManager:
 
             # Create sweeps for this VCP using the FULL time dimension
             for sweep_idx in range(len(vcp_config.elevations)):
-                scan_type = f"unified_sweep_{sweep_idx}"
-
                 # Clear dask caches to avoid task key conflicts between VCPs/sweeps
                 import gc
 
@@ -398,7 +394,6 @@ class VcpTemplateManager:
                 # Create dataset for this sweep with TOTAL time dimension
                 # The region writing will handle placing data in correct time slices
                 ds = self.create_scan_dataset(
-                    scan_type,
                     sweep_idx,
                     vcp_radar_info,
                     append_dim=append_dim,
@@ -411,7 +406,7 @@ class VcpTemplateManager:
                 sweep_dict[f"{vcp_name}/sweep_{sweep_idx}"] = ds
 
                 print(
-                    f"    🔹 Sweep {sweep_idx}: {vcp_config.elevations[sweep_idx]:.1f}° | {scan_type} | "
+                    f"    🔹 Sweep {sweep_idx}: {vcp_config.elevations[sweep_idx]:.1f}° | "
                     f"Az:{vcp_config.dims['azimuth'][sweep_idx]} R:{vcp_config.dims['range'][sweep_idx]}"
                 )
 

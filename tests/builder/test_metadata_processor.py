@@ -353,6 +353,71 @@ class TestProcessMetadataWithCorruption:
         assert "VCP-212" in result.vcp_names
         assert len(result.vcp_names) == 2
 
+    def test_filepath_mapping_with_corrupted_files(self, mock_client):
+        """Test that filepath mapping is correct even when files are skipped."""
+        metadata_results = [
+            [
+                (
+                    0,
+                    "file1.h5",
+                    pd.Timestamp("2023-01-01 12:00:00"),
+                    "VCP-12",
+                    0,
+                    [0, 1],
+                    "STANDARD",
+                    None,
+                )
+            ],
+            [
+                (
+                    1,
+                    "file2.h5",
+                    "ERROR",
+                    "Corrupted file",
+                    0,
+                    [],
+                    "CORRUPTED",
+                    [],
+                )
+            ],
+            [
+                (
+                    2,
+                    "file3.h5",
+                    pd.Timestamp("2023-01-01 12:10:00"),
+                    "VCP-12",
+                    0,
+                    [0, 1],
+                    "STANDARD",
+                    None,
+                )
+            ],
+        ]
+
+        mock_client.map.return_value = []
+        mock_client.gather.return_value = metadata_results
+
+        result = process_metadata_and_create_vcp_mapping(
+            client=mock_client,
+            radar_files=["file1.h5", "file2.h5", "file3.h5"],
+            engine="nexradlevel2",
+        )
+
+        # Verify VCP time mapping has correct filepaths (no empty strings)
+        assert result is not None
+        assert "VCP-12" in result.vcp_time_mapping
+
+        files = result.vcp_time_mapping["VCP-12"]["files"]
+        assert len(files) == 2
+
+        # Both files should have valid filepaths (not empty)
+        assert files[0]["filepath"] == "file1.h5"
+        assert files[1]["filepath"] == "file3.h5"
+
+        # Verify no empty filepath strings
+        for file_info in files:
+            assert file_info["filepath"] != ""
+
 
 class TestMetadataProcessingResult:
     """Test MetadataProcessingResult data class."""

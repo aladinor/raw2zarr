@@ -295,6 +295,95 @@ def create_vcp_time_mapping_with_slices(
     return vcp_time_mapping
 
 
+def create_sweep_to_vcp_mapping(
+    data_tree,
+    sweep_indices: list[int],
+    elevation_angles: list[float],
+    vcp_elevations: list[float],
+    vcp_range_dims: list[int],
+) -> dict[int, int]:
+    """
+    Create mapping from file sweep indices to VCP config indices.
+
+    Maps sweeps to VCP template positions by matching elevation angles and
+    optionally range dimensions (for split-cut disambiguation).
+
+    Parameters
+    ----------
+    data_tree : DataTree
+        Loaded radar data with file sweep indices
+    sweep_indices : list[int]
+        File sweep indices to map (e.g., [10, 11, 12, 13, 14, 15])
+    elevation_angles : list[float]
+        Elevation angles corresponding to sweep_indices (e.g., [0.5, 0.5, 3.1, 4.0, 5.1, 6.4])
+    vcp_elevations : list[float]
+        VCP config elevation angles (e.g., [0.5, 0.5, 0.9, 0.9, ...])
+    vcp_range_dims : list[int]
+        VCP config range dimensions per sweep (e.g., [1832, 1192, 1168, ...])
+
+    Returns
+    -------
+    dict[int, int]
+        Mapping from file sweep index to VCP config index
+        Example: {10: 0, 11: 1, 12: 8, 13: 9, 14: 10, 15: 11}
+
+    Notes
+    -----
+    - First attempts exact elevation + range match (for split cuts)
+    - Falls back to elevation-only match if no exact range match
+    - Uses ±0.15° tolerance for elevation matching
+    - Ensures each VCP index is mapped only once
+    """
+    sweep_mapping = {}  # {file_sweep_idx: vcp_config_idx}
+
+    for idx, file_sweep_idx in enumerate(sweep_indices):
+        # Get elevation for this sweep
+        elev = elevation_angles[idx]
+        rounded_elev = round(elev, 1)
+
+        # Get actual dimensions from the file sweep
+        file_sweep_name = f"sweep_{file_sweep_idx}"
+        if file_sweep_name not in data_tree.children:
+            continue
+
+        sweep_ds = data_tree[file_sweep_name].ds
+        actual_range = len(sweep_ds.range) if "range" in sweep_ds.dims else 0
+
+        # Find matching elevation + range in VCP config (for split-cut disambiguation)
+        # First try exact range match (preferred for split cuts)
+        matched_vcp_idx = None
+        for vcp_idx, (vcp_elev, vcp_range) in enumerate(
+            zip(vcp_elevations, vcp_range_dims)
+        ):
+            rounded_vcp_elev = round(vcp_elev, 1)
+            elev_match = abs(rounded_elev - rounded_vcp_elev) < 0.15
+            range_match = actual_range == vcp_range
+
+            if elev_match and range_match:
+                # Check if this VCP index hasn't been mapped yet
+                if vcp_idx not in sweep_mapping.values():
+                    matched_vcp_idx = vcp_idx
+                    break
+
+        # If no exact range match, fall back to elevation-only match
+        # This handles SAILS/MRLE supplemental scans with reduced range coverage
+        if matched_vcp_idx is None:
+            for vcp_idx, (vcp_elev, vcp_range) in enumerate(
+                zip(vcp_elevations, vcp_range_dims)
+            ):
+                rounded_vcp_elev = round(vcp_elev, 1)
+                elev_match = abs(rounded_elev - rounded_vcp_elev) < 0.15
+
+                if elev_match and vcp_idx not in sweep_mapping.values():
+                    matched_vcp_idx = vcp_idx
+                    break
+
+        if matched_vcp_idx is not None:
+            sweep_mapping[file_sweep_idx] = matched_vcp_idx
+
+    return sweep_mapping
+
+
 def map_sweeps_to_vcp_indices(
     data_tree,
     vcp: str,
@@ -356,9 +445,6 @@ def map_sweeps_to_vcp_indices(
     vcp_elevations = vcp_info["elevations"]
     vcp_range_dims = vcp_info["dims"]["range"]
 
-    # Map file sweep indices to VCP template indices
-    sweep_mapping = {}  # {file_sweep_idx: vcp_sweep_idx}
-
     # Use provided sweep_indices (SAILS/MRLE) or sequential indices (AVSET/STANDARD)
     indices_to_process = (
         sweep_indices
@@ -366,32 +452,14 @@ def map_sweeps_to_vcp_indices(
         else list(range(len(elevation_angles)))
     )
 
-    for idx, file_sweep_idx in enumerate(indices_to_process):
-        # Get elevation for this sweep
-        elev = elevation_angles[idx]
-        rounded_elev = round(elev, 1)
-
-        # Get actual dimensions from the file sweep
-        file_sweep_name = f"sweep_{file_sweep_idx}"
-        if file_sweep_name not in data_tree.children:
-            continue
-
-        sweep_ds = data_tree[file_sweep_name].ds
-        actual_range = len(sweep_ds.range) if "range" in sweep_ds.dims else 0
-
-        # Find matching elevation + range in VCP config (for split-cut disambiguation)
-        for vcp_idx, (vcp_elev, vcp_range) in enumerate(
-            zip(vcp_elevations, vcp_range_dims)
-        ):
-            rounded_vcp_elev = round(vcp_elev, 1)
-            elev_match = abs(rounded_elev - rounded_vcp_elev) < 0.15
-            range_match = actual_range == vcp_range
-
-            if elev_match and range_match:
-                # Check if this VCP index hasn't been mapped yet
-                if vcp_idx not in sweep_mapping.values():
-                    sweep_mapping[file_sweep_idx] = vcp_idx
-                    break
+    # Map file sweep indices to VCP template indices using shared helper
+    sweep_mapping = create_sweep_to_vcp_mapping(
+        data_tree=data_tree,
+        sweep_indices=indices_to_process,
+        elevation_angles=elevation_angles,
+        vcp_elevations=vcp_elevations,
+        vcp_range_dims=vcp_range_dims,
+    )
 
     # Build new tree with VCP sweep indices
     remapped_dict = {}

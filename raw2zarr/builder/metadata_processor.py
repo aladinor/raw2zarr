@@ -152,7 +152,8 @@ def process_metadata_and_create_vcp_mapping(
             valid_results.append(
                 (timestamp, vcp, slice_id, sweep_indices, scan_type, elevation_angles)
             )
-            valid_files.append((slice_index, file))
+            # Use sequential re-indexing to avoid gaps from skipped files
+            valid_files.append((len(valid_files), file))
         else:
             # Problematic file (vcp contains error message)
             problematic_files.append((file, vcp))

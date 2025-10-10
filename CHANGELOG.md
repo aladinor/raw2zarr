@@ -2,6 +2,73 @@
 
 All notable changes to this project are documented here.
 
+## [Unreleased]
+
+Highlights
+- Dynamic scan support with temporal slicing for NEXRAD (SAILS, MRLE, AVSET patterns)
+- High-performance async S3 file listing utilities (10-100x speedup)
+- Metadata processor with corruption detection and filtering
+- VCP backward compatibility system for range dimension slicing
+- Python 3.11 support for broader deployment compatibility
+
+Breaking Changes
+- None
+
+Features
+- Add async S3 file listing utilities with parallel day-level queries (6577d07, 809b7e2)
+- Add metadata processor for parallel file processing with corruption filtering (c81584b)
+- Add VCP sweep mapping (`map_sweeps_to_vcp_indices`) for dynamic scan handling (c81584b)
+- Add VCP time mapping with temporal slice support for SAILS/MRLE/AVSET (c81584b)
+- Add `slice_to_vcp_dimensions()` for VCP backward compatibility (b791af7)
+- Add corruption detection for missing/misaligned sweep indices (c81584b)
+- Add timezone-aware timestamp conversion utility (c81584b)
+- Add Python 3.11 support across setup.py, pyproject.toml, and CI matrix (d6c538a)
+- Add NCSA cluster deployment environment with HTCondor support (554aa2f)
+- Implement dynamic scan writing with temporal slicing (c751f54, 90962a7)
+- Add dynamic scan detection to `radar_datatree()` (299a250)
+
+Improvements
+- Update VCP configurations using KLOT 2025 files (bac2bbc)
+- Reorganize metadata fields: rename `dynamic_type` → `scan_type`, `sails_inserts` → `additional_sweeps` (eef1286)
+- Add `missing_sweeps` field to metadata (eef1286)
+- Improve metadata extraction placement for simplification (263877e)
+- Filter MDM files from file queries (289746a, b50a3fd)
+- Remove unused parameters (7ce7a80)
+
+Fixes
+- Fix VCP range slicing and template creation TypeError in `create_scan_dataset()` (b791af7)
+- Restrict VCP slicing to NEXRAD data only (b791af7)
+- Fix file listing bug (f88af3e)
+- Update test patches for utils package structure (b1fb2d2)
+- Export private test helper functions from utils (fb8e0eb)
+- Fix environment.yml CI conflicts by removing GitHub install (1f35f16)
+- Use `python>=3.11` in environment.yml for CI matrix flexibility (100d94e)
+- Update notebook-check CI job to use Python 3.11 (5e1201c)
+
+Tests
+- Add 30 comprehensive tests for metadata processing and corruption detection (c81584b)
+- Add tests for VCP utilities (sweep mapping, time mapping with slices) (c81584b)
+- Add tests for timezone conversion (UTC, naive, timezone-aware handling) (c81584b)
+- Add 4 integration tests using real S3 NEXRAD files (c81584b)
+
+Documentation
+- Convert README admonitions to MyST format (6e00f1d)
+- Add NEXRAD dynamic scans warning to documentation (6e00f1d)
+- Add GitHub Release badge marking v0.4.0 as latest (5ec1dbb)
+
+CI / Environment
+- Add Python 3.11 to CI test matrix alongside Python 3.12 (d6c538a)
+- Add NCSA-specific environment with HTCondor integration (554aa2f)
+- Fix CI environment conflicts (1f35f16, 100d94e, 5e1201c)
+
+Upgrade Notes
+- Python 3.11+ now supported (previously required 3.12+)
+- New async utilities available: use `get_radar_files_async()` for faster multi-day S3 queries
+- VCP range slicing now automatic for NEXRAD data (backward compatibility with older VCP configs)
+- Metadata field names changed: update code using `dynamic_type` or `sails_inserts`
+
+Full diff: compare `v0.4.0...HEAD`.
+
 ## [0.4.0] - 2025-09-29
 
 Highlights
@@ -53,4 +120,3 @@ Upgrade Notes
 - If using older config names, adjust to the simplified scheme introduced in 0.4.0.
 
 Full diff: compare `v0.3.0...v0.4.0`.
-

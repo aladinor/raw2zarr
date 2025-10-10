@@ -89,8 +89,16 @@ def radar_datatree(
     if not task_name:
         warnings.warn("Missing 'scan_name' in radar data attributes", UserWarning)
 
+    # Slice range dimensions for backward compatibility with old VCP configs
+    # For dynamic scans, pass sweep indices and elevations for correct mapping
     if engine == "nexradlevel2":
-        dtree = slice_to_vcp_dimensions(dtree, task_name, vcp_config_file)
+        dtree = slice_to_vcp_dimensions(
+            dtree,
+            task_name,
+            vcp_config_file,
+            sweep_indices=sweep_indices,
+            elevation_angles=elevation_angles,
+        )
 
     dtree = dtree.pipe(fix_angle).pipe(apply_georeferencing)
 

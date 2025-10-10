@@ -20,6 +20,7 @@ Features
 - Add VCP sweep mapping (`map_sweeps_to_vcp_indices`) for dynamic scan handling (c81584b)
 - Add VCP time mapping with temporal slice support for SAILS/MRLE/AVSET (c81584b)
 - Add `slice_to_vcp_dimensions()` for VCP backward compatibility (b791af7)
+- Add `create_sweep_to_vcp_mapping()` shared helper for elevation-based sweep mapping (e62a803)
 - Add corruption detection for missing/misaligned sweep indices (c81584b)
 - Add timezone-aware timestamp conversion utility (c81584b)
 - Add Python 3.11 support across setup.py, pyproject.toml, and CI matrix (d6c538a)
@@ -28,6 +29,7 @@ Features
 - Add dynamic scan detection to `radar_datatree()` (299a250)
 
 Improvements
+- Refactor sweep-to-VCP mapping logic into reusable helper function (e62a803)
 - Update VCP configurations using KLOT 2025 files (bac2bbc)
 - Reorganize metadata fields: rename `dynamic_type` → `scan_type`, `sails_inserts` → `additional_sweeps` (eef1286)
 - Add `missing_sweeps` field to metadata (eef1286)
@@ -36,6 +38,9 @@ Improvements
 - Remove unused parameters (7ce7a80)
 
 Fixes
+- Fix filepath index mismatch when corrupted files are skipped in metadata processing (e62a803)
+- Fix VCP-212 range dimensions for sweeps 10-13 to match 2025 data (e62a803)
+- Fix dimension mismatch errors in parallel region writes for temporal slices (e62a803)
 - Fix VCP range slicing and template creation TypeError in `create_scan_dataset()` (b791af7)
 - Restrict VCP slicing to NEXRAD data only (b791af7)
 - Fix file listing bug (f88af3e)
@@ -46,6 +51,7 @@ Fixes
 - Update notebook-check CI job to use Python 3.11 (5e1201c)
 
 Tests
+- Add test for filepath mapping with corrupted files (e62a803)
 - Add 30 comprehensive tests for metadata processing and corruption detection (c81584b)
 - Add tests for VCP utilities (sweep mapping, time mapping with slices) (c81584b)
 - Add tests for timezone conversion (UTC, naive, timezone-aware handling) (c81584b)

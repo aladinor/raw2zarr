@@ -5,10 +5,11 @@ import warnings
 from collections.abc import Iterable
 
 import icechunk
+import pandas as pd
+import xarray as xr
 from dask.distributed import LocalCluster
 
 from ..templates.template_utils import remove_string_vars
-from ..templates.vcp_utils import create_vcp_time_mapping
 from ..transform.encoding import dtree_encoding
 from ..writer.writer_utils import (
     check_cords,
@@ -16,14 +17,11 @@ from ..writer.writer_utils import (
     resolve_zarr_write_options,
 )
 from ..writer.zarr_writer import dtree_to_zarr, write_dtree_region
-from .builder_utils import (
-    _log_problematic_file,
-    extract_single_metadata,
-    generate_vcp_samples,
-)
+from .builder_utils import _log_problematic_file
 
 # _log_problematic_file not available on Coiled workers - using local logging
 from .dtree_radar import radar_datatree
+from .metadata_processor import process_metadata_and_create_vcp_mapping
 
 warnings.filterwarnings(
     "ignore",
@@ -41,6 +39,103 @@ warnings.filterwarnings(
 )
 
 
+def create_vcp_template_in_memory(
+    vcp: str,
+    append_dim: str,
+    vcp_config_file: str = "vcp_nexrad.json",
+) -> xr.DataTree:
+    """
+    Create empty VCP template with all expected sweeps (NaN-filled).
+
+    Creates a template in memory with all sweeps defined in the VCP configuration,
+    filled with NaN values. This ensures consistent structure when actual data
+    has missing sweeps (e.g., AVSET scans that terminate early).
+
+    Parameters
+    ----------
+    vcp : str
+        VCP pattern name (e.g., "VCP-212")
+    append_dim : str
+        Dimension name for appending (e.g., "vcp_time")
+    vcp_config_file : str
+        VCP configuration file name
+
+    Returns
+    -------
+    xr.DataTree
+        Template with all expected sweeps filled with NaN
+    """
+    from ..templates.template_manager import VcpTemplateManager
+
+    template_mgr = VcpTemplateManager(vcp_config_file=vcp_config_file)
+
+    # Create minimal radar info for template
+    # These dummy values will be overwritten by actual data during merge
+    radar_info = {
+        "vcp": vcp,
+        "lat": 0.0,
+        "lon": 0.0,
+        "alt": 0.0,
+        "volume_number": 0,
+        "platform_type": "fixed",
+        "instrument_type": "radar",
+        "primary_axis": "axis_z",
+        "time_coverage_start": "1970-01-01T00:00:00Z",
+        "time_coverage_end": "1970-01-01T00:00:00Z",
+        "reference_time": pd.Timestamp("1970-01-01T00:00:00Z"),
+        "crs_wkt": {"grid_mapping_name": "latitude_longitude"},
+    }
+
+    # Create template with single time step
+    template = template_mgr.create_empty_vcp_tree(
+        radar_info=radar_info,
+        append_dim=append_dim,
+        remove_strings=True,
+        append_dim_time=[pd.Timestamp.now()],  # Single dummy timestamp
+    )
+
+    return template
+
+
+def merge_data_into_template(
+    template: xr.DataTree, actual_data: xr.DataTree
+) -> xr.DataTree:
+    """
+    Overlay actual data onto template, preserving template structure.
+
+    This function takes a template with all expected sweeps (NaN-filled) and
+    overlays the actual data from a file. Missing sweeps remain NaN-filled,
+    ensuring consistent structure across all files for a given VCP.
+
+    Parameters
+    ----------
+    template : xr.DataTree
+        Template with all expected sweeps (NaN-filled)
+    actual_data : xr.DataTree
+        Actual data loaded from file (may have missing sweeps)
+
+    Returns
+    -------
+    xr.DataTree
+        Template with actual data overlaid, missing sweeps remain NaN
+    """
+    # Start with template (all sweeps, NaN-filled)
+    result_dict = template.to_dict()
+    actual_dict = actual_data.to_dict()
+
+    # Get the VCP group name (first child)
+    vcp_name = list(actual_data.children)[0]
+
+    # Overlay ALL actual data onto template (sweeps and additional groups)
+    for path, dataset in actual_dict.items():
+        # Replace any matching path from template with actual data
+        # This includes sweeps, root, and additional groups like georeferencing_correction
+        if path.startswith(f"/{vcp_name}"):
+            result_dict[path] = dataset
+
+    return xr.DataTree.from_dict(result_dict)
+
+
 def append_sequential(
     radar_files: Iterable[str | os.PathLike],
     append_dim: str,
@@ -50,6 +145,7 @@ def append_sequential(
     mode: str = "a",
     remove_strings: bool = True,
     branch: str = "main",
+    vcp_config_file: str = "vcp_nexrad.json",
     **kwargs,
 ) -> None:
     """
@@ -58,6 +154,9 @@ def append_sequential(
     This function loads each radar file one at a time, converts it to a DataTree,
     and appends it to the specified Zarr store. It is suitable for smaller datasets
     or environments where parallel processing is not needed.
+
+    Supports dynamic NEXRAD scans (SAILS, MRLE, AVSET) by detecting temporal slices
+    within each file and writing each slice as a separate time step.
 
     Parameters:
         radar_files (Iterable[str | os.PathLike]):
@@ -76,43 +175,113 @@ def append_sequential(
             Whether to remove variables of string dtype. Defaults to True.
         branch (str, optional):
             Git-like branch name for icechunk versioning. Defaults to "main".
+        vcp_config_file (str, optional):
+            VCP configuration file name for NEXRAD data. Defaults to "vcp_nexrad.json".
         **kwargs:
             Additional options passed to the Zarr writer.
 
     Returns:
         None
-    """
-    for file in radar_files:
-        session = repo.writable_session(branch=branch)
-        try:
-            dtree = radar_datatree(file, engine=engine)
 
-            if not dtree:
-                print(f"[Warning] empty DataTree {file}")
+    Note:
+        For dynamic scans (SAILS, MRLE), a single file may contain multiple temporal
+        slices. Each slice is written as a separate time step in the Zarr store.
+    """
+    for file_idx, file in enumerate(radar_files):
+        # Extract metadata for this file
+        if engine == "nexradlevel2":
+            from .builder_utils import extract_single_metadata
+
+            metadata_entries = extract_single_metadata((file_idx, file), engine)
+            # Returns list: 1 entry for STANDARD, 4 entries for MESO-SAILS×3
+        else:
+            # IRIS/ODIM: single entry, no dynamic scans
+            metadata_entries = [(file_idx, file, None, None, 0, None, "STANDARD", None)]
+
+        # Loop through temporal slices (may be multiple per file)
+        for entry in metadata_entries:
+            (
+                _,
+                filepath,
+                timestamp,
+                vcp,
+                slice_id,
+                sweep_indices,
+                scan_type,
+                elevation_angles,
+            ) = entry
+
+            # Skip corrupted files
+            if scan_type == "CORRUPTED":
+                print(f"[Warning] Skipping corrupted file: {filepath}")
                 continue
 
-            # TODO: remove this after strings are supported by zarr v3
-            if remove_strings:
-                dtree = remove_string_vars(dtree)
-                dtree.encoding = dtree_encoding(dtree, append_dim=append_dim)
+            # Determine if dynamic
+            is_dynamic = scan_type not in ["STANDARD"]
 
-            group_path = dtree.groups[1]
+            session = repo.writable_session(branch=branch)
+            try:
+                # Step 1: Create in-memory template for NEXRAD files with valid VCP
+                # This ensures all sweeps exist (including NaN-filled missing ones)
+                template = None
+                if engine == "nexradlevel2" and vcp:
+                    try:
+                        template = create_vcp_template_in_memory(
+                            vcp=vcp,
+                            append_dim=append_dim,
+                            vcp_config_file=vcp_config_file,
+                        )
+                    except Exception as e:
+                        print(
+                            f"[Warning] Failed to create template for {vcp}: {e}. Proceeding without template."
+                        )
 
-            writer_args = resolve_zarr_write_options(
-                store=session.store,
-                group_path=group_path,
-                encoding=dtree.encoding,
-                default_mode=mode,
-                append_dim=append_dim,
-                zarr_format=zarr_format,
-            )
-            dtree_to_zarr(dtree, **writer_args)
+                # Step 2: Load actual data from file
+                dtree = radar_datatree(
+                    filepath,
+                    engine=engine,
+                    append_dim=append_dim,
+                    is_dynamic=is_dynamic,
+                    sweep_indices=sweep_indices,
+                    elevation_angles=elevation_angles,
+                    vcp_config_file=vcp_config_file,
+                )
 
-            snapshot_id = session.commit(f"Added file {file}")
-            print(f"[icechunk] Committed {file} as snapshot {snapshot_id}")
-        except Exception as e:
-            print(f"[Warning] Failed to process {file}: {e}")
-            continue
+                if not dtree:
+                    print(f"[Warning] empty DataTree {filepath}")
+                    continue
+
+                # Step 3: Merge actual data into template (if template exists)
+                # This fills in actual values while keeping missing sweeps as NaN
+                if template is not None:
+                    dtree = merge_data_into_template(template, dtree)
+
+                # TODO: remove this after strings are supported by zarr v3
+                if remove_strings:
+                    dtree = remove_string_vars(dtree)
+                    dtree.encoding = dtree_encoding(dtree, append_dim=append_dim)
+
+                group_path = dtree.groups[1]
+
+                writer_args = resolve_zarr_write_options(
+                    store=session.store,
+                    group_path=group_path,
+                    encoding=dtree.encoding,
+                    default_mode=mode,
+                    append_dim=append_dim,
+                    zarr_format=zarr_format,
+                )
+                dtree_to_zarr(dtree, **writer_args)
+
+                snapshot_id = session.commit(
+                    f"Added {scan_type} slice {slice_id} from {file}"
+                )
+                print(
+                    f"[icechunk] Committed {scan_type} slice {slice_id} from {file} as snapshot {snapshot_id}"
+                )
+            except Exception as e:
+                print(f"[Warning] Failed to process {filepath} slice {slice_id}: {e}")
+                continue
 
 
 def append_parallel(
@@ -191,84 +360,26 @@ def append_parallel(
 
     session = repo.writable_session(branch=branch)
 
-    # Ultra-fast graph construction with Client.map()
-    radar_files_with_indices = list(enumerate(radar_files))
-    futures = client.map(
-        extract_single_metadata, radar_files_with_indices, engine=engine
+    # Process metadata and create VCP time mapping
+    result = process_metadata_and_create_vcp_mapping(
+        client=client,
+        radar_files=radar_files,
+        engine=engine,
+        skip_vcps=skip_vcps,
+        log_file=log_file,
+        generate_samples=generate_samples,
+        sample_percentage=sample_percentage,
+        samples_output_path=samples_output_path,
     )
-    metadata_results = client.gather(futures)
 
-    # Filter out problematic files and unwanted VCPs
-    valid_results = []
-    valid_files = []
-    problematic_files = []
-    skipped_vcps = []
+    if result is None:
+        return  # No valid files found
 
-    for original_index, file, result in metadata_results:
-        if result[0] != "ERROR":
-            timestamp, vcp_number = result
-            vcp_name = f"VCP-{vcp_number}"
-
-            # Check if this VCP should be skipped
-            if skip_vcps and vcp_name in skip_vcps:
-                skipped_vcps.append((file, vcp_name))
-                continue
-
-            # Valid result with (timestamp, vcp_number)
-            valid_results.append(result)
-            valid_files.append((original_index, file))
-        else:
-            # Problematic file with error info
-            problematic_files.append((file, result[1]))
-
-    # Log all problematic files locally (metadata extraction failures)
-    for file, error_msg in problematic_files:
-        _log_problematic_file(file, error_msg, log_file)
-
-    # Log skipped VCPs locally
-    for file, vcp_name in skipped_vcps:
-        _log_problematic_file(
-            file, f"Skipped {vcp_name} (configured to skip)", log_file
-        )
-
-    if not valid_results:
-        print("❌ No valid files found after filtering problematic files.")
-        return
-
-    # Report file filtering statistics
-    total_skipped = len(radar_files) - len(valid_results)
-    if total_skipped > 0:
-        if skipped_vcps:
-            print(f"Skipped {len(skipped_vcps)} files from filtered VCPs: {skip_vcps}")
-        problematic_count = len(problematic_files)
-        if problematic_count > 0:
-            print(
-                f"Filtered out {problematic_count} problematic files (see output.txt for details)"
-            )
-        print(f"Processing {len(valid_results)} valid files")
-
-    append_dim_time, vcps = zip(*valid_results)
-    file_indices = valid_files
-    append_dim_time = list(append_dim_time)
-    vcps = list(vcps)
-
-    vcp_time_mapping = create_vcp_time_mapping(append_dim_time, vcps, file_indices)
-
-    vcp_names = list(vcp_time_mapping.keys())
-    total_files = sum(info["file_count"] for info in vcp_time_mapping.values())
-    print(f"Discovered {len(vcp_names)} VCP patterns in {total_files} files:")
-    print(f"VCPs found: {', '.join(vcp_names)}")
-
-    # Generate VCP validation samples if requested
-    if generate_samples:
-        generate_vcp_samples(
-            vcp_time_mapping=vcp_time_mapping,
-            sample_percentage=sample_percentage,
-            output_path=samples_output_path,
-        )
+    vcp_time_mapping = result.vcp_time_mapping
+    valid_files = result.valid_files
 
     remaining_files = init_zarr_store(
-        files=file_indices,
+        files=valid_files,
         session=session,
         append_dim=append_dim,
         engine=engine,
@@ -283,16 +394,36 @@ def append_parallel(
     file_vcp_mapping = {}
     for vcp_name, vcp_info in vcp_time_mapping.items():
         for local_idx, file_info in enumerate(vcp_info["files"]):
-            file_vcp_mapping[file_info["filepath"]] = {
+            file_index = file_info["file_index"]
+            scan_type = file_info.get("scan_type", "STANDARD")
+
+            is_dynamic = scan_type not in ["STANDARD"]
+
+            file_vcp_mapping[file_index] = {
                 "time_index": local_idx,
                 "vcp": vcp_name,
+                "filepath": file_info["filepath"],
+                "is_dynamic": is_dynamic,
+                "sweep_indices": file_info.get("sweep_indices"),
+                "scan_type": scan_type,
+                "elevation_angles": file_info.get("elevation_angles"),
             }
 
     def write_single_file(file_info):
         """Write a single file using region writing - optimized for Client.map()"""
-        i, input_file = file_info
+        file_idx, input_file = file_info
         try:
-            meta = file_vcp_mapping.get(input_file, {"time_index": i, "vcp": None})
+            meta = file_vcp_mapping.get(
+                file_idx,
+                {
+                    "time_index": file_idx,
+                    "vcp": None,
+                    "is_dynamic": False,
+                    "sweep_indices": None,
+                    "scan_type": None,
+                    "elevation_angles": None,
+                },
+            )
             return write_dtree_region(
                 input_file,
                 meta["time_index"],
@@ -302,10 +433,18 @@ def append_parallel(
                 zarr_format,
                 consolidated,
                 remove_strings,
+                is_dynamic=meta.get("is_dynamic", False),
+                sweep_indices=meta.get("sweep_indices"),
+                scan_type=meta.get("scan_type"),
+                elevation_angles=meta.get("elevation_angles"),
+                vcp_config_file=vcp_config_file,
             )
         except Exception as e:
-            # Don't log from remote workers - return error info for local logging
-            return {"error": f"Write operation failed: {str(e)}", "file": input_file}
+            return {
+                "error": f"Write operation failed: {str(e)}",
+                "file": input_file,
+                "index": file_idx,
+            }
 
     write_futures = client.map(write_single_file, remaining_files)
     write_results = client.gather(write_futures)
@@ -332,6 +471,8 @@ def append_parallel(
         session.commit(
             f"writing {len(successful_sessions)}/{len(radar_files)} radar files to zarr store"
         )
-        print(f"Wrote {len(radar_files)} radar files to zarr store")
+        print(
+            f"Wrote {len(radar_files)} radar files to zarr store, with {len(successful_sessions)} time steps"
+        )
 
     check_cords(repo)

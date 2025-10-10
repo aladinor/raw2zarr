@@ -1,7 +1,40 @@
 import dask.array as da
 import numpy as np
+import pandas as pd
 import xarray as xr
 from pandas import Timestamp
+
+
+def _convert_timestamps_to_datetime64(
+    timestamps: list[Timestamp] | None,
+    size: int = 1,
+) -> np.ndarray:
+    """
+    Convert timezone-aware pandas Timestamps to numpy datetime64[ns] array.
+
+    Handles timezone conversion to avoid numpy warnings about timezones.
+    If timestamps have timezone info, converts to UTC and removes timezone.
+
+    Parameters
+    ----------
+    timestamps : list[Timestamp] | None
+        List of pandas Timestamps (may be timezone-aware)
+    size : int
+        Fallback size if timestamps is None (creates range array)
+
+    Returns
+    -------
+    np.ndarray
+        Numpy datetime64[ns] array (timezone-naive)
+    """
+    if timestamps:
+        dt_index = pd.DatetimeIndex(timestamps)
+        # Convert to UTC and remove timezone info if present
+        if dt_index.tz is not None:
+            dt_index = dt_index.tz_convert("UTC").tz_localize(None)
+        return dt_index.to_numpy(dtype="datetime64[ns]")
+    else:
+        return np.array(range(size), dtype="datetime64[ns]")
 
 
 def create_common_coords(
@@ -106,11 +139,7 @@ def create_root(
     size_append_dim: int = 1,
     append_dim_time: list[Timestamp] | None = None,
 ) -> dict[str : xr.Dataset]:
-    time_array = (
-        np.array(append_dim_time, dtype="datetime64[ns]")
-        if append_dim_time
-        else np.array(range(size_append_dim), dtype="datetime64[ns]")
-    )
+    time_array = _convert_timestamps_to_datetime64(append_dim_time, size_append_dim)
     vpc_coord = xr.DataArray(
         da.from_array(time_array, chunks=1),
         dims=append_dim,
@@ -214,11 +243,7 @@ def create_additional_groups(
     size_append_dim: int = 1,
     append_dim_time: Timestamp | None = None,
 ) -> dict[str : xr.Dataset]:
-    time_array = (
-        np.array(append_dim_time, dtype="datetime64[ns]")
-        if append_dim_time
-        else np.array(range(size_append_dim), dtype="datetime64[ns]")
-    )
+    time_array = _convert_timestamps_to_datetime64(append_dim_time, size_append_dim)
 
     group_names = ["georeferencing_correction", "radar_parameters"]
     additional_groups = {}

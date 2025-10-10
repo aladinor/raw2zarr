@@ -1,9 +1,11 @@
+import asyncio
 import glob
 import os
 import shutil
 from datetime import datetime
 
 import fsspec
+import icechunk
 import numpy as np
 import xarray as xr
 from dask.distributed import LocalCluster
@@ -11,6 +13,7 @@ from dask.distributed import LocalCluster
 from raw2zarr.builder.builder_utils import get_icechunk_repo
 from raw2zarr.builder.convert import convert_files
 from raw2zarr.utils import create_query, load_vcp_samples, timer_func
+from raw2zarr.utils.core import get_radar_files_async
 
 
 def remove_folder_if_exists(path):
@@ -89,20 +92,26 @@ def create_dtree():
 
 def get_dynamic_scans() -> list[str]:
     radar_files = [
-        "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_154426_V06",
-        "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_154815_V06",
-        "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_155154_V06",
-        "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_155533_V06",
-        "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_155912_V06",
-        "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_155912_V06_MDM",
-        "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_160251_V06",
-        "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_160643_V06",
-        "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_161058_V06",
-        "s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_161526_V06",  ### SAIL mode enabled
-        "s3://noaa-nexrad-level2/2025/02/11/KFCX/KFCX20250211_164314_V06",  ## AVSET + sailsx1 VCP215
-        "s3://noaa-nexrad-level2/2025/02/11/KFSX/KFSX20250211_164159_V06",  # AVSET + base tilt (-0.2)
+        "s3://unidata-nexrad-level2/2023/06/29/KILX/KILX20230629_154426_V06",
+        "s3://unidata-nexrad-level2/2023/06/29/KILX/KILX20230629_154815_V06",
+        "s3://unidata-nexrad-level2/2023/06/29/KILX/KILX20230629_155154_V06",
+        "s3://unidata-nexrad-level2/2023/06/29/KILX/KILX20230629_155533_V06",
+        "s3://unidata-nexrad-level2/2023/06/29/KILX/KILX20230629_155912_V06",
+        "s3://unidata-nexrad-level2/2023/06/29/KILX/KILX20230629_155912_V06_MDM",
+        "s3://unidata-nexrad-level2/2023/06/29/KILX/KILX20230629_160251_V06",
+        "s3://unidata-nexrad-level2/2023/06/29/KILX/KILX20230629_160643_V06",
+        "s3://unidata-nexrad-level2/2023/06/29/KILX/KILX20230629_161058_V06",
+        "s3://unidata-nexrad-level2/2023/06/29/KILX/KILX20230629_161526_V06",  ### SAIL mode enabled
+        "s3://unidata-nexrad-level2/2025/02/11/KFCX/KFCX20250211_164314_V06",  ## AVSET + sailsx1 VCP215
+        "s3://unidata-nexrad-level2/2025/02/11/KFSX/KFSX20250211_164159_V06",  # AVSET + base tilt (-0.2)
     ]
-    # radar_files = ["s3://noaa-nexrad-level2/2023/06/29/KILX/KILX20230629_124851_V06"],
+    radar_files = asyncio.run(
+        get_radar_files_async(
+            radar_site="KLOT",
+            start_time=datetime(2025, 3, 15, 1, 10),
+            end_time=datetime(2025, 3, 15, 12, 20),
+        )
+    )
     return radar_files
 
 
@@ -111,6 +120,38 @@ def files_with_shape_mismatch(vcp: str = "VCP-21"):
         "/media/alfonso/drive/Alfonso/python/raw2zarr/data/vcp_samples.json"
     )[vcp]
     return sorted(files), f"../zarr/{vcp}test", "nexradlevel2"
+
+
+def get_repo_config():
+    split_config = icechunk.ManifestSplittingConfig.from_dict(
+        {
+            icechunk.ManifestSplitCondition.AnyArray(): {
+                icechunk.ManifestSplitDimCondition.DimensionName("vcp_time"): 12
+                * 24
+                * 365  # roughly one year of radar data
+            }
+        }
+    )
+
+    var_condition = icechunk.ManifestPreloadCondition.name_matches(
+        r"^(vcp_time|azimuth|range|x|y|z)$"
+    )
+    size_condition = icechunk.ManifestPreloadCondition.num_refs(0, 100)  # Small arrays
+
+    preload_if = icechunk.ManifestPreloadCondition.and_conditions(
+        [var_condition, size_condition]
+    )
+
+    preload_config = icechunk.ManifestPreloadConfig(
+        max_total_refs=1000,
+        preload_if=preload_if,
+    )
+
+    return icechunk.RepositoryConfig(
+        manifest=icechunk.ManifestConfig(
+            splitting=split_config, preload=preload_config
+        ),
+    )
 
 
 def get_cluster():
@@ -124,9 +165,11 @@ def main():
     # IRIS Colombia
     # radar_files, zarr_store, engine, vcp_config_file = get_radar_files("iris")
     # NEXRAD
-    # radar_files, zarr_store, engine, vcp_config_file= get_radar_files("nexradlevel2")
+    _, zarr_store, engine, vcp_config_file = get_radar_files("nexradlevel2")
+    radar_files = get_dynamic_scans()
+
     # ECCC
-    radar_files, zarr_store, engine, vcp_config_file = get_radar_files("odim")
+    # radar_files, zarr_store, engine, vcp_config_file = get_radar_files("odim")
     # t = load_radar_data(radar_files[0], engine=engine)
     # if dynamic scans
     # radar_files = get_dynamic_scans()
@@ -143,7 +186,7 @@ def main():
     append_dim = "vcp_time"
 
     convert_files(
-        radar_files,  # Just 2 files for quick test
+        radar_files,
         append_dim=append_dim,
         repo=repo,
         zarr_format=zarr_version,

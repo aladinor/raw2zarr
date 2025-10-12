@@ -2834,19 +2834,19 @@
         1192,
         1832,
         1192,
-        1832,
+        1712,
         1192,
-        1832,
+        1540,
         1336,
-        1336,
-        1336,
-        924,
-        924,
+        1168,
+        992,
+        824,
+        684,
         540,
-        500,
-        460,
-        460,
-        460
+        456,
+        372,
+        300,
+        240
       ]
     },
     "sweep_0": {
@@ -10752,12 +10752,12 @@
       "range": [
         1832,
         1192,
-        1832,
+        1660,
         1192,
-        1832,
+        1324,
         1192,
-        1336,
-        1336
+        1084,
+        912
       ]
     },
     "sweep_0": {
@@ -11528,11 +11528,11 @@
       "range": [
         1832,
         1192,
-        1832,
+        1660,
         1192,
-        1336,
-        1336,
-        1336
+        1324,
+        1084,
+        912
       ]
     },
     "sweep_0": {
@@ -11591,6 +11591,29 @@
             "units": "unitless"
           }
         },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "clutter_correction_h",
+            "long_name": "Clutter Correction H",
+            "units": "unitless"
+          }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
         "sweep_fixed_angle": {
           "dims": [],
           "dtype": "float32",
@@ -11635,7 +11658,7 @@
           "attributes": {
             "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
             "long_name": "Radial velocity H",
-            "units": "meters per second"
+            "units": "m/s"
           }
         },
         "WRADH": {
@@ -11648,8 +11671,18 @@
           "attributes": {
             "standard_name": "radar_spectrum_width",
             "long_name": "Doppler spectrum width H",
-            "units": "meters per second"
+            "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         },
         "sweep_fixed_angle": {
           "dims": [],
@@ -11724,6 +11757,29 @@
             "units": "unitless"
           }
         },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "clutter_correction_h",
+            "long_name": "Clutter Correction H",
+            "units": "unitless"
+          }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
         "sweep_fixed_angle": {
           "dims": [],
           "dtype": "float32",
@@ -11768,7 +11824,7 @@
           "attributes": {
             "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
             "long_name": "Radial velocity H",
-            "units": "meters per second"
+            "units": "m/s"
           }
         },
         "WRADH": {
@@ -11781,8 +11837,18 @@
           "attributes": {
             "standard_name": "radar_spectrum_width",
             "long_name": "Doppler spectrum width H",
-            "units": "meters per second"
+            "units": "m/s"
           }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         },
         "sweep_fixed_angle": {
           "dims": [],
@@ -11883,6 +11949,29 @@
             "units": "unitless"
           }
         },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "clutter_correction_h",
+            "long_name": "Clutter Correction H",
+            "units": "unitless"
+          }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
         "sweep_fixed_angle": {
           "dims": [],
           "dtype": "float32",
@@ -11982,6 +12071,29 @@
             "units": "unitless"
           }
         },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "clutter_correction_h",
+            "long_name": "Clutter Correction H",
+            "units": "unitless"
+          }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
         "sweep_fixed_angle": {
           "dims": [],
           "dtype": "float32",
@@ -12080,6 +12192,29 @@
             "long_name": "Correlation coefficient HV",
             "units": "unitless"
           }
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "clutter_correction_h",
+            "long_name": "Clutter Correction H",
+            "units": "unitless"
+          }
+        },
+        "follow_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
+        },
+        "prt_mode": {
+          "dims": [],
+          "dtype": "int32",
+          "attributes": {}
         },
         "sweep_fixed_angle": {
           "dims": [],
@@ -13406,20 +13541,20 @@
         1192,
         1832,
         1192,
-        1692,
+        1712,
         1192,
-        1512,
-        1316,
-        1136,
-        964,
-        804,
-        664,
+        1540,
+        1336,
+        1168,
+        992,
+        824,
+        684,
         540,
-        444,
-        444,
-        444,
-        444,
-        444
+        456,
+        384,
+        332,
+        280,
+        240
       ],
       "azimuth": [
         720,
@@ -13565,7 +13700,7 @@
           "attributes": {
             "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
             "long_name": "Radial velocity H",
-            "units": "meters per seconds"
+            "units": "m/s"
           }
         },
         "WRADH": {
@@ -13578,7 +13713,7 @@
           "attributes": {
             "standard_name": "radar_spectrum_width",
             "long_name": "Doppler spectrum width H",
-            "units": "meters per seconds"
+            "units": "m/s"
           }
         },
         "follow_mode": {
@@ -13731,7 +13866,7 @@
           "attributes": {
             "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
             "long_name": "Radial velocity H",
-            "units": "meters per seconds"
+            "units": "m/s"
           }
         },
         "WRADH": {
@@ -13744,7 +13879,7 @@
           "attributes": {
             "standard_name": "radar_spectrum_width",
             "long_name": "Doppler spectrum width H",
-            "units": "meters per seconds"
+            "units": "m/s"
           }
         },
         "follow_mode": {
@@ -13897,7 +14032,7 @@
           "attributes": {
             "standard_name": "radial_velocity_of_scatterers_away_from_instrument",
             "long_name": "Radial velocity H",
-            "units": "meters per seconds"
+            "units": "m/s"
           }
         },
         "WRADH": {
@@ -13910,7 +14045,7 @@
           "attributes": {
             "standard_name": "radar_spectrum_width",
             "long_name": "Doppler spectrum width H",
-            "units": "meters per seconds"
+            "units": "m/s"
           }
         },
         "follow_mode": {
@@ -14019,6 +14154,19 @@
           "attributes": {
             "standard_name": "radar_correlation_coefficient_hv",
             "long_name": "Correlation coefficient HV",
+            "units": "unitless"
+          }
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "clutter_correction_h",
+            "long_name": "Clutter Correction H",
             "units": "unitless"
           }
         },
@@ -14131,6 +14279,19 @@
             "units": "unitless"
           }
         },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "clutter_correction_h",
+            "long_name": "Clutter Correction H",
+            "units": "unitless"
+          }
+        },
         "follow_mode": {
           "dims": [],
           "dtype": "int32",
@@ -14237,6 +14398,19 @@
           "attributes": {
             "standard_name": "radar_correlation_coefficient_hv",
             "long_name": "Correlation coefficient HV",
+            "units": "unitless"
+          }
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "clutter_correction_h",
+            "long_name": "Clutter Correction H",
             "units": "unitless"
           }
         },
@@ -14349,6 +14523,19 @@
             "units": "unitless"
           }
         },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "clutter_correction_h",
+            "long_name": "Clutter Correction H",
+            "units": "unitless"
+          }
+        },
         "follow_mode": {
           "dims": [],
           "dtype": "int32",
@@ -14455,6 +14642,19 @@
           "attributes": {
             "standard_name": "radar_correlation_coefficient_hv",
             "long_name": "Correlation coefficient HV",
+            "units": "unitless"
+          }
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "clutter_correction_h",
+            "long_name": "Clutter Correction H",
             "units": "unitless"
           }
         },
@@ -14567,6 +14767,19 @@
             "units": "unitless"
           }
         },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "clutter_correction_h",
+            "long_name": "Clutter Correction H",
+            "units": "unitless"
+          }
+        },
         "follow_mode": {
           "dims": [],
           "dtype": "int32",
@@ -14635,6 +14848,58 @@
             "standard_name": "radar_spectrum_width",
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
+          }
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radar_differential_reflectivity_hv",
+            "long_name": "Log differential reflectivity H/V",
+            "units": "dB"
+          }
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radar_differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "degrees"
+          }
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radar_correlation_coefficient_hv",
+            "long_name": "Correlation coefficient HV",
+            "units": "unitless"
+          }
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "clutter_correction_h",
+            "long_name": "Clutter Correction H",
+            "units": "unitless"
           }
         },
         "follow_mode": {
@@ -14707,6 +14972,58 @@
             "units": "m/s"
           }
         },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radar_differential_reflectivity_hv",
+            "long_name": "Log differential reflectivity H/V",
+            "units": "dB"
+          }
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radar_differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "degrees"
+          }
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radar_correlation_coefficient_hv",
+            "long_name": "Correlation coefficient HV",
+            "units": "unitless"
+          }
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "clutter_correction_h",
+            "long_name": "Clutter Correction H",
+            "units": "unitless"
+          }
+        },
         "follow_mode": {
           "dims": [],
           "dtype": "int32",
@@ -14775,6 +15092,58 @@
             "standard_name": "radar_spectrum_width",
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
+          }
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radar_differential_reflectivity_hv",
+            "long_name": "Log differential reflectivity H/V",
+            "units": "dB"
+          }
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radar_differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "degrees"
+          }
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radar_correlation_coefficient_hv",
+            "long_name": "Correlation coefficient HV",
+            "units": "unitless"
+          }
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "clutter_correction_h",
+            "long_name": "Clutter Correction H",
+            "units": "unitless"
           }
         },
         "follow_mode": {
@@ -14847,6 +15216,58 @@
             "units": "m/s"
           }
         },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radar_differential_reflectivity_hv",
+            "long_name": "Log differential reflectivity H/V",
+            "units": "dB"
+          }
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radar_differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "degrees"
+          }
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radar_correlation_coefficient_hv",
+            "long_name": "Correlation coefficient HV",
+            "units": "unitless"
+          }
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "clutter_correction_h",
+            "long_name": "Clutter Correction H",
+            "units": "unitless"
+          }
+        },
         "follow_mode": {
           "dims": [],
           "dtype": "int32",
@@ -14917,6 +15338,58 @@
             "units": "m/s"
           }
         },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radar_differential_reflectivity_hv",
+            "long_name": "Log differential reflectivity H/V",
+            "units": "dB"
+          }
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radar_differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "degrees"
+          }
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radar_correlation_coefficient_hv",
+            "long_name": "Correlation coefficient HV",
+            "units": "unitless"
+          }
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "clutter_correction_h",
+            "long_name": "Clutter Correction H",
+            "units": "unitless"
+          }
+        },
         "follow_mode": {
           "dims": [],
           "dtype": "int32",
@@ -14985,6 +15458,58 @@
             "standard_name": "radar_spectrum_width",
             "long_name": "Doppler spectrum width H",
             "units": "m/s"
+          }
+        },
+        "ZDR": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radar_differential_reflectivity_hv",
+            "long_name": "Log differential reflectivity H/V",
+            "units": "dB"
+          }
+        },
+        "PHIDP": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radar_differential_phase_hv",
+            "long_name": "Differential phase HV",
+            "units": "degrees"
+          }
+        },
+        "RHOHV": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "radar_correlation_coefficient_hv",
+            "long_name": "Correlation coefficient HV",
+            "units": "unitless"
+          }
+        },
+        "CCORH": {
+          "dims": [
+            "azimuth",
+            "range"
+          ],
+          "dtype": "float64",
+          "fill_value": -999.0,
+          "attributes": {
+            "standard_name": "clutter_correction_h",
+            "long_name": "Clutter Correction H",
+            "units": "unitless"
           }
         },
         "follow_mode": {

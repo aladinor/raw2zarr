@@ -7,13 +7,29 @@ name = "raw2zarr"
 description = "Package for convertir Sigmet radar files into zarr format"
 version = "0.4.0"
 requires-python = ">=3.11"
+license = {text = "CC-BY-NC-SA-4.0"}
 dependencies = [
     "black>=25.9.0",
-    "duckdb>=1.4.0",
-    "pre-commit>=4.3.0",
-    "pyarrow>=21.0.0",
     "pytest>=8.4.2",
     "ruff>=0.13.1",
+    # Core runtime dependencies
+    "fsspec",
+    "dask",
+    "distributed",
+    "pandas",
+    "numpy<2.3",
+    "pydantic",
+    "xarray>=2025.10.1",
+    "zarr>=3.1.0",
+    "s3fs>=2024.1.0",
+    "icechunk==1.1.9",
+    "xradar>=0.10.0",
+    "netcdf4",
+    "h5netcdf",
+    "bottleneck",
+    "jupyterlab",
+    "notebook",
+    "ipykernel",
 ]
 
 [tool.pytest.ini_options]

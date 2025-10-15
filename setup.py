@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="raw2zarr",
-    version="0.3.0",
+    version="0.4.1",
     description="Tools for working with radar data and converting it to Zarr format",
     author="Alfonso Ladino, Max Grover",
     author_email="alfonso8@illinois.edu",

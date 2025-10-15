@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented here.
 
+## [0.4.1] - 2025-10-15
+
+**License Change**
+- Changed license from BSD-3-Clause to CC BY-NC-SA 4.0 (Creative Commons Attribution-NonCommercial-ShareAlike 4.0)
+- Added NOTICE file explaining license terms and commercial licensing options
+- Updated pyproject.toml and setup.py with correct license metadata
+
+**Documentation**
+- Reorganized documentation files: moved SCIPY_POSTER.pdf to /docs folder
+- Moved radar_FAIR.png to /images folder
+
+**Important Notice**
+This version restricts usage to non-commercial purposes only. For commercial licensing inquiries, contact alfonso8@illinois.edu.
+
 ## [0.4.0] - 2025-09-29
 
 Highlights

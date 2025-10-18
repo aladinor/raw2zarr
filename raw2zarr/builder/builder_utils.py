@@ -1,4 +1,5 @@
 import re
+from typing import Optional
 
 import icechunk
 import pandas as pd
@@ -8,50 +9,154 @@ from xradar.io.backends.nexrad_level2 import NEXRADLevel2File
 from ..io.preprocess import normalize_input_for_xradar
 
 
+def _make_manifest_config(
+    vcp_per_hour: int = 12,
+    hours_per_day: int = 24,
+    days_per_manifest: int = 365,
+    num_ref: int = 100,
+    max_total_refs: int = 1000,
+) -> icechunk.RepositoryConfig:
+    """Build and return a manifest configuration for icechunk.
+
+    Parameters
+    ----------
+    vcp_per_hour : int, default 12
+        Expected number of files per hour (average scan frequency).
+    hours_per_day : int, default 24
+        Number of hours in a day (usually 24).
+    days_per_manifest : int, default 365
+        Target number of days grouped into a single manifest.
+    num_ref : int, default 100
+        Upper bound on number of references for arrays to preload (small arrays only).
+    max_total_refs : int, default 1000
+        Maximum total number of references to preload across the manifest.
+    """
+    split_config = icechunk.ManifestSplittingConfig.from_dict(
+        {
+            icechunk.ManifestSplitCondition.AnyArray(): {
+                icechunk.ManifestSplitDimCondition.DimensionName(
+                    "vcp_time"
+                ): vcp_per_hour
+                * hours_per_day
+                * days_per_manifest
+            }
+        }
+    )
+
+    var_condition = icechunk.ManifestPreloadCondition.name_matches(
+        r"^(vcp_time|azimuth|range|x|y|z)$"
+    )
+    size_condition = icechunk.ManifestPreloadCondition.num_refs(0, num_ref)
+
+    preload_if = icechunk.ManifestPreloadCondition.and_conditions(
+        [var_condition, size_condition]
+    )
+
+    preload_config = icechunk.ManifestPreloadConfig(
+        max_total_refs=max_total_refs,
+        preload_if=preload_if,
+    )
+
+    return icechunk.RepositoryConfig(
+        manifest=icechunk.ManifestConfig(
+            splitting=split_config, preload=preload_config
+        ),
+    )
+
+
 def get_icechunk_repo(
     zarr_store: str,
+    local_repo: bool = True,
     use_manifest_config: bool = True,
+    vcp_per_hour: int = 12,
+    hours_per_day: int = 24,
+    days_per_manifest: int = 365,
+    bucket: Optional[str] = None,
+    prefix: Optional[str] = None,
+    endpoint_url: Optional[str] = None,
+    region: Optional[str] = None,
+    access_key: Optional[str] = None,
+    secret_access: Optional[str] = None,
+    force_path_style: bool = True,
 ) -> icechunk.Repository:
-    storage = icechunk.local_filesystem_storage(zarr_store)
+    """
+    Create or open an Icechunk repository, locally or on an S3-compatible storage.
 
-    repo_config = None
-    if use_manifest_config:
-        split_config = icechunk.ManifestSplittingConfig.from_dict(
-            {
-                icechunk.ManifestSplitCondition.AnyArray(): {
-                    icechunk.ManifestSplitDimCondition.DimensionName("vcp_time"): 12
-                    * 24
-                    * 365  # roughly one year of radar data
-                }
-            }
-        )
+    Parameters
+    ----------
+    zarr_store : str
+        Path (local) or logical name used for the repository. For remote, used only
+        for identification by callers; bucket/prefix select the actual storage.
+    local_repo : bool, default True
+        Whether to use a local filesystem-backed repository. If False, uses S3 storage.
+    use_manifest_config : bool, default True
+        Whether to apply manifest splitting and preload configuration.
+    vcp_per_hour : int, default 12
+        Expected number of files per hour; used to size the split along ``vcp_time``
+        when ``use_manifest_config`` is True.
+    hours_per_day : int, default 24
+        Number of hours per day; used with ``vcp_per_hour`` to size a manifest.
+    days_per_manifest : int, default 365
+        Number of days grouped into a single manifest (defaults to ~1 year).
+    bucket : str | None
+        S3 bucket name for remote repository (required when local_repo=False).
+    prefix : str | None
+        S3 key prefix (directory) for remote repository. If None, uses
+        the provided `zarr_store` value as the prefix.
+    endpoint_url : str | None
+        S3 endpoint URL for remote repository.
+    region : str | None
+        S3 region for remote repository.
+    access_key : str | None
+        Access key ID for authenticated access. If None, anonymous or env-based auth may be used.
+    secret_access : str | None
+        Secret access key for authenticated access.
+    force_path_style : bool, default True
+        Whether to force path-style addressing for S3-compatible endpoints.
 
-        var_condition = icechunk.ManifestPreloadCondition.name_matches(
-            r"^(vcp_time|azimuth|range|x|y|z)$"
-        )
-        size_condition = icechunk.ManifestPreloadCondition.num_refs(
-            0, 100
-        )  # Small arrays
+    Returns
+    -------
+    icechunk.Repository
+        The created or opened repository instance.
+    """
 
-        preload_if = icechunk.ManifestPreloadCondition.and_conditions(
-            [var_condition, size_condition]
-        )
+    # Optional manifest configuration: build kwargs only when requested
+    config_kwargs = (
+        {
+            "config": _make_manifest_config(
+                vcp_per_hour, hours_per_day, days_per_manifest
+            )
+        }
+        if use_manifest_config
+        else {}
+    )
 
-        preload_config = icechunk.ManifestPreloadConfig(
-            max_total_refs=1000,
-            preload_if=preload_if,
-        )
+    if local_repo:
+        storage = icechunk.local_filesystem_storage(zarr_store)
+        try:
+            return icechunk.Repository.create(storage, **config_kwargs)
+        except icechunk.IcechunkError:
+            return icechunk.Repository.open(storage, **config_kwargs)
 
-        repo_config = icechunk.RepositoryConfig(
-            manifest=icechunk.ManifestConfig(
-                splitting=split_config, preload=preload_config
-            ),
-        )
+    # Remote repository: require bucket; prefix defaults to zarr_store when omitted
+    if not bucket:
+        raise ValueError("bucket is required when local_repo is False")
+    if not prefix:
+        prefix = zarr_store
 
+    storage = icechunk.s3_storage(
+        bucket=bucket,
+        prefix=prefix,
+        endpoint_url=endpoint_url,
+        access_key_id=access_key,
+        secret_access_key=secret_access,
+        force_path_style=force_path_style,
+        region=region,
+    )
     try:
-        return icechunk.Repository.create(storage, config=repo_config)
+        return icechunk.Repository.create(storage, **config_kwargs)
     except icechunk.IcechunkError:
-        return icechunk.Repository.open(storage, config=repo_config)
+        return icechunk.Repository.open(storage, **config_kwargs)
 
 
 def extract_timestamp(filename: str) -> pd.Timestamp:

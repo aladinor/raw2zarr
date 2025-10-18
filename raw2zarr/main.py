@@ -2,8 +2,10 @@ import asyncio
 import glob
 import os
 import shutil
+import time
 from datetime import datetime
 
+import boto3
 import fsspec
 import icechunk
 import numpy as np
@@ -12,7 +14,7 @@ from dask.distributed import LocalCluster
 
 from raw2zarr.builder.builder_utils import get_icechunk_repo
 from raw2zarr.builder.convert import convert_files
-from raw2zarr.utils import create_query, load_vcp_samples, timer_func
+from raw2zarr.utils import create_query, load_vcp_samples
 from raw2zarr.utils.core import get_radar_files_async
 
 
@@ -160,7 +162,6 @@ def get_cluster():
     return cluster
 
 
-@timer_func
 def main():
     # IRIS Colombia
     # radar_files, zarr_store, engine, vcp_config_file = get_radar_files("iris")
@@ -174,8 +175,34 @@ def main():
     # if dynamic scans
     # radar_files = get_dynamic_scans()
     # radar_files, zarr_store, engine = files_with_shape_mismatch("VCP-32")
-    remove_folder_if_exists(zarr_store)
-    repo = get_icechunk_repo(zarr_store=zarr_store)
+    # Choose local or remote Icechunk repository
+    use_remote_repo = True
+
+    if use_remote_repo:
+        print("Using Remote repo")
+        session = boto3.Session(profile_name="osn-nexrad")
+        credentials = session.get_credentials()
+        access_key = credentials.access_key
+        secret_key = credentials.secret_key
+        region = "us-east-1"
+        endpoint_url = "https://umn1.osn.mghpcc.org"
+
+        remote_prefix = "KLOT"
+        repo = get_icechunk_repo(
+            zarr_store=remote_prefix,
+            local_repo=False,
+            bucket="nexrad-arco",
+            endpoint_url=endpoint_url,
+            region=region,
+            access_key=access_key,
+            secret_access=secret_key,
+            force_path_style=True,
+        )
+    else:
+        print("Using local repo")
+        remove_folder_if_exists(zarr_store)
+        repo = get_icechunk_repo(zarr_store=zarr_store)
+
     process_mode = "parallel"
     if process_mode == "parallel":
         cluster = get_cluster()
@@ -185,8 +212,9 @@ def main():
     zarr_version = 3
     append_dim = "vcp_time"
 
+    start = time.time()
     convert_files(
-        radar_files,
+        radar_files[:2],
         append_dim=append_dim,
         repo=repo,
         zarr_format=zarr_version,
@@ -197,6 +225,8 @@ def main():
         log_file=f"/media/alfonso/drive/Alfonso/python/raw2zarr/{zarr_store.split('/')[-1]}.txt",
         vcp_config_file=vcp_config_file,
     )
+    elapsed = time.time() - start
+    print(f"convert_files executed in {elapsed:.4f}s")
 
 
 if __name__ == "__main__":

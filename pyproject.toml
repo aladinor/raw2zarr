@@ -5,8 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "raw2zarr"
 description = "Package for convertir Sigmet radar files into zarr format"
-version = "0.4.0"
+version = "0.4.1"
 requires-python = ">=3.11"
+license = {text = "CC-BY-NC-SA-4.0"}
 dependencies = [
     "black>=25.9.0",
     "duckdb>=1.4.0",

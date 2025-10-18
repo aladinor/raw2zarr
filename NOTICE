@@ -1,0 +1,34 @@
+LICENSE CHANGE NOTICE
+=====================
+
+Effective Date: 2025-10-15
+
+This project has changed its license from BSD 3-Clause to
+Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0).
+
+This license change applies to:
+- All code committed after 2025-10-15
+
+Prior versions released under the BSD 3-Clause license remain available under those terms
+for those who obtained them before this date.
+
+COMMERCIAL USE
+--------------
+
+This software is licensed for non-commercial use only. If you wish to use this software
+for commercial purposes, please contact alfonso8@illinois.edu to discuss commercial
+licensing options.
+
+Non-commercial use includes:
+- Academic research
+- Educational purposes
+- Personal projects
+- Non-profit organizations
+
+Commercial use includes (but is not limited to):
+- Use by for-profit companies
+- Integration into commercial products or services
+- Revenue-generating activities
+
+For questions about whether your use case is considered commercial, please contact
+the copyright holder.

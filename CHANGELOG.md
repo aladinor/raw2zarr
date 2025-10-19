@@ -10,6 +10,8 @@ All notable changes to this project are documented here.
 - **Templates**: Added `follow_mode` and `prt_mode` scalar variables to sweep templates to ensure parallel mode matches sequential mode structure ([#5be63a7](https://github.com/aladinor/raw2zarr/commit/5be63a7))
 - **Templates**: Materialize VCP root variables before template write using `.compute()` to persist scalar metadata values (longitude, latitude, altitude) ([#f232ab0](https://github.com/aladinor/raw2zarr/commit/f232ab0))
 - **Writer**: Cast string variables to U50 for template compatibility during parallel region writes ([#b53be83](https://github.com/aladinor/raw2zarr/commit/b53be83))
+- **CI**: Added explicit conda-forge channel configuration to micromamba setup to fix package resolution failures ([#a7d2ff3](https://github.com/aladinor/raw2zarr/commit/a7d2ff3))
+- **Environment**: Removed duplicate `pandas` entry and added version pins to pip-installed packages (`icechunk>=1.1.9`, `arraylake>=0.25`) ([#15805a6](https://github.com/aladinor/raw2zarr/commit/15805a6))
 
 ### Changed
 - **Architecture**: Moved template operations (`create_vcp_template_in_memory`, `merge_data_into_template`) from `builder/executor.py` to new `templates/template_ops.py` module for better separation of concerns ([#a7b1a99](https://github.com/aladinor/raw2zarr/commit/a7b1a99), [#667c064](https://github.com/aladinor/raw2zarr/commit/667c064))

@@ -370,8 +370,7 @@ def append_parallel(
         else:
             # Successful session
             successful_sessions.append(result)
-    print(write_failed_files)
-    # Log all write failures locally
+
     for file, error_msg in write_failed_files:
         _log_problematic_file(file, error_msg, log_file)
 
@@ -386,6 +385,5 @@ def append_parallel(
         )
     else:
         print("No files wrote")
-    elapsed = time.time() - start
-    print(f"Time to write files in {elapsed:.4f}s")
+
     check_cords(repo)

@@ -147,7 +147,12 @@ def test_append_parallel_creates_zarr(sample_nexrad_files, output_zarr, test_clu
 def test_parallel_vs_sequential_equivalence(
     sample_nexrad_file, tmp_path, test_cluster, remove_strings
 ):
-    repo_seq = icechunk.Repository.create(icechunk.in_memory_storage())
+    from raw2zarr.builder.builder_utils import get_icechunk_repo
+
+    # repo_seq = icechunk.Repository.create(icechunk.in_memory_storage())
+    zarr_seq = tmp_path / "zarr_seq.zarr"
+    zarr_par = tmp_path / "zarr_par.zarr"
+    repo_seq = get_icechunk_repo(zarr_seq)
     append_sequential(
         radar_files=[sample_nexrad_file],
         repo=repo_seq,
@@ -155,7 +160,8 @@ def test_parallel_vs_sequential_equivalence(
         engine="nexradlevel2",
         remove_strings=remove_strings,
     )
-    repo_par = icechunk.Repository.create(icechunk.in_memory_storage())
+    # repo_par = icechunk.Repository.create(icechunk.in_memory_storage())
+    repo_par = get_icechunk_repo(zarr_par)
     append_parallel(
         repo=repo_par,
         radar_files=[sample_nexrad_file],

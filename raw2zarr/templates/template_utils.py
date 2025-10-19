@@ -165,7 +165,7 @@ def create_root(
                 da.from_array(
                     np.array(
                         [radar_info["platform_type"]] * size_append_dim,
-                        dtype="U25",
+                        dtype="U50",  # Match zarr U50 dtype to avoid region write errors
                     ),
                     chunks=(1,),
                 ),
@@ -175,7 +175,7 @@ def create_root(
                 da.from_array(
                     np.array(
                         [radar_info["instrument_type"]] * size_append_dim,
-                        dtype="U25",
+                        dtype="U50",  # Match zarr U50 dtype to avoid region write errors
                     ),
                     chunks=(1,),
                 ),
@@ -185,7 +185,7 @@ def create_root(
                 da.from_array(
                     np.array(
                         [radar_info["time_coverage_start"]] * size_append_dim,
-                        dtype="U25",
+                        dtype="U50",  # Match zarr U50 dtype to avoid region write errors
                     ),
                     chunks=(1,),
                 ),
@@ -195,7 +195,7 @@ def create_root(
                 da.from_array(
                     np.array(
                         [radar_info["time_coverage_end"]] * size_append_dim,
-                        dtype="U25",
+                        dtype="U50",  # Match zarr U50 dtype to avoid region write errors
                     ),
                     chunks=(1,),
                 ),
@@ -233,6 +233,7 @@ def create_root(
             "scan_name": radar_info["vcp"],
         },
     )
+    root_ds = root_ds.compute()
     return {radar_info["vcp"]: root_ds.set_coords(append_dim)}
 
 

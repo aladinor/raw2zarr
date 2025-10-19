@@ -54,6 +54,10 @@ jobs:
           environment-file: ${{env.CONDA_ENV_FILE}}
           cache-environment: true
           cache-environment-key: "${{runner.os}}-${{runner.arch}}-py${{matrix.python-version}}-numpy${{matrix.numpy-version}}-${{hashFiles(env.CONDA_ENV_FILE)}}"
+          condarc: |
+            channels:
+              - conda-forge
+              - nodefaults
           create-args: >-
             python=${{matrix.python-version}}
             numpy=${{matrix.numpy-version}}
@@ -113,9 +117,12 @@ jobs:
           environment-file: environment.yml
           cache-environment: true
           cache-environment-key: "notebook-${{runner.os}}-${{hashFiles('environment.yml')}}"
+          condarc: |
+            channels:
+              - conda-forge
+              - nodefaults
           create-args: >-
             python=3.11
-            numpy=2
           post-cleanup: none
 
       - name: Install raw2zarr (editable mode)

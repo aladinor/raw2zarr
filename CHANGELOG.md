@@ -7,6 +7,7 @@ All notable changes to this project are documented here.
 ### Fixed
 - **VCP Config**: Changed `follow_mode`, `prt_mode`, and `sweep_mode` dtypes from `int32` to `U50` to match actual xradar string data types ([#ccda1b9](https://github.com/aladinor/raw2zarr/commit/ccda1b9))
 - **Templates**: Excluded scalar variables from 3D array creation - these variables now correctly have only `(vcp_time,)` dimension instead of `(vcp_time, azimuth, range)` ([#6ed437a](https://github.com/aladinor/raw2zarr/commit/6ed437a))
+- **Templates**: Added `follow_mode` and `prt_mode` scalar variables to sweep templates to ensure parallel mode matches sequential mode structure ([#5be63a7](https://github.com/aladinor/raw2zarr/commit/5be63a7))
 - **Templates**: Materialize VCP root variables before template write using `.compute()` to persist scalar metadata values (longitude, latitude, altitude) ([#f232ab0](https://github.com/aladinor/raw2zarr/commit/f232ab0))
 - **Writer**: Cast string variables to U50 for template compatibility during parallel region writes ([#b53be83](https://github.com/aladinor/raw2zarr/commit/b53be83))
 

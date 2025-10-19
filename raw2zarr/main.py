@@ -12,10 +12,13 @@ import numpy as np
 import xarray as xr
 from dask.distributed import LocalCluster
 
+import zarr
 from raw2zarr.builder.builder_utils import get_icechunk_repo
 from raw2zarr.builder.convert import convert_files
 from raw2zarr.utils import create_query, load_vcp_samples
 from raw2zarr.utils.core import get_radar_files_async
+
+zarr.config.set({"async.concurrency": 24})
 
 
 def remove_folder_if_exists(path):
@@ -163,6 +166,7 @@ def get_cluster():
 
 
 def main():
+    print(zarr.config.get("async.concurrency"))
     # IRIS Colombia
     # radar_files, zarr_store, engine, vcp_config_file = get_radar_files("iris")
     # NEXRAD
@@ -214,7 +218,7 @@ def main():
 
     start = time.time()
     convert_files(
-        radar_files[:2],
+        radar_files[:20],
         append_dim=append_dim,
         repo=repo,
         zarr_format=zarr_version,

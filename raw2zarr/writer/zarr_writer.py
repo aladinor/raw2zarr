@@ -95,7 +95,6 @@ def write_dtree_region(
     remove_strings: bool = True,
     is_dynamic: bool = False,
     sweep_indices: list[int] | None = None,
-    scan_type: str | None = None,
     elevation_angles: list[float] | None = None,
     vcp_config_file: str = "vcp_nexrad.json",
     **kwargs,
@@ -130,6 +129,27 @@ def write_dtree_region(
         elevation_angles=elevation_angles,
         vcp_config_file=vcp_config_file,
     )
+
+    # Cast all string variables to U50 to match template dtype
+    if not remove_strings:
+        dtree_dict = dtree.to_dict()
+        for path, ds in dtree_dict.items():
+            if not isinstance(ds, xr.Dataset):
+                continue
+
+            modified = False
+            # Cast ALL string variables to U50
+            for var in ds.data_vars:
+                if ds[var].dtype.kind == "U":
+                    # Cast to U50 to match template dtype
+                    ds[var] = ds[var].astype("U50")
+                    modified = True
+
+            if modified:
+                dtree_dict[path] = ds
+
+        dtree = DataTree.from_dict(dtree_dict)
+
     # TODO: remove this after strings are supported by zarr v3
     if remove_strings:
         dtree = remove_string_vars(dtree)

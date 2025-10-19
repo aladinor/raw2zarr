@@ -206,6 +206,7 @@ class VcpTemplateManager:
 
         ds = xr.Dataset(data_vars, coords=coord_ds)
 
+        # Add scalar variables with only vcp_time dimension
         ds["sweep_mode"] = xr.DataArray(
             da.from_array(
                 np.full(
@@ -223,6 +224,26 @@ class VcpTemplateManager:
             dims=(append_dim,),
         )
 
+        # Add follow_mode and prt_mode from config
+        for var_name in ["follow_mode", "prt_mode"]:
+            if var_name in sweep_config["variables"]:
+                var_config = sweep_config["variables"][var_name]
+                dtype = var_config["dtype"]
+                fill_val = var_config.get("fill_value", "")
+
+                # Create scalar variable with U50 dtype
+                array = da.from_array(
+                    np.full(size_append_dim, fill_val, dtype=dtype),
+                    chunks=(1,),
+                )
+
+                ds[var_name] = xr.DataArray(
+                    array,
+                    dims=(append_dim,),
+                    attrs=var_config.get("attributes", {}),
+                )
+
+        # Add sweep_fixed_angle with actual elevation value
         ds["sweep_fixed_angle"] = xr.DataArray(
             da.full((size_append_dim,), elevation, dtype=float, chunks=(1,)),
             dims=(append_dim,),

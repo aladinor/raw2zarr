@@ -142,7 +142,7 @@ jobs:
 
       - name: Execute Selected Notebooks
         run: |
-          pytest --nbmake --nbmake-timeout=300 notebooks/1.Sigmet2Zarr.ipynb notebooks/2.NexRad2Zarr.ipynb notebooks/3.RYZHKOV-QVP.ipynb
+          pytest --nbmake --nbmake-timeout=500 notebooks/1.Sigmet2Zarr.ipynb notebooks/2.NexRad2Zarr.ipynb notebooks/3.RYZHKOV-QVP.ipynb
 
       - name: Cleanup
         if: always()

@@ -5,10 +5,12 @@ import warnings
 from collections.abc import Iterable
 
 import icechunk
-import pandas as pd
-import xarray as xr
 from dask.distributed import LocalCluster
 
+from ..templates.template_ops import (
+    create_vcp_template_in_memory,
+    merge_data_into_template,
+)
 from ..templates.template_utils import remove_string_vars
 from ..transform.encoding import dtree_encoding
 from ..writer.writer_utils import (
@@ -37,103 +39,6 @@ warnings.filterwarnings(
     category=UserWarning,
     module=r"zarr\.core\.array",
 )
-
-
-def create_vcp_template_in_memory(
-    vcp: str,
-    append_dim: str,
-    vcp_config_file: str = "vcp_nexrad.json",
-) -> xr.DataTree:
-    """
-    Create empty VCP template with all expected sweeps (NaN-filled).
-
-    Creates a template in memory with all sweeps defined in the VCP configuration,
-    filled with NaN values. This ensures consistent structure when actual data
-    has missing sweeps (e.g., AVSET scans that terminate early).
-
-    Parameters
-    ----------
-    vcp : str
-        VCP pattern name (e.g., "VCP-212")
-    append_dim : str
-        Dimension name for appending (e.g., "vcp_time")
-    vcp_config_file : str
-        VCP configuration file name
-
-    Returns
-    -------
-    xr.DataTree
-        Template with all expected sweeps filled with NaN
-    """
-    from ..templates.template_manager import VcpTemplateManager
-
-    template_mgr = VcpTemplateManager(vcp_config_file=vcp_config_file)
-
-    # Create minimal radar info for template
-    # These dummy values will be overwritten by actual data during merge
-    radar_info = {
-        "vcp": vcp,
-        "lat": 0.0,
-        "lon": 0.0,
-        "alt": 0.0,
-        "volume_number": 0,
-        "platform_type": "fixed",
-        "instrument_type": "radar",
-        "primary_axis": "axis_z",
-        "time_coverage_start": "1970-01-01T00:00:00Z",
-        "time_coverage_end": "1970-01-01T00:00:00Z",
-        "reference_time": pd.Timestamp("1970-01-01T00:00:00Z"),
-        "crs_wkt": {"grid_mapping_name": "latitude_longitude"},
-    }
-
-    # Create template with single time step
-    template = template_mgr.create_empty_vcp_tree(
-        radar_info=radar_info,
-        append_dim=append_dim,
-        remove_strings=True,
-        append_dim_time=[pd.Timestamp.now()],  # Single dummy timestamp
-    )
-
-    return template
-
-
-def merge_data_into_template(
-    template: xr.DataTree, actual_data: xr.DataTree
-) -> xr.DataTree:
-    """
-    Overlay actual data onto template, preserving template structure.
-
-    This function takes a template with all expected sweeps (NaN-filled) and
-    overlays the actual data from a file. Missing sweeps remain NaN-filled,
-    ensuring consistent structure across all files for a given VCP.
-
-    Parameters
-    ----------
-    template : xr.DataTree
-        Template with all expected sweeps (NaN-filled)
-    actual_data : xr.DataTree
-        Actual data loaded from file (may have missing sweeps)
-
-    Returns
-    -------
-    xr.DataTree
-        Template with actual data overlaid, missing sweeps remain NaN
-    """
-    # Start with template (all sweeps, NaN-filled)
-    result_dict = template.to_dict()
-    actual_dict = actual_data.to_dict()
-
-    # Get the VCP group name (first child)
-    vcp_name = list(actual_data.children)[0]
-
-    # Overlay ALL actual data onto template (sweeps and additional groups)
-    for path, dataset in actual_dict.items():
-        # Replace any matching path from template with actual data
-        # This includes sweeps, root, and additional groups like georeferencing_correction
-        if path.startswith(f"/{vcp_name}"):
-            result_dict[path] = dataset
-
-    return xr.DataTree.from_dict(result_dict)
 
 
 def append_sequential(
@@ -377,7 +282,9 @@ def append_parallel(
 
     vcp_time_mapping = result.vcp_time_mapping
     valid_files = result.valid_files
+    import time
 
+    start = time.time()
     remaining_files = init_zarr_store(
         files=valid_files,
         session=session,
@@ -387,7 +294,10 @@ def append_parallel(
         consolidated=consolidated,
         vcp_time_mapping=vcp_time_mapping,
         vcp_config_file=vcp_config_file,
+        remove_strings=remove_strings,
     )
+    elapsed = time.time() - start
+    print(f"Time to initialize template in {elapsed:.4f}s")
     session = repo.writable_session(branch=branch)
     fork = session.fork()
 
@@ -435,7 +345,6 @@ def append_parallel(
                 remove_strings,
                 is_dynamic=meta.get("is_dynamic", False),
                 sweep_indices=meta.get("sweep_indices"),
-                scan_type=meta.get("scan_type"),
                 elevation_angles=meta.get("elevation_angles"),
                 vcp_config_file=vcp_config_file,
             )
@@ -446,6 +355,7 @@ def append_parallel(
                 "index": file_idx,
             }
 
+    start = time.time()
     write_futures = client.map(write_single_file, remaining_files)
     write_results = client.gather(write_futures)
 
@@ -474,5 +384,8 @@ def append_parallel(
         print(
             f"Wrote {len(radar_files)} radar files to zarr store, with {len(successful_sessions)} time steps"
         )
-
+    else:
+        print("No files wrote")
+    elapsed = time.time() - start
+    print(f"Time to write files in {elapsed:.4f}s")
     check_cords(repo)

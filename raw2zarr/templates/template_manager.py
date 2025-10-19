@@ -187,22 +187,25 @@ class VcpTemplateManager:
             time_array=time_array,
         )
 
-        # Create data variables directly from sweep config
+        scalar_vars = ["follow_mode", "prt_mode", "sweep_mode", "sweep_fixed_angle"]
         data_vars = {}
         for var_name, var_config in sweep_config["variables"].items():
+            if var_name in scalar_vars:
+                continue
+
             dims = (append_dim, "azimuth", "range")
             shape = (size_append_dim, total_azimuth, total_bins)
 
+            fill_val = var_config.get("fill_value", da.nan)
+
             data_vars[var_name] = xr.DataArray(
-                da.full(shape, da.nan, dtype=var_config["dtype"]),
+                da.full(shape, fill_val, dtype=var_config["dtype"]),
                 dims=dims,
                 attrs=var_config["attributes"],
             )
 
-        # Create dataset
         ds = xr.Dataset(data_vars, coords=coord_ds)
 
-        # Add metadata
         ds["sweep_mode"] = xr.DataArray(
             da.from_array(
                 np.full(

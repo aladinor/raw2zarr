@@ -292,6 +292,7 @@ class TestConfigConsistency:
                                         "int32",
                                         "int64",
                                         "str",
+                                        "U50",
                                     ]
                                     assert (
                                         var_config["dtype"] in valid_dtypes

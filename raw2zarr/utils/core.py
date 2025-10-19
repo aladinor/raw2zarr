@@ -433,7 +433,9 @@ async def get_radar_files_async(
     filtered = [
         (f, dt)
         for f in all_files
-        if (dt := parse_nexrad_filename(f)) and start_dt <= dt <= end_dt
+        if not f.endswith("_MDM")
+        and (dt := parse_nexrad_filename(f))
+        and start_dt <= dt <= end_dt
     ]
 
     filtered_sorted = [f for f, _ in sorted(filtered, key=lambda x: x[1])]

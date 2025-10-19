@@ -175,7 +175,7 @@ class TestVcpConfigParameterFlow:
         mock_init_zarr_store.return_value = []
 
         with patch("dask.distributed.Client", return_value=mock_client):
-            with patch("raw2zarr.builder.executor.extract_single_metadata"):
+            with patch("raw2zarr.builder.builder_utils.extract_single_metadata"):
                 # Setup client.map to return empty results
                 mock_client.map.return_value = []
                 mock_client.gather.return_value = []

@@ -10,6 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from ..transform.encoding import dtree_encoding
 from .template_utils import (
+    _convert_timestamps_to_datetime64,
     create_additional_groups,
     create_common_coords,
     create_root,
@@ -94,7 +95,6 @@ class VcpTemplateManager:
 
     def create_scan_dataset(
         self,
-        scan_type: str,
         sweep_idx: int,
         radar_info: dict,
         append_dim: str = "vcp_time",
@@ -109,11 +109,7 @@ class VcpTemplateManager:
         sweep_config = self.get_sweep_config(vcp_name, sweep_idx)
         vcp_info = self.get_vcp_info(vcp_name)
 
-        time_array = (
-            np.array(append_dim_time, dtype="datetime64[ns]")
-            if append_dim_time
-            else np.array(range(size_append_dim), dtype="datetime64[ns]")
-        )
+        time_array = _convert_timestamps_to_datetime64(append_dim_time, size_append_dim)
 
         total_azimuth = vcp_info.dims["azimuth"][sweep_idx]
         total_bins = vcp_info.dims["range"][sweep_idx]
@@ -191,22 +187,26 @@ class VcpTemplateManager:
             time_array=time_array,
         )
 
-        # Create data variables directly from sweep config
+        scalar_vars = ["follow_mode", "prt_mode", "sweep_mode", "sweep_fixed_angle"]
         data_vars = {}
         for var_name, var_config in sweep_config["variables"].items():
+            if var_name in scalar_vars:
+                continue
+
             dims = (append_dim, "azimuth", "range")
             shape = (size_append_dim, total_azimuth, total_bins)
 
+            fill_val = var_config.get("fill_value", da.nan)
+
             data_vars[var_name] = xr.DataArray(
-                da.full(shape, da.nan, dtype=var_config["dtype"]),
+                da.full(shape, fill_val, dtype=var_config["dtype"]),
                 dims=dims,
                 attrs=var_config["attributes"],
             )
 
-        # Create dataset
         ds = xr.Dataset(data_vars, coords=coord_ds)
 
-        # Add metadata
+        # Add scalar variables with only vcp_time dimension
         ds["sweep_mode"] = xr.DataArray(
             da.from_array(
                 np.full(
@@ -224,6 +224,26 @@ class VcpTemplateManager:
             dims=(append_dim,),
         )
 
+        # Add follow_mode and prt_mode from config
+        for var_name in ["follow_mode", "prt_mode"]:
+            if var_name in sweep_config["variables"]:
+                var_config = sweep_config["variables"][var_name]
+                dtype = var_config["dtype"]
+                fill_val = var_config.get("fill_value", "")
+
+                # Create scalar variable with U50 dtype
+                array = da.from_array(
+                    np.full(size_append_dim, fill_val, dtype=dtype),
+                    chunks=(1,),
+                )
+
+                ds[var_name] = xr.DataArray(
+                    array,
+                    dims=(append_dim,),
+                    attrs=var_config.get("attributes", {}),
+                )
+
+        # Add sweep_fixed_angle with actual elevation value
         ds["sweep_fixed_angle"] = xr.DataArray(
             da.full((size_append_dim,), elevation, dtype=float, chunks=(1,)),
             dims=(append_dim,),
@@ -280,9 +300,7 @@ class VcpTemplateManager:
         )
         sweep_dict: dict = {}
         for sweep_idx in range(len(vcp_info.elevations)):
-            scan_type = f"unified_sweep_{sweep_idx}"
             ds = self.create_scan_dataset(
-                scan_type,
                 sweep_idx,
                 radar_info,
                 append_dim=append_dim,
@@ -386,8 +404,6 @@ class VcpTemplateManager:
 
             # Create sweeps for this VCP using the FULL time dimension
             for sweep_idx in range(len(vcp_config.elevations)):
-                scan_type = f"unified_sweep_{sweep_idx}"
-
                 # Clear dask caches to avoid task key conflicts between VCPs/sweeps
                 import gc
 
@@ -402,7 +418,6 @@ class VcpTemplateManager:
                 # Create dataset for this sweep with TOTAL time dimension
                 # The region writing will handle placing data in correct time slices
                 ds = self.create_scan_dataset(
-                    scan_type,
                     sweep_idx,
                     vcp_radar_info,
                     append_dim=append_dim,
@@ -415,7 +430,7 @@ class VcpTemplateManager:
                 sweep_dict[f"{vcp_name}/sweep_{sweep_idx}"] = ds
 
                 print(
-                    f"    🔹 Sweep {sweep_idx}: {vcp_config.elevations[sweep_idx]:.1f}° | {scan_type} | "
+                    f"    🔹 Sweep {sweep_idx}: {vcp_config.elevations[sweep_idx]:.1f}° | "
                     f"Az:{vcp_config.dims['azimuth'][sweep_idx]} R:{vcp_config.dims['range'][sweep_idx]}"
                 )
 

@@ -2,6 +2,28 @@
 
 All notable changes to this project are documented here.
 
+## [Unreleased]
+
+### Fixed
+- **VCP Config**: Changed `follow_mode`, `prt_mode`, and `sweep_mode` dtypes from `int32` to `U50` to match actual xradar string data types ([#ccda1b9](https://github.com/aladinor/raw2zarr/commit/ccda1b9))
+- **Templates**: Excluded scalar variables from 3D array creation - these variables now correctly have only `(vcp_time,)` dimension instead of `(vcp_time, azimuth, range)` ([#6ed437a](https://github.com/aladinor/raw2zarr/commit/6ed437a))
+- **Templates**: Added `follow_mode` and `prt_mode` scalar variables to sweep templates to ensure parallel mode matches sequential mode structure ([#5be63a7](https://github.com/aladinor/raw2zarr/commit/5be63a7))
+- **Templates**: Materialize VCP root variables before template write using `.compute()` to persist scalar metadata values (longitude, latitude, altitude) ([#f232ab0](https://github.com/aladinor/raw2zarr/commit/f232ab0))
+- **Writer**: Cast string variables to U50 for template compatibility during parallel region writes ([#b53be83](https://github.com/aladinor/raw2zarr/commit/b53be83))
+- **CI**: Added explicit conda-forge channel configuration to micromamba setup to fix package resolution failures ([#a7d2ff3](https://github.com/aladinor/raw2zarr/commit/a7d2ff3))
+- **Environment**: Removed duplicate `pandas` entry and added version pins to pip-installed packages (`icechunk>=1.1.9`, `arraylake>=0.25`) ([#15805a6](https://github.com/aladinor/raw2zarr/commit/15805a6))
+
+### Changed
+- **Architecture**: Moved template operations (`create_vcp_template_in_memory`, `merge_data_into_template`) from `builder/executor.py` to new `templates/template_ops.py` module for better separation of concerns ([#a7b1a99](https://github.com/aladinor/raw2zarr/commit/a7b1a99), [#667c064](https://github.com/aladinor/raw2zarr/commit/667c064))
+
+### Added
+- **Tests**: Comprehensive unit tests for `template_ops.py` module (14 tests covering template creation and data merging) ([#1b4a9e0](https://github.com/aladinor/raw2zarr/commit/1b4a9e0))
+- **Tests**: Enhanced parallel vs sequential equivalence test with parametrization for `remove_strings` and template placeholder handling ([#4c1d1da](https://github.com/aladinor/raw2zarr/commit/4c1d1da))
+- **Tests**: Added U50 string dtype to config validation test's valid dtypes list ([#e64b0dd](https://github.com/aladinor/raw2zarr/commit/e64b0dd))
+
+### Performance
+- **Zarr**: Added async concurrency configuration (`async.concurrency: 24`) for improved parallel write performance ([#0d0005c](https://github.com/aladinor/raw2zarr/commit/0d0005c))
+
 ## [0.4.1] - 2025-10-15
 
 **License Change**
@@ -67,4 +89,3 @@ Upgrade Notes
 - If using older config names, adjust to the simplified scheme introduced in 0.4.0.
 
 Full diff: compare `v0.3.0...v0.4.0`.
-

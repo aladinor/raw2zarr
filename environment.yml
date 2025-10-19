@@ -15,12 +15,12 @@ dependencies:
   - coiled
   - hvplot
   - datashader
-  - zarr>=3.1.0
+  - zarr>=3.1.2
   - ca-certificates
   - certifi
   - openssl
   - s3fs>=2025.5.1
-  - xarray>=2025.08.0
+  - xarray>=2025.10.0
   - xradar>=0.10.0
   - pytest
   - pytest-cov
@@ -29,11 +29,10 @@ dependencies:
   - pytest-xdist
   - nbmake
   - pydantic
-  - icechunk>=1.0.3
-  - arraylake>=0.21.1
   - pandas
   - numpy<2.3
-  - icechunk>=1.1
   - cmweather
-  - pandas
   - pip
+  - pip:
+      - icechunk>=1.1.9
+      - arraylake>=0.25

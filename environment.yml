@@ -32,5 +32,7 @@ dependencies:
   - pandas
   - numpy<2.3
   - cmweather
-  - icechunk>=1.1.9
-  - arraylake>=0.25
+  - pip
+  - pip:
+      - icechunk>=1.1.9
+      - arraylake>=0.25

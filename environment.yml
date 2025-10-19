@@ -30,7 +30,7 @@ dependencies:
   - nbmake
   - pydantic
   - pandas
-  - numpy<2.3
+  - numpy<2.2
   - cmweather
   - pip
   - pip:

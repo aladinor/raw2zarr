@@ -29,10 +29,11 @@ dependencies:
   - pytest-xdist
   - nbmake
   - pydantic
-  - arraylake>=0.24
   - pandas
   - numpy<2.3
-  - icechunk>=1.1.8
   - cmweather
   - pandas
   - pip
+  - pip:
+      - icechunk
+      - arraylake

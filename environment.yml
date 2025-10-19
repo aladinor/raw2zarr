@@ -34,5 +34,5 @@ dependencies:
   - cmweather
   - pip
   - pip:
-      - icechunk>=1.1.9
-      - arraylake>=0.25
+      - icechunk>=1.1
+      - arraylake>=0.23

@@ -370,7 +370,7 @@ def append_parallel(
         else:
             # Successful session
             successful_sessions.append(result)
-
+    print(write_failed_files)
     # Log all write failures locally
     for file, error_msg in write_failed_files:
         _log_problematic_file(file, error_msg, log_file)

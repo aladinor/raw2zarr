@@ -4,6 +4,14 @@ All notable changes to this project are documented here.
 
 ## [Unreleased]
 
+## [0.5.0] - 2025-10-20
+
+### Highlights
+- Fixed critical parallel vs sequential write mode equivalence issues
+- Improved template-compliant architecture for both write modes
+- Enhanced CI/CD reliability with explicit conda-forge configuration
+- Comprehensive test coverage improvements
+
 ### Fixed
 - **VCP Config**: Changed `follow_mode`, `prt_mode`, and `sweep_mode` dtypes from `int32` to `U50` to match actual xradar string data types ([#ccda1b9](https://github.com/aladinor/raw2zarr/commit/ccda1b9))
 - **Templates**: Excluded scalar variables from 3D array creation - these variables now correctly have only `(vcp_time,)` dimension instead of `(vcp_time, azimuth, range)` ([#6ed437a](https://github.com/aladinor/raw2zarr/commit/6ed437a))

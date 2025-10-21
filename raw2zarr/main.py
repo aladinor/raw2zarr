@@ -18,7 +18,7 @@ from raw2zarr.builder.convert import convert_files
 from raw2zarr.utils import create_query, load_vcp_samples
 from raw2zarr.utils.core import get_radar_files_async
 
-zarr.config.set({"async.concurrency": 24})
+zarr.config.set({"async.concurrency": 100})
 
 
 def remove_folder_if_exists(path):

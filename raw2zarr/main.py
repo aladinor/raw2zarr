@@ -181,7 +181,7 @@ def get_cluster():
 
     else:
         zarr.config.set({"async.concurrency": 20})
-        cluster = LocalCluster(dashboard_address="127.0.0.1:8785")
+        cluster = LocalCluster(dashboard_address="127.0.0.1:8786")
 
     return cluster
 

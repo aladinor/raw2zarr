@@ -51,8 +51,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -92,8 +92,8 @@
                         "units": "meters per seconds"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -143,8 +143,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -184,8 +184,8 @@
                         "units": "meters per second"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -255,8 +255,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -326,8 +326,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -397,8 +397,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -468,8 +468,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -539,8 +539,8 @@
                         "units": "dB"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -610,8 +610,8 @@
                         "units": "dB"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -681,8 +681,8 @@
                         "units": "dB"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -792,8 +792,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -833,8 +833,8 @@
                         "units": "meters per second"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -884,8 +884,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -925,8 +925,8 @@
                         "units": "meters per second"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -996,8 +996,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -1067,8 +1067,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -1138,8 +1138,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -1209,8 +1209,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -1280,8 +1280,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -1351,8 +1351,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -1422,8 +1422,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -1493,8 +1493,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -1564,8 +1564,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -1635,8 +1635,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -1706,8 +1706,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -1777,8 +1777,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -1901,8 +1901,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -1942,8 +1942,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -2003,8 +2003,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -2044,8 +2044,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -2105,8 +2105,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -2146,8 +2146,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -2227,8 +2227,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -2308,8 +2308,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -2389,8 +2389,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -2470,8 +2470,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -2551,8 +2551,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -2632,8 +2632,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -2713,8 +2713,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -2794,8 +2794,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -2875,8 +2875,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -2956,8 +2956,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -3037,8 +3037,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -3170,8 +3170,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -3211,8 +3211,8 @@
                         "units": "meters per seconds"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -3262,8 +3262,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -3303,8 +3303,8 @@
                         "units": "meters per second"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -3364,8 +3364,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -3405,8 +3405,8 @@
                         "units": "meters per seconds"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -3456,8 +3456,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -3497,8 +3497,8 @@
                         "units": "meters per second"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -3568,8 +3568,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -3609,8 +3609,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -3650,8 +3650,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -3721,8 +3721,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -3762,8 +3762,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -3803,8 +3803,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -3874,8 +3874,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -3915,8 +3915,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -3986,8 +3986,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -4027,8 +4027,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -4068,8 +4068,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -4109,8 +4109,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -4230,8 +4230,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -4271,8 +4271,8 @@
                         "units": "meters per seconds"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -4332,8 +4332,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -4373,8 +4373,8 @@
                         "units": "meters per seconds"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -4444,8 +4444,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -4515,8 +4515,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -4586,8 +4586,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -4657,8 +4657,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -4728,8 +4728,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -4769,8 +4769,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -4810,8 +4810,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -4851,8 +4851,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -4892,8 +4892,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -4933,8 +4933,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -4974,8 +4974,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -5015,8 +5015,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -5139,8 +5139,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -5180,8 +5180,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -5241,8 +5241,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -5282,8 +5282,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -5343,8 +5343,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -5384,8 +5384,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -5465,8 +5465,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -5546,8 +5546,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -5627,8 +5627,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -5708,8 +5708,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -5789,8 +5789,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -5870,8 +5870,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -5951,8 +5951,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -6032,8 +6032,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -6113,8 +6113,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -6194,8 +6194,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -6275,8 +6275,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -6342,8 +6342,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -6383,8 +6383,8 @@
                         "units": "meters per seconds"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -6444,8 +6444,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -6485,8 +6485,8 @@
                         "units": "meters per seconds"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -6556,8 +6556,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -6627,8 +6627,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -6698,8 +6698,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -6769,8 +6769,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -6810,8 +6810,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -6851,8 +6851,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -6892,8 +6892,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -6962,8 +6962,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -7003,8 +7003,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -7064,8 +7064,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -7105,8 +7105,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -7166,8 +7166,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -7207,8 +7207,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -7288,8 +7288,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -7369,8 +7369,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -7439,8 +7439,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -7480,8 +7480,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -7541,8 +7541,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -7582,8 +7582,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -7663,8 +7663,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -7744,8 +7744,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -7825,8 +7825,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -7908,8 +7908,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -7949,8 +7949,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -8010,8 +8010,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -8051,8 +8051,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -8112,8 +8112,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -8153,8 +8153,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -8234,8 +8234,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -8315,8 +8315,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -8396,8 +8396,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -8477,8 +8477,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -8558,8 +8558,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -8639,8 +8639,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -8766,8 +8766,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -8807,8 +8807,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -8868,8 +8868,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -8909,8 +8909,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -8970,8 +8970,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -9011,8 +9011,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -9092,8 +9092,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -9173,8 +9173,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -9254,8 +9254,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -9335,8 +9335,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -9416,8 +9416,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -9497,8 +9497,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -9578,8 +9578,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -9659,8 +9659,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -9740,8 +9740,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -9821,8 +9821,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -9902,8 +9902,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -9983,8 +9983,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -10002,8 +10002,8 @@
                 "DBZH": {"dims": ["azimuth", "range"], "dtype": "float32"},
                 "sweep_mode": {"dims": [], "dtype": "U50"},
                 "sweep_number": {"dims": [], "dtype": "int32"},
-                "prt_mode": {"dims": [], "dtype": "U50"},
-                "follow_mode": {"dims": [], "dtype": "U50"},
+                "prt_mode": {"dims": [], "dtype": "U7"},
+                "follow_mode": {"dims": [], "dtype": "U7"},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32"}
             }
         },
@@ -10012,8 +10012,8 @@
                 "VRADH": {"dims": ["azimuth", "range"], "dtype": "float32"},
                 "sweep_mode": {"dims": [], "dtype": "U50"},
                 "sweep_number": {"dims": [], "dtype": "int32"},
-                "prt_mode": {"dims": [], "dtype": "U50"},
-                "follow_mode": {"dims": [], "dtype": "U50"},
+                "prt_mode": {"dims": [], "dtype": "U7"},
+                "follow_mode": {"dims": [], "dtype": "U7"},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32"}
             }
         },
@@ -10022,8 +10022,8 @@
                 "DBZH": {"dims": ["azimuth", "range"], "dtype": "float32"},
                 "sweep_mode": {"dims": [], "dtype": "U50"},
                 "sweep_number": {"dims": [], "dtype": "int32"},
-                "prt_mode": {"dims": [], "dtype": "U50"},
-                "follow_mode": {"dims": [], "dtype": "U50"},
+                "prt_mode": {"dims": [], "dtype": "U7"},
+                "follow_mode": {"dims": [], "dtype": "U7"},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32"}
             }
         },
@@ -10032,8 +10032,8 @@
                 "VRADH": {"dims": ["azimuth", "range"], "dtype": "float32"},
                 "sweep_mode": {"dims": [], "dtype": "U50"},
                 "sweep_number": {"dims": [], "dtype": "int32"},
-                "prt_mode": {"dims": [], "dtype": "U50"},
-                "follow_mode": {"dims": [], "dtype": "U50"},
+                "prt_mode": {"dims": [], "dtype": "U7"},
+                "follow_mode": {"dims": [], "dtype": "U7"},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32"}
             }
         },
@@ -10043,8 +10043,8 @@
                 "VRADH": {"dims": ["azimuth", "range"], "dtype": "float32"},
                 "sweep_mode": {"dims": [], "dtype": "U50"},
                 "sweep_number": {"dims": [], "dtype": "int32"},
-                "prt_mode": {"dims": [], "dtype": "U50"},
-                "follow_mode": {"dims": [], "dtype": "U50"},
+                "prt_mode": {"dims": [], "dtype": "U7"},
+                "follow_mode": {"dims": [], "dtype": "U7"},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32"}
             }
         },
@@ -10054,8 +10054,8 @@
                 "VRADH": {"dims": ["azimuth", "range"], "dtype": "float32"},
                 "sweep_mode": {"dims": [], "dtype": "U50"},
                 "sweep_number": {"dims": [], "dtype": "int32"},
-                "prt_mode": {"dims": [], "dtype": "U50"},
-                "follow_mode": {"dims": [], "dtype": "U50"},
+                "prt_mode": {"dims": [], "dtype": "U7"},
+                "follow_mode": {"dims": [], "dtype": "U7"},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32"}
             }
         },
@@ -10065,8 +10065,8 @@
                 "VRADH": {"dims": ["azimuth", "range"], "dtype": "float32"},
                 "sweep_mode": {"dims": [], "dtype": "U50"},
                 "sweep_number": {"dims": [], "dtype": "int32"},
-                "prt_mode": {"dims": [], "dtype": "U50"},
-                "follow_mode": {"dims": [], "dtype": "U50"},
+                "prt_mode": {"dims": [], "dtype": "U7"},
+                "follow_mode": {"dims": [], "dtype": "U7"},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32"}
             }
         }
@@ -10183,8 +10183,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -10222,8 +10222,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -10281,8 +10281,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -10320,8 +10320,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -10379,8 +10379,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -10418,8 +10418,8 @@
                         "units": "m/s"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -10497,8 +10497,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -10576,8 +10576,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -10655,8 +10655,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -10734,8 +10734,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -10813,8 +10813,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -10892,8 +10892,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -10971,8 +10971,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -11050,8 +11050,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -11129,8 +11129,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -11208,8 +11208,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -11287,8 +11287,8 @@
                         "units": "unitless"
                     }
                 },
-                "follow_mode": {"dims": [], "dtype": "U50", "attributes": {}},
-                "prt_mode": {"dims": [], "dtype": "U50", "attributes": {}},
+                "follow_mode": {"dims": [], "dtype": "U7", "attributes": {}},
+                "prt_mode": {"dims": [], "dtype": "U7", "attributes": {}},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32", "attributes": {}},
                 "sweep_mode": {"dims": [], "dtype": "U50", "attributes": {}},
                 "sweep_number": {"dims": [], "dtype": "int32", "attributes": {}}
@@ -11305,8 +11305,8 @@
                 "CCORH": {"dims": ["azimuth", "range"], "dtype": "float32"},
                 "sweep_mode": {"dims": [], "dtype": "U50"},
                 "sweep_number": {"dims": [], "dtype": "int32"},
-                "prt_mode": {"dims": [], "dtype": "U50"},
-                "follow_mode": {"dims": [], "dtype": "U50"},
+                "prt_mode": {"dims": [], "dtype": "U7"},
+                "follow_mode": {"dims": [], "dtype": "U7"},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32"}
             }
         }
@@ -11326,8 +11326,8 @@
                 "CCORH": {"dims": ["azimuth", "range"], "dtype": "float32"},
                 "sweep_mode": {"dims": [], "dtype": "U50"},
                 "sweep_number": {"dims": [], "dtype": "int32"},
-                "prt_mode": {"dims": [], "dtype": "U50"},
-                "follow_mode": {"dims": [], "dtype": "U50"},
+                "prt_mode": {"dims": [], "dtype": "U7"},
+                "follow_mode": {"dims": [], "dtype": "U7"},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32"}
             }
         },
@@ -11338,8 +11338,8 @@
                 "WRADH": {"dims": ["azimuth", "range"], "dtype": "float32"},
                 "sweep_mode": {"dims": [], "dtype": "U50"},
                 "sweep_number": {"dims": [], "dtype": "int32"},
-                "prt_mode": {"dims": [], "dtype": "U50"},
-                "follow_mode": {"dims": [], "dtype": "U50"},
+                "prt_mode": {"dims": [], "dtype": "U7"},
+                "follow_mode": {"dims": [], "dtype": "U7"},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32"}
             }
         },
@@ -11352,8 +11352,8 @@
                 "CCORH": {"dims": ["azimuth", "range"], "dtype": "float32"},
                 "sweep_mode": {"dims": [], "dtype": "U50"},
                 "sweep_number": {"dims": [], "dtype": "int32"},
-                "prt_mode": {"dims": [], "dtype": "U50"},
-                "follow_mode": {"dims": [], "dtype": "U50"},
+                "prt_mode": {"dims": [], "dtype": "U7"},
+                "follow_mode": {"dims": [], "dtype": "U7"},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32"}
             }
         },
@@ -11364,8 +11364,8 @@
                 "WRADH": {"dims": ["azimuth", "range"], "dtype": "float32"},
                 "sweep_mode": {"dims": [], "dtype": "U50"},
                 "sweep_number": {"dims": [], "dtype": "int32"},
-                "prt_mode": {"dims": [], "dtype": "U50"},
-                "follow_mode": {"dims": [], "dtype": "U50"},
+                "prt_mode": {"dims": [], "dtype": "U7"},
+                "follow_mode": {"dims": [], "dtype": "U7"},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32"}
             }
         },
@@ -11378,8 +11378,8 @@
                 "CCORH": {"dims": ["azimuth", "range"], "dtype": "float32"},
                 "sweep_mode": {"dims": [], "dtype": "U50"},
                 "sweep_number": {"dims": [], "dtype": "int32"},
-                "prt_mode": {"dims": [], "dtype": "U50"},
-                "follow_mode": {"dims": [], "dtype": "U50"},
+                "prt_mode": {"dims": [], "dtype": "U7"},
+                "follow_mode": {"dims": [], "dtype": "U7"},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32"}
             }
         },
@@ -11390,8 +11390,8 @@
                 "WRADH": {"dims": ["azimuth", "range"], "dtype": "float32"},
                 "sweep_mode": {"dims": [], "dtype": "U50"},
                 "sweep_number": {"dims": [], "dtype": "int32"},
-                "prt_mode": {"dims": [], "dtype": "U50"},
-                "follow_mode": {"dims": [], "dtype": "U50"},
+                "prt_mode": {"dims": [], "dtype": "U7"},
+                "follow_mode": {"dims": [], "dtype": "U7"},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32"}
             }
         },
@@ -11406,8 +11406,8 @@
                 "CCORH": {"dims": ["azimuth", "range"], "dtype": "float32"},
                 "sweep_mode": {"dims": [], "dtype": "U50"},
                 "sweep_number": {"dims": [], "dtype": "int32"},
-                "prt_mode": {"dims": [], "dtype": "U50"},
-                "follow_mode": {"dims": [], "dtype": "U50"},
+                "prt_mode": {"dims": [], "dtype": "U7"},
+                "follow_mode": {"dims": [], "dtype": "U7"},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32"}
             }
         },
@@ -11422,8 +11422,8 @@
                 "CCORH": {"dims": ["azimuth", "range"], "dtype": "float32"},
                 "sweep_mode": {"dims": [], "dtype": "U50"},
                 "sweep_number": {"dims": [], "dtype": "int32"},
-                "prt_mode": {"dims": [], "dtype": "U50"},
-                "follow_mode": {"dims": [], "dtype": "U50"},
+                "prt_mode": {"dims": [], "dtype": "U7"},
+                "follow_mode": {"dims": [], "dtype": "U7"},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32"}
             }
         },
@@ -11438,8 +11438,8 @@
                 "CCORH": {"dims": ["azimuth", "range"], "dtype": "float32"},
                 "sweep_mode": {"dims": [], "dtype": "U50"},
                 "sweep_number": {"dims": [], "dtype": "int32"},
-                "prt_mode": {"dims": [], "dtype": "U50"},
-                "follow_mode": {"dims": [], "dtype": "U50"},
+                "prt_mode": {"dims": [], "dtype": "U7"},
+                "follow_mode": {"dims": [], "dtype": "U7"},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32"}
             }
         },
@@ -11454,8 +11454,8 @@
                 "CCORH": {"dims": ["azimuth", "range"], "dtype": "float32"},
                 "sweep_mode": {"dims": [], "dtype": "U50"},
                 "sweep_number": {"dims": [], "dtype": "int32"},
-                "prt_mode": {"dims": [], "dtype": "U50"},
-                "follow_mode": {"dims": [], "dtype": "U50"},
+                "prt_mode": {"dims": [], "dtype": "U7"},
+                "follow_mode": {"dims": [], "dtype": "U7"},
                 "sweep_fixed_angle": {"dims": [], "dtype": "float32"}
             }
         }

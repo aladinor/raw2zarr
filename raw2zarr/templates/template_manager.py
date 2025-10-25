@@ -212,7 +212,7 @@ class VcpTemplateManager:
                 np.full(
                     size_append_dim,
                     sweep_config.get("scan_mode", "azimuth_surveillance"),
-                    dtype="U35",
+                    dtype="U20",
                 ),
                 chunks=(1,),
             ),

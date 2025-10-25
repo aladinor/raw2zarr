@@ -1,4 +1,3 @@
-import time
 from collections.abc import Mapping, MutableMapping
 from os import PathLike
 from typing import Any, Literal
@@ -85,7 +84,7 @@ def dtree_to_zarr(
         )
 
     # Determine which store to use
-    write_store = session.store if session is not None else store
+    write_store = session if session is not None else store
 
     # Set up encoding
     if encoding is None:
@@ -100,7 +99,9 @@ def dtree_to_zarr(
 
     # Choose write path
     if use_icechunk and region is not None:
-        _write_with_icechunk(dtree, session, region, write_inherited_coords, compute)
+        _write_with_icechunk(
+            dtree, write_store, region, write_inherited_coords, compute
+        )
     else:
         _write_with_zarr(
             dtree,
@@ -139,11 +140,6 @@ def _write_with_icechunk(
     """
     from icechunk.xarray import to_icechunk
 
-    start_total = time.time()
-    node_count = 0
-    total_compute_time = 0
-    total_write_time = 0
-
     for node in dtree.subtree:
         at_root = node is dtree
 
@@ -151,21 +147,9 @@ def _write_with_icechunk(
         if node.is_empty or node.is_root:
             continue
 
-        node_count += 1
-
         # Convert node to dataset
         ds = node.to_dataset(inherit=write_inherited_coords or at_root)
 
-        # Materialize dask arrays before writing
-        # Note: to_icechunk() doesn't accept a compute parameter,
-        # so we must materialize arrays explicitly when compute=True
-        compute_start = time.time()
-        if compute:
-            ds = ds.compute()
-        compute_elapsed = time.time() - compute_start
-        total_compute_time += compute_elapsed
-
-        # Build group path: None for root node, "/path" for children
         if at_root:
             group_path = None
         else:
@@ -174,25 +158,12 @@ def _write_with_icechunk(
         # Write using icechunk backend
         # Note: to_icechunk() automatically handles zarr_format,
         # consolidated metadata, and mode settings
-        write_start = time.time()
         to_icechunk(
             ds,
             session=session,
             group=group_path,
             region=region,
         )
-        write_elapsed = time.time() - write_start
-        total_write_time += write_elapsed
-
-        print(
-            f"[to_icechunk] group={group_path or 'root'}: compute={compute_elapsed:.4f}s, write={write_elapsed:.4f}s"
-        )
-
-    total_elapsed = time.time() - start_total
-    overhead = total_elapsed - total_compute_time - total_write_time
-    print(
-        f"[to_icechunk] TOTAL: {node_count} nodes in {total_elapsed:.4f}s (compute={total_compute_time:.4f}s, write={total_write_time:.4f}s, overhead={overhead:.4f}s)"
-    )
 
 
 def _write_with_zarr(
@@ -223,17 +194,12 @@ def _write_with_zarr(
         region: Region specification for writes
         **kwargs: Additional arguments passed to to_zarr
     """
-    start_total = time.time()
-    node_count = 0
-
     for node in dtree.subtree:
         at_root = node is dtree
 
         # Skip empty and root nodes
         if node.is_empty or node.is_root:
             continue
-
-        node_count += 1
 
         # Convert node to dataset
         ds = node.to_dataset(inherit=write_inherited_coords or at_root)
@@ -245,7 +211,6 @@ def _write_with_zarr(
             group_path = "/" + node.relative_to(dtree)
 
         # Write using standard zarr backend
-        write_start = time.time()
         ds.to_zarr(
             store,
             group=group_path,
@@ -258,12 +223,6 @@ def _write_with_zarr(
             region=region,
             **kwargs,
         )
-        write_elapsed = time.time() - write_start
-
-        print(f"[to_zarr] group={group_path or 'root'}: write={write_elapsed:.4f}s")
-
-    total_elapsed = time.time() - start_total
-    print(f"[to_zarr] TOTAL: {node_count} nodes in {total_elapsed:.4f}s")
 
 
 def drop_vars_region(dtree: xr.DataTree, append_dim: str) -> xr.DataTree:

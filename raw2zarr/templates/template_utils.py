@@ -165,7 +165,7 @@ def create_root(
                 da.from_array(
                     np.array(
                         [radar_info["platform_type"]] * size_append_dim,
-                        dtype="U50",  # Match zarr U50 dtype to avoid region write errors
+                        dtype="<U5",  # Match actual radar data dtype
                     ),
                     chunks=(1,),
                 ),
@@ -175,7 +175,7 @@ def create_root(
                 da.from_array(
                     np.array(
                         [radar_info["instrument_type"]] * size_append_dim,
-                        dtype="U50",  # Match zarr U50 dtype to avoid region write errors
+                        dtype="<U5",  # Match actual radar data dtype (e.g., "radar")
                     ),
                     chunks=(1,),
                 ),
@@ -185,7 +185,7 @@ def create_root(
                 da.from_array(
                     np.array(
                         [radar_info["time_coverage_start"]] * size_append_dim,
-                        dtype="U50",  # Match zarr U50 dtype to avoid region write errors
+                        dtype="U20",  # Match zarr U50 dtype to avoid region write errors
                     ),
                     chunks=(1,),
                 ),
@@ -195,7 +195,7 @@ def create_root(
                 da.from_array(
                     np.array(
                         [radar_info["time_coverage_end"]] * size_append_dim,
-                        dtype="U50",  # Match zarr U50 dtype to avoid region write errors
+                        dtype="U20",  # Match zarr U50 dtype to avoid region write errors
                     ),
                     chunks=(1,),
                 ),

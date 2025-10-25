@@ -2,6 +2,7 @@ import asyncio
 import glob
 import os
 import shutil
+import socket
 import time
 from datetime import datetime
 
@@ -18,6 +19,7 @@ from raw2zarr.builder.convert import convert_files
 from raw2zarr.utils import create_query, load_vcp_samples
 from raw2zarr.utils.core import get_radar_files_async
 
+# Set default concurrency (will be overridden by get_cluster if needed)
 zarr.config.set({"async.concurrency": 100})
 
 
@@ -160,8 +162,27 @@ def get_repo_config():
 
 
 def get_cluster():
-    dashboard_address = "127.0.0.1:8785"
-    cluster = LocalCluster(dashboard_address=dashboard_address, memory_limit="10GB")
+    hostname = socket.gethostname()
+    is_keeling = "keeling" in hostname.lower()
+
+    if is_keeling:
+        zarr.config.set({"async.concurrency": 100})
+        from dask_jobqueue import SLURMCluster
+
+        cluster = SLURMCluster(
+            cores=48,
+            walltime="48:00:00",
+            scheduler_options={
+                "host": "172.22.179.4:8778",
+                "dashboard_address": "8785",
+            },
+        )
+        cluster.scale(8)
+
+    else:
+        zarr.config.set({"async.concurrency": 20})
+        cluster = LocalCluster(dashboard_address="127.0.0.1:8785")
+
     return cluster
 
 

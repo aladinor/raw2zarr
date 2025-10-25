@@ -292,10 +292,15 @@ class TestConfigConsistency:
                                         "int32",
                                         "int64",
                                         "str",
-                                        "U50",
                                     ]
+                                    # Also accept Unicode string dtypes (U5, U6, U7, U20, U50, etc.)
+                                    is_valid = var_config[
+                                        "dtype"
+                                    ] in valid_dtypes or var_config["dtype"].startswith(
+                                        "U"
+                                    )
                                     assert (
-                                        var_config["dtype"] in valid_dtypes
+                                        is_valid
                                     ), f"{config_name} {vcp_name} {key} {var_name} invalid dtype: {var_config['dtype']}"
 
     def test_elevation_angle_ranges(self):

@@ -4,6 +4,23 @@ All notable changes to this project are documented here.
 
 ## [Unreleased]
 
+### Fixed
+- **Writer**: Resolved dtype mismatches between templates and actual radar data for string variables by using appropriate dtypes based on actual string lengths instead of hardcoded U50 ([#b4231d7](https://github.com/aladinor/raw2zarr/commit/b4231d7))
+  - `platform_type`: U50 → U5
+  - `instrument_type`: U50 → U5
+  - `prt_mode`: U50 → U7 (188 instances in vcp_nexrad.json)
+  - `follow_mode`: U50 → U7 (188 instances in vcp_nexrad.json)
+  - `scan_mode`: U35 → U20
+- **Encoding**: Changed string dtype handling to preserve actual variable dtypes instead of forcing U50 for all string variables ([#b4231d7](https://github.com/aladinor/raw2zarr/commit/b4231d7))
+
+### Changed
+- **Writer**: Removed debug output (timing instrumentation and print statements) from zarr_writer.py and writer_utils.py ([#b4231d7](https://github.com/aladinor/raw2zarr/commit/b4231d7))
+- **Writer**: Refactored zarr_writer.py to separate Icechunk and standard Zarr write paths with improved backend selection logic ([#29fae1c](https://github.com/aladinor/raw2zarr/commit/29fae1c))
+
+### Added
+- **Tests**: Updated dtype assertions to accept appropriate Unicode string sizes (U5, U7, U20, etc.) instead of expecting hardcoded U50 ([#fd91d3b](https://github.com/aladinor/raw2zarr/commit/fd91d3b))
+- **Tests**: Enhanced VCP config validation to accept any Unicode string dtype pattern starting with "U" ([#fd91d3b](https://github.com/aladinor/raw2zarr/commit/fd91d3b))
+
 ## [0.5.0] - 2025-10-20
 
 ### Highlights

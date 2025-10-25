@@ -385,5 +385,6 @@ def append_parallel(
         )
     else:
         print("No files wrote")
-
+    elapsed = time.time() - start
+    print(f"Total time to write data {elapsed:.4f}s")
     check_cords(repo)

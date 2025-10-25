@@ -73,8 +73,9 @@ def dtree_encoding(
                 return az_chunksize, range_chunksize
 
             if dtype_kind in {"O", "U"}:
+                # Use the actual dtype from the variable, not hardcoded U50
                 encoding[path][var_name] = {
-                    "dtype": "U50",
+                    "dtype": var.dtype,
                     "chunks": (1,) * len(dims),
                     # TODO fix this after zarrv3 string enconding dtype is accepted
                     # "_FillValue": "None",

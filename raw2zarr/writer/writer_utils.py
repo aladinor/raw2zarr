@@ -156,7 +156,6 @@ def init_zarr_store(
         dtree_to_zarr(final_tree, **writer_args)
 
         session.commit("Initial commit: VCP-specific xarray template created")
-        print(f"Template created with {len(final_tree.children)} nodes")
         # Return all files including the first one for region writing
         files.insert(0, (idx, first_file))
         return files

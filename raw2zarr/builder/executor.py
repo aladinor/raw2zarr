@@ -205,6 +205,8 @@ def append_parallel(
     sample_percentage: float = 15.0,
     samples_output_path: str = None,
     vcp_config_file: str = "vcp_nexrad.json",
+    batch_size: int = 100,
+    write_timeout_minutes: int = 10,
 ) -> None:
     """
     Append radar files to a Zarr store in parallel using Dask.
@@ -242,6 +244,12 @@ def append_parallel(
             Percentage of files to sample for validation when generate_samples=True. Defaults to 15.0.
         samples_output_path (str, optional):
             Path to save VCP samples JSON file. If None, doesn't save to file.
+        batch_size (int, optional):
+            Number of completed sessions to collect before merging. Defaults to 100.
+            Smaller batches provide more frequent progress updates but slightly more merge overhead.
+        write_timeout_minutes (int, optional):
+            Timeout in minutes for write operations. If no new task completes within this time,
+            the operation will fail with a timeout error. Defaults to 10 minutes.
 
     Returns:
         None
@@ -249,10 +257,13 @@ def append_parallel(
     Note:
         This function uses the new icechunk 1.0+ Session.fork() API for parallel
         processing. The old allow_pickling() context manager is no longer supported.
+
+        Uses progressive batch merging with as_completed() to avoid blocking on hung tasks
+        and to provide better progress tracking during large-scale ingestion.
     """
     import logging
 
-    from dask.distributed import Client
+    from dask.distributed import Client, as_completed
 
     logging.getLogger("distributed.scheduler").setLevel(logging.ERROR)
 
@@ -357,34 +368,86 @@ def append_parallel(
 
     start = time.time()
     write_futures = client.map(write_single_file, remaining_files)
-    write_results = client.gather(write_futures)
 
-    # Separate successful sessions from failed files
+    # Progressive batch merging using as_completed()
     successful_sessions = []
     write_failed_files = []
+    current_batch = []
+    total_tasks = len(remaining_files)
+    completed_count = 0
+    timeout_seconds = write_timeout_minutes * 60
 
-    for result in write_results:
-        if isinstance(result, dict) and "error" in result:
-            # Failed file
-            write_failed_files.append((result["file"], result["error"]))
-        else:
-            # Successful session
-            successful_sessions.append(result)
+    print(
+        f"Starting parallel write of {total_tasks} files with batch size {batch_size}"
+    )
 
-    for file, error_msg in write_failed_files:
-        _log_problematic_file(file, error_msg, log_file)
+    try:
+        for future in as_completed(write_futures, timeout=f"{timeout_seconds}s"):
+            try:
+                result = future.result()
+                completed_count += 1
 
-    # Only merge successful sessions
+                if isinstance(result, dict) and "error" in result:
+                    # Failed file
+                    write_failed_files.append((result["file"], result["error"]))
+                    _log_problematic_file(result["file"], result["error"], log_file)
+                else:
+                    # Successful session - add to current batch
+                    current_batch.append(result)
+                    successful_sessions.append(result)
+
+                # Merge batch when it reaches batch_size
+                if len(current_batch) >= batch_size:
+                    print(
+                        f"Progress: {completed_count}/{total_tasks} tasks completed, "
+                        f"merging batch of {len(current_batch)} sessions..."
+                    )
+                    session.merge(*current_batch)
+                    current_batch = []  # Reset batch
+
+            except Exception as e:
+                # Handle individual task errors
+                completed_count += 1
+                error_msg = f"Task execution failed: {str(e)}"
+                write_failed_files.append(("unknown_file", error_msg))
+                _log_problematic_file("unknown_file", error_msg, log_file)
+
+    except TimeoutError:
+        # Timeout occurred - some tasks never completed
+        remaining_futures = [f for f in write_futures if not f.done()]
+        print(
+            f"\nTimeout after {write_timeout_minutes} minutes! "
+            f"Completed {completed_count}/{total_tasks} tasks."
+        )
+        print(f"Number of incomplete tasks: {len(remaining_futures)}")
+
+        # Log incomplete tasks
+        error_msg = (
+            f"Task timeout after {write_timeout_minutes} minutes - no completion"
+        )
+        for incomplete_future in remaining_futures:
+            _log_problematic_file(
+                f"timeout_task_{incomplete_future.key}", error_msg, log_file
+            )
+
+    # Merge any remaining sessions in the final batch
+    if current_batch:
+        print(f"Merging final batch of {len(current_batch)} sessions...")
+        session.merge(*current_batch)
+
+    elapsed = time.time() - start
+
+    # Commit and report results
     if successful_sessions:
-        session.merge(*successful_sessions)
         session.commit(
             f"writing {len(successful_sessions)}/{len(radar_files)} radar files to zarr store"
         )
         print(
-            f"Wrote {len(radar_files)} radar files to zarr store, with {len(successful_sessions)} time steps"
+            f"\nCompleted: {len(successful_sessions)}/{total_tasks} files successfully written "
+            f"({len(write_failed_files)} failed) in {elapsed:.2f}s"
         )
     else:
-        print("No files wrote")
-    elapsed = time.time() - start
-    print(f"Total time to write data {elapsed:.4f}s")
+        print("No files were successfully written")
+
+    print(f"Total time to write data: {elapsed:.4f}s")
     check_cords(repo)

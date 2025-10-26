@@ -4,6 +4,14 @@ All notable changes to this project are documented here.
 
 ## [Unreleased]
 
+### Added
+- **Parallel Executor**: Implemented progressive batch merging with `as_completed()` to avoid indefinite blocking on hung tasks during large-scale parallel writes
+  - New parameter `batch_size` (default: 100) controls number of sessions merged per batch
+  - New parameter `write_timeout_minutes` (default: 10) sets timeout for detecting stuck tasks
+  - Real-time progress tracking shows completion status during ingestion
+  - Better error handling identifies and logs specific failed/timeout tasks
+  - Non-blocking execution continues processing even if some tasks fail or timeout
+
 ### Fixed
 - **Writer**: Resolved dtype mismatches between templates and actual radar data for string variables by using appropriate dtypes based on actual string lengths instead of hardcoded U50 ([#b4231d7](https://github.com/aladinor/raw2zarr/commit/b4231d7))
   - `platform_type`: U50 → U5
@@ -14,6 +22,9 @@ All notable changes to this project are documented here.
 - **Encoding**: Changed string dtype handling to preserve actual variable dtypes instead of forcing U50 for all string variables ([#b4231d7](https://github.com/aladinor/raw2zarr/commit/b4231d7))
 
 ### Changed
+- **Dependencies**: Updated icechunk to >=1.1.10 in environment.yml and pyproject.toml
+- **Main Script**: Enhanced main.py with hostname-based log file path configuration for Keeling cluster
+- **Main Script**: Added FutureWarning suppression for cleaner output
 - **Writer**: Removed debug output (timing instrumentation and print statements) from zarr_writer.py and writer_utils.py ([#b4231d7](https://github.com/aladinor/raw2zarr/commit/b4231d7))
 - **Writer**: Refactored zarr_writer.py to separate Icechunk and standard Zarr write paths with improved backend selection logic ([#29fae1c](https://github.com/aladinor/raw2zarr/commit/29fae1c))
 

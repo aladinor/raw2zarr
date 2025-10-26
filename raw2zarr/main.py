@@ -4,6 +4,7 @@ import os
 import shutil
 import socket
 import time
+import warnings
 from datetime import datetime
 
 import boto3
@@ -18,6 +19,8 @@ from raw2zarr.builder.builder_utils import get_icechunk_repo
 from raw2zarr.builder.convert import convert_files
 from raw2zarr.utils import create_query, load_vcp_samples
 from raw2zarr.utils.core import get_radar_files_async
+
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 # Set default concurrency (will be overridden by get_cluster if needed)
 zarr.config.set({"async.concurrency": 100})
@@ -201,7 +204,14 @@ def main():
     # radar_files = get_dynamic_scans()
     # radar_files, zarr_store, engine = files_with_shape_mismatch("VCP-32")
     # Choose local or remote Icechunk repository
-    use_remote_repo = True
+
+    hostname = socket.gethostname()
+    if "keeling" in hostname.lower():
+        log_file = f"/data/keeling/a/alfonso8/projects/raw2zarr/raw2zarr/{zarr_store.split('/')[-1]}.txt"
+    else:
+        log_file = f"/media/alfonso/drive/Alfonso/python/raw2zarr/{zarr_store.split('/')[-1]}.txt"
+
+    use_remote_repo = False
 
     if use_remote_repo:
         print("Using Remote repo")
@@ -239,7 +249,7 @@ def main():
 
     start = time.time()
     convert_files(
-        radar_files[:20],
+        radar_files[:100],
         append_dim=append_dim,
         repo=repo,
         zarr_format=zarr_version,
@@ -247,8 +257,9 @@ def main():
         process_mode=process_mode,
         remove_strings=True,
         cluster=cluster,
-        log_file=f"/media/alfonso/drive/Alfonso/python/raw2zarr/{zarr_store.split('/')[-1]}.txt",
+        log_file=log_file,
         vcp_config_file=vcp_config_file,
+        batch_size=100,
     )
     elapsed = time.time() - start
     print(f"convert_files executed in {elapsed:.4f}s")

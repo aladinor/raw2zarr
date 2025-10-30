@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  raw2zarr:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: raw2zarr
+    ports:
+      - "8888:8888"  # JupyterLab
+      - "8787:8787"  # Dask dashboard
+    volumes:
+      # Mount notebooks directory
+      - ./notebooks:/opt/raw2zarr/notebooks
+      # Mount data directory for input/output
+      - ./data:/opt/raw2zarr/data
+      # Mount zarr output directory
+      - ./zarr:/opt/raw2zarr/zarr
+    environment:
+      - AWS_REQUEST_CHECKSUM_CALCULATION=WHEN_REQUIRED
+      - PYTHONUNBUFFERED=1
+    # Uncomment to mount AWS credentials for S3 access
+    # volumes:
+    #   - ~/.aws:/root/.aws:ro

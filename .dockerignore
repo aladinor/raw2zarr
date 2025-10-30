@@ -1,0 +1,69 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+ENV/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Claude Code
+.claude/
+
+# Documentation drafts
+AGENTS.md
+ICECHUNK_ISSUE.md
+OSN_SUPPORT_REQUEST.md
+
+# Notebooks (keep only if needed)
+notebooks/*.ipynb
+!notebooks/examples/
+
+# Data directories
+data/
+*.zarr/
+zarr/
+
+# Temporary files
+*.log
+*.tmp
+output.txt
+
+# Local scripts
+local_scripts/
+diagnose_timeout.py
+
+# Shape registry (if not needed)
+shape_registry/
+
+# Documentation build
+docs/_build/
+docs/CLUSTER_*.md
+docs/SLURM_*.md
+
+# UV cache
+.uv/

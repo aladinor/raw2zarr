@@ -11,7 +11,7 @@ This repository implements the **Radar DataTree** framework described in:
 
 **Ladino-Rincón & Nesbitt (2025)**
 *Radar DataTree: A FAIR and Cloud-Native Framework for Scalable Weather Radar Archives*
-arXiv:2510.24943 — https://arxiv.org/abs/2510.24943
+arXiv:2510.24943 [cs.DC] — https://doi.org/10.48550/arXiv.2510.24943
 
 Please cite this work if you use Raw2Zarr or the Radar DataTree model.
 
@@ -199,6 +199,6 @@ finally:
 - Safe real-time ingestion alongside ongoing analysis
 ## References
 
-* **Ladino-Rincón, A., & Nesbitt, S. W. (2025).** Radar DataTree: A FAIR and Cloud-Native Framework for Scalable Weather Radar Archives. *arXiv preprint arXiv:2510.24943*. https://arxiv.org/abs/2510.24943
+* **Ladino-Rincón, A., & Nesbitt, S. W. (2025).** Radar DataTree: A FAIR and Cloud-Native Framework for Scalable Weather Radar Archives. *arXiv preprint arXiv:2510.24943 [cs.DC]*. https://doi.org/10.48550/arXiv.2510.24943
 
 * Abernathey, R. P., et al. (2021). Cloud-Native Repositories for Big Scientific Data. *Computing in Science & Engineering*, 23(2), 26-35. doi:10.1109/MCSE.2021.3059437
